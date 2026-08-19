@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد مدیریت | طهران باتری</title>
+    
+    <!-- ===== هدرهای امنیتی ===== -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
+    
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   script-src 'self' 'unsafe-inline'; 
+                   style-src 'self' 'unsafe-inline'; 
+                   img-src 'self' data:; 
+                   frame-src 'none'; 
+                   connect-src 'self'; 
+                   form-action 'self';">
+    
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="no-referrer">
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <link rel="stylesheet" href="css/admin-style.css">
+    <link rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- ===== سایدبار ===== -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>🔧 طهران باتری</h2>
+                <span>پنل مدیریت</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="#dashboard" class="active" data-section="dashboard">
+                    <i class="fas fa-chart-pie"></i> داشبورد
+                </a>
+                <a href="#products" data-section="products">
+                    <i class="fas fa-box"></i> محصولات
+                </a>
+                <a href="#orders" data-section="orders">
+                    <i class="fas fa-shopping-bag"></i> سفارشات
+                </a>
+                <a href="#customers" data-section="customers">
+                    <i class="fas fa-users"></i> مشتریان
+                </a>
+                <a href="#settings" data-section="settings">
+                    <i class="fas fa-cog"></i> تنظیمات
+                </a>
+            </nav>
+            <button onclick="logout()" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> خروج
+            </button>
+        </aside>
+
+        <!-- ===== محتوای اصلی ===== -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1 id="pageTitle">داشبورد مدیریت</h1>
+                <div class="admin-info">
+                    <span>👤 خوش آمدید، ادمین</span>
+                    <span class="admin-time" id="adminTime"></span>
+                </div>
+            </header>
+
+            <!-- ===== بخش داشبورد ===== -->
+            <section id="section-dashboard" class="admin-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-bag"></i>
+                        <div>
+                            <span class="stat-number" id="totalOrders">۱۲۴</span>
+                            <span class="stat-label">کل سفارشات</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-box"></i>
+                        <div>
+                            <span class="stat-number" id="totalProducts">۵۶</span>
+                            <span class="stat-label">محصولات موجود</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <span class="stat-number" id="totalCustomers">۳۴۵</span>
+                            <span class="stat-label">مشتریان</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div>
+                            <span class="stat-number" id="totalSales">۱۲,۵۰۰,۰۰۰</span>
+                            <span class="stat-label">فروش کل (تومان)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-welcome">
+                    <h3>📊 خلاصه وضعیت</h3>
+                    <p>به پنل مدیریت طهران باتری خوش آمدید. از اینجا می‌توانید تمام بخش‌های فروشگاه را مدیریت کنید.</p>
+                </div>
+            </section>
+
+            <!-- ===== بخش محصولات ===== -->
+            <section id="section-products" class="admin-section">
+                <div class="section-header">
+                    <h2>مدیریت محصولات</h2>
+                    <button class="add-product-btn" onclick="showAddProductModal()">
+                        <i class="fas fa-plus"></i> افزودن محصول جدید
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>نام محصول</th>
+                                <th>قیمت</th>
+                                <th>موجودی</th>
+                                <th>دسته‌بندی</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productList">
+                            <!-- داده‌ها توسط JavaScript پر می‌شود -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ===== بخش سفارشات ===== -->
+            <section id="section-orders" class="admin-section">
+                <div class="section-header">
+                    <h2>مدیریت سفارشات</h2>
+                    <div class="order-filters">
+                        <select id="orderStatusFilter" onchange="filterOrders()">
+                            <option value="all">همه سفارشات</option>
+                            <option value="pending">در انتظار</option>
+                            <option value="processing">در حال انجام</option>
+                            <option value="completed">تکمیل شده</option>
+                            <option value="cancelled">لغو شده</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>کد پیگیری</th>
+                                <th>مشتری</th>
+                                <th>مبلغ</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderList">
+                            <!-- داده‌ها توسط JavaScript پر می‌شود -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ===== بخش مشتریان ===== -->
+            <section id="section-customers" class="admin-section">
+                <h2>مدیریت مشتریان</h2>
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>نام</th>
+                                <th>شماره تماس</th>
+                                <th>تعداد سفارشات</th>
+                                <th>تاریخ عضویت</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerList">
+                            <!-- داده‌ها توسط JavaScript پر می‌شود -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ===== بخش تنظیمات ===== -->
+            <section id="section-settings" class="admin-section">
+                <h2>تنظیمات</h2>
+                <div class="settings-card">
+                    <h3>اطلاعات فروشگاه</h3>
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <label>نام فروشگاه</label>
+                            <input type="text" value="طهران باتری" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>شماره تماس</label>
+                            <input type="text" value="۰۲۱-۱۲۳۴۵۶۷۸" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>آدرس</label>
+                            <textarea disabled>تهران، خیابان آزادی، خیابان تهران‌پارس، پلاک ۱۲</textarea>
+                        </div>
+                        <p class="settings-note">⚠️ تنظیمات در نسخه شبیه‌سازی شده غیرفعال است.</p>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ===== مودال افزودن محصول ===== -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('addProductModal')">&times;</span>
+            <h3>افزودن محصول جدید</h3>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label>نام محصول</label>
+                    <input type="text" id="prodName" required>
+                </div>
+                <div class="form-group">
+                    <label>قیمت (تومان)</label>
+                    <input type="number" id="prodPrice" required>
+                </div>
+                <div class="form-group">
+                    <label>موجودی</label>
+                    <input type="number" id="prodStock" required>
+                </div>
+                <div class="form-group">
+                    <label>دسته‌بندی</label>
+                    <select id="prodCategory">
+                        <option value="باتری">باتری</option>
+                        <option value="برقی">برقی</option>
+                        <option value="کولر">کولر</option>
+                        <option value="سایر">سایر</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">افزودن محصول</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin-panel.js"></script>
+</body>
+</html>

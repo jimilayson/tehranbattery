@@ -1,0 +1,623 @@
+/* ============================================
+   ===== استایل اختصاصی پنل ادمین =====
+   ============================================ */
+
+/* ===== ریست ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
+    background: #080B10;
+    color: #C5CED9;
+    direction: rtl;
+}
+
+/* ===== کانتینر اصلی ===== */
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===== سایدبار ===== */
+.admin-sidebar {
+    width: 260px;
+    background: #101722;
+    border-left: 1px solid #26364A;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    overflow-y: auto;
+}
+
+.admin-logo h2 {
+    color: #F5F7FA;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.admin-logo span {
+    color: #8E9AAA;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 24px;
+}
+
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.admin-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: #8E9AAA;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.admin-nav a i {
+    width: 20px;
+    text-align: center;
+}
+
+.admin-nav a:hover {
+    background: #182333;
+    color: #F5F7FA;
+}
+
+.admin-nav a.active {
+    background: #182333;
+    color: #F5F7FA;
+    border-right: 3px solid #7A8A9E;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    margin-top: 16px;
+    background: transparent;
+    border: 1px solid #26364A;
+    border-radius: 8px;
+    color: #FF4D4D;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 77, 77, 0.1);
+    border-color: #FF4D4D;
+}
+
+/* ===== محتوای اصلی ===== */
+.admin-main {
+    flex: 1;
+    margin-right: 260px;
+    padding: 24px;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #26364A;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.admin-header h1 {
+    color: #F5F7FA;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.admin-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #8E9AAA;
+    font-size: 14px;
+}
+
+.admin-time {
+    background: #182333;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid #26364A;
+}
+
+/* ===== بخش‌ها ===== */
+.admin-section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.admin-section.active {
+    display: block;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.section-header h2 {
+    color: #F5F7FA;
+    font-size: 20px;
+}
+
+/* ===== آمار ===== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: #182333;
+    border: 1px solid #26364A;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: 0.3s;
+}
+
+.stat-card:hover {
+    border-color: #7A8A9E;
+    transform: translateY(-2px);
+}
+
+.stat-card i {
+    font-size: 32px;
+    color: #7A8A9E;
+}
+
+.stat-number {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: #F5F7FA;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #8E9AAA;
+}
+
+.dashboard-welcome {
+    background: #182333;
+    border: 1px solid #26364A;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.dashboard-welcome h3 {
+    color: #F5F7FA;
+    margin-bottom: 8px;
+}
+
+.dashboard-welcome p {
+    color: #8E9AAA;
+}
+
+/* ===== جدول‌ها ===== */
+.table-container {
+    background: #182333;
+    border: 1px solid #26364A;
+    border-radius: 12px;
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.admin-table thead {
+    background: #101722;
+}
+
+.admin-table th {
+    padding: 12px 16px;
+    text-align: right;
+    color: #8E9AAA;
+    font-weight: 600;
+    border-bottom: 1px solid #26364A;
+}
+
+.admin-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #1a2538;
+    color: #C5CED9;
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(122, 138, 158, 0.05);
+}
+
+/* ===== وضعیت سفارش ===== */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-pending {
+    background: rgba(255, 209, 102, 0.15);
+    color: #FFD166;
+}
+
+.status-processing {
+    background: rgba(122, 138, 158, 0.15);
+    color: #7A8A9E;
+}
+
+.status-completed {
+    background: rgba(46, 213, 115, 0.15);
+    color: #2ED573;
+}
+
+.status-cancelled {
+    background: rgba(255, 77, 77, 0.15);
+    color: #FF4D4D;
+}
+
+/* ===== دکمه‌ها ===== */
+.add-product-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: #7A8A9E;
+    color: #F5F7FA;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+.add-product-btn:hover {
+    background: #8E9EAF;
+    transform: translateY(-2px);
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    color: #8E9AAA;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+.btn-icon:hover {
+    background: rgba(122, 138, 158, 0.1);
+    color: #F5F7FA;
+}
+
+.btn-icon.danger:hover {
+    background: rgba(255, 77, 77, 0.1);
+    color: #FF4D4D;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: #7A8A9E;
+    color: #F5F7FA;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+.btn-primary:hover {
+    background: #8E9EAF;
+}
+
+/* ===== مودال ===== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(8, 11, 16, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #182333;
+    padding: 32px;
+    border-radius: 16px;
+    border: 1px solid #26364A;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    animation: slideUp 0.3s ease;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    font-size: 28px;
+    color: #8E9AAA;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.modal-close:hover {
+    color: #F5F7FA;
+}
+
+.modal-content h3 {
+    color: #F5F7FA;
+    margin-bottom: 20px;
+}
+
+.modal-content .form-group {
+    margin-bottom: 16px;
+}
+
+.modal-content .form-group label {
+    display: block;
+    color: #8E9AAA;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.modal-content .form-group input,
+.modal-content .form-group select {
+    width: 100%;
+    padding: 10px 14px;
+    background: #243247;
+    border: 1px solid #26364A;
+    border-radius: 8px;
+    color: #F5F7FA;
+    font-size: 14px;
+    font-family: inherit;
+    transition: 0.3s;
+}
+
+.modal-content .form-group input:focus,
+.modal-content .form-group select:focus {
+    border-color: #7A8A9E;
+    outline: none;
+}
+
+/* ===== تنظیمات ===== */
+.settings-card {
+    background: #182333;
+    border: 1px solid #26364A;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 600px;
+}
+
+.settings-card h3 {
+    color: #F5F7FA;
+    margin-bottom: 16px;
+}
+
+.settings-card .form-group {
+    margin-bottom: 16px;
+}
+
+.settings-card .form-group label {
+    display: block;
+    color: #8E9AAA;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.settings-card .form-group input,
+.settings-card .form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    background: #243247;
+    border: 1px solid #26364A;
+    border-radius: 8px;
+    color: #C5CED9;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.settings-card .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.settings-note {
+    color: #FFD166;
+    font-size: 13px;
+    margin-top: 12px;
+}
+
+/* ===== نوتیفیکیشن ===== */
+@keyframes slideDown {
+    from {
+        transform: translateX(-50%) translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ===== ریسپانسیو ===== */
+@media (max-width: 992px) {
+    .admin-sidebar {
+        width: 220px;
+        padding: 16px 12px;
+    }
+    
+    .admin-main {
+        margin-right: 220px;
+        padding: 16px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+        border-left: none;
+        border-bottom: 1px solid #26364A;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 12px 16px;
+    }
+    
+    .admin-logo {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .admin-logo span {
+        margin-bottom: 0;
+    }
+    
+    .admin-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        padding: 8px 0;
+    }
+    
+    .admin-nav a {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    .logout-btn {
+        margin-top: 0;
+        padding: 8px 16px;
+    }
+    
+    .admin-main {
+        margin-right: 0;
+        padding: 12px;
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    
+    .stat-card {
+        padding: 16px;
+    }
+    
+    .stat-number {
+        font-size: 20px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .modal-content {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-nav a {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+    
+    .admin-table {
+        font-size: 12px;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        padding: 8px 10px;
+    }
+}

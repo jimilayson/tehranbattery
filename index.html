@@ -4,28 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     
-    <!-- SEO Meta Tags -->
+    <!-- ===== SEO Meta Tags ===== -->
     <title>طهران باتری | تعمیرگاه تخصصی و فروش لوازم یدکی خودرو</title>
     <meta name="description" content="تعمیرگاه تخصصی خودروهای ایرانی و خارجی، فروش لوازم یدکی، خدمات برق خودرو، کولر، باتری و عیب‌یابی تخصصی با ضمانت کیفیت">
     <meta name="keywords" content="تعمیرگاه خودرو, تعمیرات تخصصی, لوازم یدکی, برق خودرو, باتری خودرو, کولر خودرو, عیب‌یابی خودرو">
     
-    <!-- Open Graph -->
+    <!-- ===== Open Graph ===== -->
     <meta property="og:title" content="طهران باتری | تعمیرگاه تخصصی و فروش لوازم یدکی">
     <meta property="og:description" content="تعمیرات تخصصی خودروهای ایرانی و خارجی با بهترین کیفیت">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tehranbattery.ir">
+    <meta property="og:url" content="https://tehranbattery.vercel.app">
     
-    <!-- CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; frame-src https://www.google.com;">
-
-    <link rel="stylesheet" href="css/style.css?v=4.0">
-
+    <!-- ===== هدرهای امنیتی ===== -->
+    <!-- جلوگیری از ایندکس شدن صفحات حساس توسط موتورهای جستجو -->
+    <meta name="robots" content="index, follow">
+    
+    <!-- سیاست امنیتی محتوا (CSP) - جلوگیری از حملات XSS -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; 
+                   style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; 
+                   font-src 'self' https://cdnjs.cloudflare.com; 
+                   img-src 'self' data:; 
+                   frame-src https://www.google.com; 
+                   connect-src 'self';">
+    
+    <!-- جلوگیری از نمایش سایت در iframe (کلیک‌جکینگ) -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    
+    <!-- جلوگیری از MIME type sniffing -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- سیاست ارجاع دهنده -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- ===== فونت و استایل ===== -->
+    <link rel="stylesheet" href="css/style.css?v=4.1">
     <link rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" 
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" 
           crossorigin="anonymous" 
           referrerpolicy="no-referrer">
 
+    <!-- ===== JSON-LD ===== -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -678,6 +699,7 @@
         </div>
     </footer>
 
-    <script src="js/main.js?v=4.0"></script>
+    <!-- ===== اسکریپت‌ها ===== -->
+    <script src="js/main.js?v=4.1"></script>
 </body>
 </html>
