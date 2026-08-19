@@ -621,3 +621,668 @@ body {
         padding: 8px 10px;
     }
 }
+
+/* ===== اضافات جدید برای داشبورد ===== */
+
+/* KPI Cards */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.kpi-card {
+    background: #182333;
+    border: 1px solid #26364A;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.kpi-card:hover {
+    border-color: #7A8A9E;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.kpi-card.critical {
+    border-color: #FF4D4D;
+}
+
+.kpi-card .kpi-icon {
+    font-size: 28px;
+    color: #7A8A9E;
+    width: 50px;
+    text-align: center;
+}
+
+.kpi-card .kpi-content {
+    flex: 1;
+}
+
+.kpi-card .kpi-value {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: #F5F7FA;
+}
+
+.kpi-card .kpi-label {
+    font-size: 13px;
+    color: #8E9AAA;
+}
+
+.kpi-card .kpi-change {
+    font-size: 12px;
+    color: #2ED573;
+}
+
+/* نمودار */
+.chart-section {
+    background: #182333;
+    border: 1px solid #26364A;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.chart-header h3 {
+    color: #F5F7FA;
+    font-size: 18px;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.chart-btn {
+    padding: 4px 12px;
+    background: transparent;
+    border: 1px solid #26364A;
+    border-radius: 6px;
+    color: #8E9AAA;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+.chart-btn:hover {
+    background: #243247;
+    color: #F5F7FA;
+}
+
+.chart-btn.active {
+    background: #7A8A9E;
+    color: #F5F7FA;
+    border-color: #7A8A9E;
+}
+
+.chart-container {
+    height: 300px;
+    position: relative;
+}
+
+.chart-stats {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #26364A;
+}
+
+.chart-stat {
+    color: #8E9AAA;
+    font-size: 14px;
+}
+
+.chart-stat strong {
+    color: #F5F7FA;
+    font-size: 20px;
+}
+
+.chart-stat .growth {
+    color: #2ED573;
+    font-weight: 600;
+}
+
+/* دو ستونه */
+.dashboard-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+/* کارت‌ها */
+.card {
+    background: #182333;
+    border: 1px solid #26364A;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.card h3 {
+    color: #F5F7FA;
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+/* وضعیت سفارش‌ها */
+.order-status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #101722;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.status-item:hover {
+    background: #243247;
+}
+
+.status-item .status-label {
+    color: #8E9AAA;
+    font-size: 14px;
+}
+
+.status-item .status-count {
+    color: #F5F7FA;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/* فروش بر اساس برند */
+.brand-sales, .amp-sales {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.brand-item, .amp-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 50px 120px;
+    gap: 12px;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.brand-name, .amp-name {
+    color: #F5F7FA;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.brand-bar, .amp-bar {
+    height: 8px;
+    background: #101722;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.brand-bar-fill, .amp-bar-fill {
+    height: 100%;
+    background: #7A8A9E;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+
+.brand-percent, .amp-percent {
+    color: #F5F7FA;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.brand-detail, .amp-detail {
+    color: #8E9AAA;
+    font-size: 12px;
+}
+
+/* پرفروش‌ترین محصولات */
+.top-product {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #1a2538;
+}
+
+.top-product:last-child {
+    border-bottom: none;
+}
+
+.top-product-rank {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #101722;
+    border-radius: 50%;
+    color: #7A8A9E;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.top-product-info {
+    flex: 1;
+}
+
+.top-product-name {
+    color: #F5F7FA;
+    font-weight: 500;
+}
+
+.top-product-detail {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: #8E9AAA;
+}
+
+/* موجودی بحرانی */
+.critical-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #101722;
+    border-radius: 6px;
+    margin-bottom: 4px;
+}
+
+.critical-item.danger {
+    border-right: 3px solid #FF4D4D;
+}
+
+.critical-item.warning {
+    border-right: 3px solid #FFD166;
+}
+
+.critical-item.info {
+    border-right: 3px solid #7A8A9E;
+}
+
+.critical-info {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.critical-name {
+    color: #F5F7FA;
+    font-weight: 500;
+}
+
+.critical-stock, .critical-min {
+    color: #8E9AAA;
+    font-size: 13px;
+}
+
+.critical-status {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* مشاوره */
+.consulting-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.consulting-stat {
+    text-align: center;
+    padding: 8px;
+    background: #101722;
+    border-radius: 6px;
+}
+
+.consulting-stat .stat-label {
+    display: block;
+    color: #8E9AAA;
+    font-size: 12px;
+}
+
+.consulting-stat .stat-count {
+    display: block;
+    color: #F5F7FA;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.consulting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #101722;
+    border-radius: 6px;
+    margin-bottom: 4px;
+}
+
+.consulting-info {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.consulting-customer {
+    color: #F5F7FA;
+    font-weight: 500;
+}
+
+.consulting-car {
+    color: #8E9AAA;
+    font-size: 13px;
+}
+
+.consulting-suggested {
+    color: #7A8A9E;
+    font-size: 13px;
+}
+
+.consulting-status {
+    font-size: 12px;
+    padding: 2px 10px;
+    border-radius: 12px;
+}
+
+.consulting-status.status-new {
+    background: rgba(255, 77, 77, 0.15);
+    color: #FF4D4D;
+}
+
+.consulting-status.status-reviewing {
+    background: rgba(255, 209, 102, 0.15);
+    color: #FFD166;
+}
+
+.consulting-status.status-answered {
+    background: rgba(46, 213, 115, 0.15);
+    color: #2ED573;
+}
+
+.consulting-time {
+    color: #667384;
+    font-size: 12px;
+}
+
+/* هشدارها */
+.alert-card {
+    border-color: #FFD166;
+}
+
+.alert-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: #101722;
+    border-radius: 6px;
+    margin-bottom: 4px;
+}
+
+.alert-item i {
+    font-size: 18px;
+}
+
+.alert-item.alert-danger {
+    border-right: 3px solid #FF4D4D;
+}
+
+.alert-item.alert-danger i {
+    color: #FF4D4D;
+}
+
+.alert-item.alert-warning {
+    border-right: 3px solid #FFD166;
+}
+
+.alert-item.alert-warning i {
+    color: #FFD166;
+}
+
+.alert-item span {
+    color: #C5CED9;
+    font-size: 14px;
+}
+
+.no-alerts {
+    color: #2ED573;
+    font-size: 14px;
+    text-align: center;
+    padding: 12px;
+}
+
+.no-data {
+    color: #8E9AAA;
+    text-align: center;
+    padding: 12px;
+}
+
+/* مشتریان */
+.customer-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.customer-stat {
+    background: #101722;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.customer-stat span {
+    display: block;
+    color: #8E9AAA;
+    font-size: 13px;
+}
+
+.customer-stat strong {
+    display: block;
+    color: #F5F7FA;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.customer-status {
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.customer-status.active {
+    background: rgba(46, 213, 115, 0.15);
+    color: #2ED573;
+}
+
+.customer-status.new {
+    background: rgba(122, 138, 158, 0.15);
+    color: #7A8A9E;
+}
+
+.customer-status.inactive {
+    background: rgba(255, 77, 77, 0.15);
+    color: #FF4D4D;
+}
+
+/* گزارش‌ها */
+.reports-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.report-card {
+    background: #182333;
+    border: 1px solid #26364A;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.report-card:hover {
+    border-color: #7A8A9E;
+    transform: translateY(-3px);
+}
+
+.report-card i {
+    font-size: 36px;
+    color: #7A8A9E;
+    margin-bottom: 12px;
+}
+
+.report-card h3 {
+    color: #F5F7FA;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.report-card p {
+    color: #8E9AAA;
+    font-size: 13px;
+}
+
+/* ===== ریسپانسیو ===== */
+@media (max-width: 1200px) {
+    .kpi-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .dashboard-two-col {
+        grid-template-columns: 1fr;
+    }
+    
+    .reports-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .brand-item, .amp-item {
+        grid-template-columns: 70px 1fr 40px 100px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 12px 16px;
+    }
+    
+    .admin-main {
+        margin-right: 0;
+        padding: 12px;
+    }
+    
+    .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    
+    .kpi-card {
+        padding: 16px;
+    }
+    
+    .kpi-card .kpi-value {
+        font-size: 20px;
+    }
+    
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .chart-container {
+        height: 200px;
+    }
+    
+    .order-status-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .brand-item, .amp-item {
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+    }
+    
+    .consulting-stats {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    
+    .customer-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .reports-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .consulting-info {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .order-status-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .customer-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .reports-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .top-product-detail {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
