@@ -18,7 +18,7 @@ if (window.App && window.App.database) {
             return window.App.database.data.customers || []; 
         },
         getConsultings: function() { 
-            return window.App.database.data.consultings || mockConsultings; 
+            return window.App.database.data.consultings || []; 
         },
         
         addProduct: function(product) {
@@ -104,10 +104,11 @@ if (window.App && window.App.database) {
         { name: 'رضا کریمی', phone: '09127654321', orders: 7, totalSpent: 48300000, lastOrder: '۱۴۰۵/۰۵/۱۴', status: 'active' },
     ];
 
+    // ✅ متغیر mockConsultings اضافه شد
     let mockConsultings = [
-        { id: 1, customer: 'علی رضایی', car: 'پژو ۲۰۶', model: 'تیپ ۵', year: 1398, suggested: 'باتری ۵۵ آمپر', status: 'new', time: '۵ دقیقه پیش' },
-        { id: 2, customer: 'سارا محمدی', car: 'سمند', model: 'LX', year: 1399, suggested: 'باتری ۶۰ آمپر', status: 'reviewing', time: '۱۵ دقیقه پیش' },
-        { id: 3, customer: 'رضا کریمی', car: 'تویوتا کرولا', model: '۲۰۲۰', year: 1400, suggested: 'باتری ۷۴ آمپر', status: 'answered', time: '۳۰ دقیقه پیش' },
+        { id: 1, customer: 'علی رضایی', phone: '09123456789', car: 'پژو ۲۰۶', model: 'تیپ ۵', year: 1398, suggested: 'باتری ۵۵ آمپر', status: 'new', time: '۵ دقیقه پیش', message: 'سلام. ماشین من پژو ۲۰۶ مدل ۱۳۹۸ هست. باتری ماشین ضعیف شده و نمیدونم چه آمپراژی باید تهیه کنم.' },
+        { id: 2, customer: 'سارا محمدی', phone: '09129876543', car: 'سمند', model: 'LX', year: 1399, suggested: 'باتری ۶۰ آمپر', status: 'reviewing', time: '۱۵ دقیقه پیش', message: 'سلام. برای سمند مدل ۱۳۹۹ چه باتری مناسب است؟ قیمت و موجودی را هم لطفاً بفرمایید.' },
+        { id: 3, customer: 'رضا کریمی', phone: '09127654321', car: 'تویوتا کرولا', model: '۲۰۲۰', year: 1400, suggested: 'باتری ۷۴ آمپر', status: 'answered', time: '۳۰ دقیقه پیش', message: 'باتری ۷۴ آمپر بوش موجود دارید؟ قیمت چقدر است؟' },
     ];
 
     DataService = {
@@ -162,10 +163,9 @@ if (window.App && window.App.database) {
 }
 
 // ============================================
-// ===== ادامه کدهای قبلی =====
+// ===== توابع کمکی =====
 // ============================================
 
-// ===== توابع کمکی =====
 function sanitizeHtml(str) {
     if (typeof str !== 'string') return str;
     const div = document.createElement('div');
@@ -273,25 +273,35 @@ function updateKPIs() {
     
     const todayOrders = orders.filter(o => o.time && (o.time.includes('دقیقه') || o.time.includes('ساعت') || o.time.includes('امروز')));
     const todayRevenue = todayOrders.reduce((sum, o) => sum + o.total, 0);
-    document.getElementById('todayRevenue').textContent = formatPrice(todayRevenue);
-    document.getElementById('todayOrders').textContent = todayOrders.length;
+    
+    const todayRevenueEl = document.getElementById('todayRevenue');
+    if (todayRevenueEl) todayRevenueEl.textContent = formatPrice(todayRevenue);
+    
+    const todayOrdersEl = document.getElementById('todayOrders');
+    if (todayOrdersEl) todayOrdersEl.textContent = todayOrders.length;
     
     const pending = orders.filter(o => o.status === 'pending' || o.status === 'registered');
-    document.getElementById('pendingOrders').textContent = pending.length;
+    const pendingEl = document.getElementById('pendingOrders');
+    if (pendingEl) pendingEl.textContent = pending.length;
     
     const shipping = orders.filter(o => o.status === 'shipping');
-    document.getElementById('shippingOrders').textContent = shipping.length;
+    const shippingEl = document.getElementById('shippingOrders');
+    if (shippingEl) shippingEl.textContent = shipping.length;
     
-    document.getElementById('newCustomers').textContent = Math.floor(Math.random() * 10) + 5;
+    const newCustomersEl = document.getElementById('newCustomers');
+    if (newCustomersEl) newCustomersEl.textContent = Math.floor(Math.random() * 10) + 5;
     
     const batteries = orders.reduce((sum, o) => sum + (o.items || 0), 0);
-    document.getElementById('batteriesSold').textContent = batteries;
+    const batteriesEl = document.getElementById('batteriesSold');
+    if (batteriesEl) batteriesEl.textContent = batteries;
     
     const critical = products.filter(p => p.stock <= p.minStock);
-    document.getElementById('criticalStock').textContent = critical.length;
+    const criticalEl = document.getElementById('criticalStock');
+    if (criticalEl) criticalEl.textContent = critical.length;
     
     const cancelled = orders.filter(o => o.status === 'cancelled' || o.status === 'returned');
-    document.getElementById('cancelledOrders').textContent = cancelled.length;
+    const cancelledEl = document.getElementById('cancelledOrders');
+    if (cancelledEl) cancelledEl.textContent = cancelled.length;
 }
 
 // ============================================
@@ -307,47 +317,55 @@ function initSalesChart() {
     
     if (salesChart) salesChart.destroy();
     
-    salesChart = new Chart(ctx.getContext('2d'), {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'فروش (میلیون تومان)',
-                data: data,
-                borderColor: '#7A8A9E',
-                backgroundColor: 'rgba(122, 138, 158, 0.1)',
-                fill: true,
-                tension: 0.4,
-                pointRadius: 4,
-                pointBackgroundColor: '#7A8A9E'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#C5CED9',
-                        font: { family: 'Vazirmatn' }
+    try {
+        salesChart = new Chart(ctx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'فروش (میلیون تومان)',
+                    data: data,
+                    borderColor: '#7A8A9E',
+                    backgroundColor: 'rgba(122, 138, 158, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#7A8A9E'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#C5CED9',
+                            font: { family: 'Vazirmatn' }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#8E9AAA' }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#8E9AAA' }
                     }
                 }
-            },
-            scales: {
-                x: {
-                    grid: { color: 'rgba(255,255,255,0.05)' },
-                    ticks: { color: '#8E9AAA' }
-                },
-                y: {
-                    grid: { color: 'rgba(255,255,255,0.05)' },
-                    ticks: { color: '#8E9AAA' }
-                }
             }
-        }
-    });
-    
-    document.getElementById('monthlySales').textContent = '۱,۲۴۵,۰۰۰,۰۰۰ تومان';
-    document.getElementById('monthlyGrowth').textContent = '+۱۲.۴٪ نسبت به ماه قبل';
+        });
+        
+        const monthlySalesEl = document.getElementById('monthlySales');
+        if (monthlySalesEl) monthlySalesEl.textContent = '۱,۲۴۵,۰۰۰,۰۰۰ تومان';
+        
+        const monthlyGrowthEl = document.getElementById('monthlyGrowth');
+        if (monthlyGrowthEl) monthlyGrowthEl.textContent = '+۱۲.۴٪ نسبت به ماه قبل';
+        
+    } catch (e) {
+        console.warn('⚠️ نمودار فروش قابل بارگذاری نیست:', e);
+    }
 }
 
 // ============================================
@@ -400,16 +418,32 @@ window.editProduct = function(id) {
     const product = products.find(p => p.id === id);
     if (!product) return;
     
-    document.getElementById('editProductId').value = product.id;
-    document.getElementById('editProdName').value = product.name;
-    document.getElementById('editProdBrand').value = product.brand || 'ایران باتری';
-    document.getElementById('editProdAmp').value = product.amp || '۶۶';
-    document.getElementById('editProdPrice').value = product.price;
-    document.getElementById('editProdStock').value = product.stock;
-    document.getElementById('editProdMinStock').value = product.minStock || 5;
-    document.getElementById('editProdSales').value = product.sales || 0;
+    const editIdEl = document.getElementById('editProductId');
+    if (editIdEl) editIdEl.value = product.id;
     
-    document.getElementById('editProductModal').style.display = 'flex';
+    const editNameEl = document.getElementById('editProdName');
+    if (editNameEl) editNameEl.value = product.name;
+    
+    const editBrandEl = document.getElementById('editProdBrand');
+    if (editBrandEl) editBrandEl.value = product.brand || 'ایران باتری';
+    
+    const editAmpEl = document.getElementById('editProdAmp');
+    if (editAmpEl) editAmpEl.value = product.amp || '۶۶';
+    
+    const editPriceEl = document.getElementById('editProdPrice');
+    if (editPriceEl) editPriceEl.value = product.price;
+    
+    const editStockEl = document.getElementById('editProdStock');
+    if (editStockEl) editStockEl.value = product.stock;
+    
+    const editMinStockEl = document.getElementById('editProdMinStock');
+    if (editMinStockEl) editMinStockEl.value = product.minStock || 5;
+    
+    const editSalesEl = document.getElementById('editProdSales');
+    if (editSalesEl) editSalesEl.value = product.sales || 0;
+    
+    const modal = document.getElementById('editProductModal');
+    if (modal) modal.style.display = 'flex';
 };
 
 window.deleteProduct = function(id) {
@@ -434,26 +468,31 @@ function renderAllOrders(page = 1) {
     const tbody = document.getElementById('allOrdersList');
     if (!tbody) return;
     
-    tbody.innerHTML = pageData.map(o => `
-        <tr>
-            <td><strong>#${o.id}</strong></td>
-            <td>${sanitizeHtml(o.customer?.name || o.customer || '')}</td>
-            <td>${Array.isArray(o.products) ? o.products.join('، ') : (o.items ? o.items.map(i => i.name).join('، ') : '-')}</td>
-            <td>${formatPrice(o.total)}</td>
-            <td><span class="status-badge ${getStatusClass(o.status)}">${getStatusLabel(o.status)}</span></td>
-            <td>${o.time || o.createdAt || '-'}</td>
-            <td>
-                <div class="action-buttons">
-                    <button onclick="viewOrder(${o.id})" class="btn-action btn-view">
-                        👁️ مشاهده
-                    </button>
-                    <button onclick="openOrderStatusModal(${o.id})" class="btn-action btn-status">
-                        🔄 تغییر وضعیت
-                    </button>
-                </div>
-            </td>
-        </tr>
-    `).join('');
+    tbody.innerHTML = pageData.map(o => {
+        const customerName = o.customer?.name || o.customer || '';
+        const productsList = Array.isArray(o.products) ? o.products.join('، ') : 
+                            (o.items ? o.items.map(i => i.name).join('، ') : '-');
+        return `
+            <tr>
+                <td><strong>#${o.id}</strong></td>
+                <td>${sanitizeHtml(customerName)}</td>
+                <td>${productsList}</td>
+                <td>${formatPrice(o.total)}</td>
+                <td><span class="status-badge ${getStatusClass(o.status)}">${getStatusLabel(o.status)}</span></td>
+                <td>${o.time || o.createdAt || '-'}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button onclick="viewOrder(${o.id})" class="btn-action btn-view">
+                            👁️ مشاهده
+                        </button>
+                        <button onclick="openOrderStatusModal(${o.id})" class="btn-action btn-status">
+                            🔄 تغییر وضعیت
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
     
     renderPagination('ordersPagination', ordersPagination, renderAllOrders);
 }
@@ -578,10 +617,15 @@ window.viewOrder = function(id) {
     const order = orders.find(o => o.id === id);
     if (!order) return;
     
+    const customerName = order.customer?.name || order.customer || '';
+    const customerPhone = order.customer?.phone || order.phone || '';
+    const productsList = Array.isArray(order.products) ? order.products.join('، ') : 
+                        (order.items ? order.items.map(i => i.name).join('، ') : '-');
+    
     alert(`📋 جزئیات سفارش #${order.id}\n\n` +
-          `👤 مشتری: ${order.customer?.name || order.customer || ''}\n` +
-          `📱 تماس: ${order.customer?.phone || order.phone || ''}\n` +
-          `📦 محصولات: ${Array.isArray(order.products) ? order.products.join('، ') : (order.items ? order.items.map(i => i.name).join('، ') : '-')}\n` +
+          `👤 مشتری: ${customerName}\n` +
+          `📱 تماس: ${customerPhone}\n` +
+          `📦 محصولات: ${productsList}\n` +
           `💰 مبلغ: ${formatPrice(order.total)}\n` +
           `📊 وضعیت: ${getStatusLabel(order.status)}\n` +
           `⏰ زمان: ${order.time || order.createdAt || '-'}`);
@@ -591,7 +635,8 @@ let currentOrderId = null;
 
 window.openOrderStatusModal = function(id) {
     currentOrderId = id;
-    document.getElementById('orderStatusModal').style.display = 'flex';
+    const modal = document.getElementById('orderStatusModal');
+    if (modal) modal.style.display = 'flex';
 };
 
 window.changeOrderStatus = function(status) {
@@ -657,7 +702,8 @@ window.openConsultingStatusModal = function(id) {
     const statusSelect = document.getElementById('consultingNewStatus');
     if (statusSelect) statusSelect.value = consulting.status;
     
-    document.getElementById('consultingStatusModal').style.display = 'flex';
+    const modal = document.getElementById('consultingStatusModal');
+    if (modal) modal.style.display = 'flex';
 };
 
 window.applyConsultingStatus = function() {
@@ -738,11 +784,13 @@ window.navigateTo = function(section) {
 // ============================================
 
 window.showAddProductModal = function() {
-    document.getElementById('addProductModal').style.display = 'flex';
+    const modal = document.getElementById('addProductModal');
+    if (modal) modal.style.display = 'flex';
 };
 
 window.closeModal = function(id) {
-    document.getElementById(id).style.display = 'none';
+    const modal = document.getElementById(id);
+    if (modal) modal.style.display = 'none';
 };
 
 // ============================================
@@ -764,18 +812,14 @@ window.generateReport = function(type) {
 // ============================================
 
 function refreshDashboard() {
-    const products = DataService.getProducts();
-    const orders = DataService.getOrders();
-    const customers = DataService.getCustomers();
-    
     updateKPIs();
-    updateOrderStatus(orders);
-    updateBrandSales(products);
-    updateAmpSales(products);
-    updateTopProducts(products);
-    updateCriticalStock(products);
-    updateSystemAlerts(orders, products);
-    updateLowSalesProducts(products);
+    updateOrderStatus(DataService.getOrders());
+    updateBrandSales(DataService.getProducts());
+    updateAmpSales(DataService.getProducts());
+    updateTopProducts(DataService.getProducts());
+    updateCriticalStock(DataService.getProducts());
+    updateSystemAlerts(DataService.getOrders(), DataService.getProducts());
+    updateLowSalesProducts(DataService.getProducts());
     
     // رندر جداول
     renderAllOrders(ordersPagination ? ordersPagination.currentPage : 1);
@@ -1017,12 +1061,19 @@ document.addEventListener('DOMContentLoaded', function() {
         addForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const name = document.getElementById('prodName').value.trim();
-            const brand = document.getElementById('prodBrand').value;
-            const amp = parseInt(document.getElementById('prodAmp').value);
-            const price = parseInt(document.getElementById('prodPrice').value);
-            const stock = parseInt(document.getElementById('prodStock').value);
-            const minStock = parseInt(document.getElementById('prodMinStock').value) || 5;
+            const nameEl = document.getElementById('prodName');
+            const brandEl = document.getElementById('prodBrand');
+            const ampEl = document.getElementById('prodAmp');
+            const priceEl = document.getElementById('prodPrice');
+            const stockEl = document.getElementById('prodStock');
+            const minStockEl = document.getElementById('prodMinStock');
+            
+            const name = nameEl ? nameEl.value.trim() : '';
+            const brand = brandEl ? brandEl.value : 'ایران باتری';
+            const amp = ampEl ? parseInt(ampEl.value) : 60;
+            const price = priceEl ? parseInt(priceEl.value) : 0;
+            const stock = stockEl ? parseInt(stockEl.value) : 0;
+            const minStock = minStockEl ? parseInt(minStockEl.value) || 5 : 5;
             
             if (!name || !price || isNaN(stock)) {
                 alert('❌ لطفاً تمام فیلدها را به درستی پر کنید.');
@@ -1043,7 +1094,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (DataService.addProduct(product)) {
                 showNotification('✅ محصول جدید با موفقیت اضافه شد');
                 closeModal('addProductModal');
-                this.reset();
+                if (addForm) addForm.reset();
                 refreshDashboard();
                 renderProducts(productsPagination ? productsPagination.currentPage : 1);
             }
@@ -1056,13 +1107,21 @@ document.addEventListener('DOMContentLoaded', function() {
         editForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const id = parseInt(document.getElementById('editProductId').value);
-            const name = document.getElementById('editProdName').value.trim();
-            const brand = document.getElementById('editProdBrand').value;
-            const amp = parseInt(document.getElementById('editProdAmp').value);
-            const price = parseInt(document.getElementById('editProdPrice').value);
-            const stock = parseInt(document.getElementById('editProdStock').value);
-            const minStock = parseInt(document.getElementById('editProdMinStock').value) || 5;
+            const idEl = document.getElementById('editProductId');
+            const nameEl = document.getElementById('editProdName');
+            const brandEl = document.getElementById('editProdBrand');
+            const ampEl = document.getElementById('editProdAmp');
+            const priceEl = document.getElementById('editProdPrice');
+            const stockEl = document.getElementById('editProdStock');
+            const minStockEl = document.getElementById('editProdMinStock');
+            
+            const id = idEl ? parseInt(idEl.value) : 0;
+            const name = nameEl ? nameEl.value.trim() : '';
+            const brand = brandEl ? brandEl.value : 'ایران باتری';
+            const amp = ampEl ? parseInt(ampEl.value) : 60;
+            const price = priceEl ? parseInt(priceEl.value) : 0;
+            const stock = stockEl ? parseInt(stockEl.value) : 0;
+            const minStock = minStockEl ? parseInt(minStockEl.value) || 5 : 5;
             
             if (!name || !price || isNaN(stock)) {
                 alert('❌ لطفاً تمام فیلدها را به درستی پر کنید.');
