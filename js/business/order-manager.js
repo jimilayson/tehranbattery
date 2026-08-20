@@ -8,7 +8,7 @@ class OrderManager {
         this.database = database;
         this.paymentProvider = paymentProvider;
         this.eventBus = eventBus;
-        this.debug = isDebugMode();
+        this.debug = true;
     }
     
     /**
@@ -43,15 +43,19 @@ class OrderManager {
                     price: item.price,
                     quantity: item.quantity
                 })),
+                products: orderData.items.map(item => item.name),
                 total: orderData.total,
-                status: 'pending',
+                status: 'registered',
                 paymentStatus: 'pending',
                 shippingAddress: (orderData.address || '').trim(),
                 notes: (orderData.notes || '').trim(),
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 paymentTransactionId: null,
-                refId: null
+                refId: null,
+                time: 'همین الان',
+                items: orderData.items.reduce((sum, item) => sum + item.quantity, 0),
+                phone: orderData.phone.trim()
             };
             
             // ۴. ذخیره در دیتابیس
@@ -68,6 +72,7 @@ class OrderManager {
             
             if (this.debug) {
                 console.log('✅ سفارش با موفقیت ایجاد شد:', savedOrder);
+                console.log('📊 تعداد کل سفارشات در دیتابیس:', this.database.data.orders.length);
             }
             
             return savedOrder;
@@ -91,18 +96,15 @@ class OrderManager {
                 console.log('💳 شروع پرداخت برای سفارش:', orderId);
             }
             
-            // ۱. دریافت سفارش
             const order = await this.database.getOrder(orderId);
             if (!order) {
                 throw new Error('سفارش یافت نشد');
             }
             
-            // ۲. بررسی وضعیت سفارش
             if (order.paymentStatus === 'paid') {
                 throw new Error('سفارش قبلاً پرداخت شده است');
             }
             
-            // ۳. شروع پرداخت
             const paymentResult = await this.paymentProvider.initiatePayment({
                 id: order.id,
                 orderCode: order.orderCode,
@@ -110,7 +112,6 @@ class OrderManager {
                 customer: order.customer
             });
             
-            // ۴. به‌روزرسانی سفارش با اطلاعات پرداخت
             if (paymentResult.success) {
                 await this.database.updateOrder(orderId, {
                     paymentTransactionId: paymentResult.transactionId,
@@ -118,7 +119,6 @@ class OrderManager {
                     updatedAt: new Date().toISOString()
                 });
                 
-                // انتشار رویداد
                 this.eventBus.emit(SystemEvents.PAYMENT_INITIATED, {
                     orderId: orderId,
                     transactionId: paymentResult.transactionId,
@@ -147,16 +147,13 @@ class OrderManager {
                 console.log('✅ تایید پرداخت:', params);
             }
             
-            // ۱. تایید پرداخت از درگاه
             const verificationResult = await this.paymentProvider.verifyPayment(params);
             
-            // ۲. پیدا کردن سفارش با transactionId
             const order = await this.database.getOrderByTransactionId(params.transactionId);
             if (!order) {
                 throw new Error('سفارش مرتبط با این تراکنش یافت نشد');
             }
             
-            // ۳. به‌روزرسانی وضعیت سفارش
             if (verificationResult.success) {
                 await this.database.updateOrder(order.id, {
                     paymentStatus: 'paid',
@@ -165,24 +162,16 @@ class OrderManager {
                     updatedAt: new Date().toISOString()
                 });
                 
-                // ۴. تایید قطعی موجودی (از رزرو به فروش)
                 await this.confirmStock(order.items);
-                
-                // ۵. ثبت در آمار فروش
                 await this.updateSalesStats(order);
                 
-                // ۶. انتشار رویداد
                 this.eventBus.emit(SystemEvents.PAYMENT_VERIFIED, {
                     orderId: order.id,
                     refId: verificationResult.refId,
                     transactionId: params.transactionId
                 });
                 
-                // ۷. ارسال نوتیفیکیشن به مشتری (در آینده)
-                // await this.sendOrderConfirmation(order);
-                
             } else {
-                // پرداخت ناموفق - آزادسازی موجودی
                 await this.releaseStock(order.items);
                 
                 await this.database.updateOrder(order.id, {
@@ -222,8 +211,6 @@ class OrderManager {
             if (product.stock < item.quantity) {
                 throw new Error(`موجودی کافی برای محصول ${product.name} وجود ندارد`);
             }
-            // در حالت واقعی، می‌توانیم یک فیلد reservedStock اضافه کنیم
-            // فعلاً فقط بررسی می‌کنیم
         }
     }
     
@@ -247,7 +234,7 @@ class OrderManager {
     }
     
     /**
-     * آزادسازی موجودی (در صورت لغو یا失败)
+     * آزادسازی موجودی (در صورت لغو یا失敗)
      */
     async releaseStock(items) {
         for (const item of items) {
@@ -262,7 +249,6 @@ class OrderManager {
         const customer = await this.database.getCustomerByPhone(order.customer.phone);
         
         if (customer) {
-            // به‌روزرسانی مشتری موجود
             await this.database.updateCustomer(customer.id, {
                 orders: customer.orders + 1,
                 totalSpent: customer.totalSpent + order.total,
@@ -274,7 +260,6 @@ class OrderManager {
                 orderId: order.id
             });
         } else {
-            // ثبت مشتری جدید
             const newCustomer = await this.database.addCustomer({
                 name: order.customer.name,
                 phone: order.customer.phone,
@@ -347,13 +332,10 @@ class OrderManager {
         
         if (order.paymentStatus === 'paid') {
             // در صورت پرداخت شده، نیاز به استرداد وجه
-            // اینجا می‌توانیم منطق استرداد را پیاده‌سازی کنیم
         }
         
-        // آزادسازی موجودی
         await this.releaseStock(order.items);
         
-        // به‌روزرسانی وضعیت
         await this.database.updateOrder(orderId, {
             status: 'cancelled',
             updatedAt: new Date().toISOString()
