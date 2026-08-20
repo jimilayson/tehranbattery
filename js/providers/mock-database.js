@@ -16,20 +16,19 @@ class MockDatabase {
                 { id: 8, name: 'باتری ۵۰ آمپر', brand: 'سپاهان باتری', amp: 50, price: 4200000, stock: 4, minStock: 3, sales: 22, revenue: 92400000 },
             ],
             orders: [],
-            customers: [
-                { id: 1, name: 'علی رضایی', phone: '09123456789', orders: 5, totalSpent: 29000000, lastOrder: '۱۴۰۵/۰۵/۱۵', status: 'active', joined: '۱۴۰۵/۰۱/۰۵' },
-                { id: 2, name: 'محمد احمدی', phone: '09129876543', orders: 3, totalSpent: 14700000, lastOrder: '۱۴۰۵/۰۵/۱۴', status: 'active', joined: '۱۴۰۵/۰۲/۱۰' },
-                { id: 3, name: 'رضا کریمی', phone: '09127654321', orders: 7, totalSpent: 48300000, lastOrder: '۱۴۰۵/۰۵/۱۴', status: 'active', joined: '۱۴۰۴/۱۲/۱۵' },
-                { id: 4, name: 'سارا محمدی', phone: '09125432167', orders: 2, totalSpent: 18000000, lastOrder: '۱۴۰۵/۰۵/۱۳', status: 'inactive', joined: '۱۴۰۵/۰۳/۲۰' },
-                { id: 5, name: 'حسین علی‌پور', phone: '09121987654', orders: 1, totalSpent: 5800000, lastOrder: '۱۴۰۵/۰۵/۱۲', status: 'new', joined: '۱۴۰۵/۰۵/۱۲' },
+            customers: [],
+            consultings: [
+                { id: 1, customer: 'علی رضایی', phone: '09123456789', car: 'پژو ۲۰۶', model: 'تیپ ۵', year: 1398, suggested: 'باتری ۵۵ آمپر', status: 'new', time: '۵ دقیقه پیش', message: 'سلام. ماشین من پژو ۲۰۶ مدل ۱۳۹۸ هست. باتری ماشین ضعیف شده و نمیدونم چه آمپراژی باید تهیه کنم. راهنمایی می‌خواستم. ممنون.' },
+                { id: 2, customer: 'سارا محمدی', phone: '09129876543', car: 'سمند', model: 'LX', year: 1399, suggested: 'باتری ۶۰ آمپر', status: 'reviewing', time: '۱۵ دقیقه پیش', message: 'سلام. برای سمند مدل ۱۳۹۹ چه باتری مناسب است؟ قیمت و موجودی را هم لطفاً بفرمایید.' },
+                { id: 3, customer: 'رضا کریمی', phone: '09127654321', car: 'تویوتا کرولا', model: '۲۰۲۰', year: 1400, suggested: 'باتری ۷۴ آمپر', status: 'answered', time: '۳۰ دقیقه پیش', message: 'باتری ۷۴ آمپر بوش موجود دارید؟ قیمت چقدر است؟' },
             ],
             stats: {
-                totalRevenue: 1245000000,
-                totalOrders: 124,
-                totalCustomers: 345,
-                todayRevenue: 12800000,
-                todayOrders: 5,
-                todayCustomers: 2
+                totalRevenue: 0,
+                totalOrders: 0,
+                totalCustomers: 0,
+                todayRevenue: 0,
+                todayOrders: 0,
+                todayCustomers: 0
             }
         };
     }
@@ -37,15 +36,17 @@ class MockDatabase {
     // ===== متدهای سفارش =====
     async saveOrder(order) {
         this.data.orders.push(order);
-        this.data.stats.totalOrders++;
+        this.data.stats.totalOrders = this.data.orders.length;
         this.data.stats.totalRevenue += order.total;
         
-        // به‌روزرسانی آمار امروز
         const today = new Date().toDateString();
         if (new Date(order.createdAt).toDateString() === today) {
             this.data.stats.todayOrders++;
             this.data.stats.todayRevenue += order.total;
         }
+        
+        console.log('💾 سفارش در دیتابیس ذخیره شد:', order);
+        console.log('📊 تعداد کل سفارشات:', this.data.orders.length);
         
         return order;
     }
@@ -165,13 +166,11 @@ class MockDatabase {
         const customer = {
             id: Date.now(),
             ...customerData,
-            orders: 0,
-            totalSpent: 0,
             joined: new Date().toLocaleDateString('fa-IR'),
             status: 'new'
         };
         this.data.customers.push(customer);
-        this.data.stats.totalCustomers++;
+        this.data.stats.totalCustomers = this.data.customers.length;
         return customer;
     }
     
@@ -186,6 +185,20 @@ class MockDatabase {
     
     async getCustomerOrders(phone) {
         return this.data.orders.filter(o => o.customer.phone === phone);
+    }
+    
+    // ===== متدهای مشاوره =====
+    async getConsultings() {
+        return this.data.consultings;
+    }
+    
+    async updateConsultingStatus(id, status) {
+        const consulting = this.data.consultings.find(c => c.id === id);
+        if (consulting) {
+            consulting.status = status;
+            return consulting;
+        }
+        return null;
     }
     
     // ===== متدهای آمار =====
