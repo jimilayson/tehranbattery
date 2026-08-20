@@ -1,10 +1,52 @@
 // ============================================
-// ===== دیتابیس شبیه‌سازی =====
+// ===== دیتابیس شبیه‌سازی با پشتیبانی از localStorage =====
 // ============================================
 
 class MockDatabase {
     constructor() {
-        this.data = {
+        // کلید ذخیره‌سازی در localStorage
+        this.STORAGE_KEY = 'tehranbattery_database';
+        
+        // بارگذاری داده‌ها از localStorage یا ایجاد داده‌های پیش‌فرض
+        this.data = this.loadData();
+    }
+    
+    /**
+     * بارگذاری داده‌ها از localStorage
+     */
+    loadData() {
+        try {
+            const saved = localStorage.getItem(this.STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                console.log('💾 داده‌ها از localStorage بارگذاری شدند');
+                console.log(`📊 ${parsed.orders?.length || 0} سفارش، ${parsed.customers?.length || 0} مشتری`);
+                return parsed;
+            }
+        } catch (e) {
+            console.warn('⚠️ خطا در بارگذاری از localStorage:', e);
+        }
+        
+        // داده‌های پیش‌فرض
+        return this.getDefaultData();
+    }
+    
+    /**
+     * ذخیره داده‌ها در localStorage
+     */
+    saveData() {
+        try {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.data));
+        } catch (e) {
+            console.warn('⚠️ خطا در ذخیره در localStorage:', e);
+        }
+    }
+    
+    /**
+     * داده‌های پیش‌فرض
+     */
+    getDefaultData() {
+        return {
             products: [
                 { id: 1, name: 'باتری ۶۶ آمپر', brand: 'ایران باتری', amp: 66, price: 5800000, stock: 12, minStock: 5, sales: 128, revenue: 742400000 },
                 { id: 2, name: 'باتری ۵۵ آمپر', brand: 'سپاهان باتری', amp: 55, price: 4900000, stock: 8, minStock: 5, sales: 78, revenue: 382200000 },
@@ -44,6 +86,9 @@ class MockDatabase {
             this.data.stats.todayOrders++;
             this.data.stats.todayRevenue += order.total;
         }
+        
+        // ذخیره در localStorage
+        this.saveData();
         
         console.log('💾 سفارش در دیتابیس ذخیره شد:', order);
         console.log('📊 تعداد کل سفارشات:', this.data.orders.length);
@@ -86,6 +131,7 @@ class MockDatabase {
         const index = this.data.orders.findIndex(o => o.id === id);
         if (index !== -1) {
             this.data.orders[index] = { ...this.data.orders[index], ...updates };
+            this.saveData();
             return this.data.orders[index];
         }
         return null;
@@ -109,6 +155,7 @@ class MockDatabase {
             createdAt: new Date().toISOString()
         };
         this.data.products.push(newProduct);
+        this.saveData();
         return newProduct;
     }
     
@@ -116,6 +163,7 @@ class MockDatabase {
         const index = this.data.products.findIndex(p => p.id === id);
         if (index !== -1) {
             this.data.products[index] = { ...this.data.products[index], ...updates };
+            this.saveData();
             return this.data.products[index];
         }
         return null;
@@ -125,6 +173,7 @@ class MockDatabase {
         const index = this.data.products.findIndex(p => p.id === id);
         if (index !== -1) {
             this.data.products.splice(index, 1);
+            this.saveData();
             return true;
         }
         return false;
@@ -134,6 +183,7 @@ class MockDatabase {
         const product = await this.getProduct(productId);
         if (product) {
             product.stock += quantity;
+            this.saveData();
             return product;
         }
         return null;
@@ -144,6 +194,7 @@ class MockDatabase {
         if (product) {
             product.sales += data.quantity;
             product.revenue += data.revenue;
+            this.saveData();
             return product;
         }
         return null;
@@ -171,6 +222,7 @@ class MockDatabase {
         };
         this.data.customers.push(customer);
         this.data.stats.totalCustomers = this.data.customers.length;
+        this.saveData();
         return customer;
     }
     
@@ -178,6 +230,7 @@ class MockDatabase {
         const index = this.data.customers.findIndex(c => c.id === id);
         if (index !== -1) {
             this.data.customers[index] = { ...this.data.customers[index], ...updates };
+            this.saveData();
             return this.data.customers[index];
         }
         return null;
@@ -196,6 +249,7 @@ class MockDatabase {
         const consulting = this.data.consultings.find(c => c.id === id);
         if (consulting) {
             consulting.status = status;
+            this.saveData();
             return consulting;
         }
         return null;
@@ -215,7 +269,7 @@ class MockDatabase {
             this.data.stats.todayRevenue += data.totalRevenue || 0;
             this.data.stats.todayOrders += data.orderCount || 0;
         }
-        
+        this.saveData();
         return this.data.stats;
     }
     
@@ -230,6 +284,7 @@ class MockDatabase {
             todayOrders: 0,
             todayCustomers: 0
         };
+        this.saveData();
         return true;
     }
     
