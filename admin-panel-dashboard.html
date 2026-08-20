@@ -6,15 +6,16 @@
     <title>داشبورد مدیریت | طهران باتری</title>
     
     <!-- ===== هدرهای امنیتی ===== -->
-    <meta name="robots" content="noindex, nofollow">
-    <meta http-equiv="Content-Security-Policy" 
-          content="default-src 'self'; 
-                   script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; 
-                   style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; 
-                   img-src 'self' data:; 
-                   frame-src 'none'; 
-                   connect-src 'self'; 
-                   form-action 'self';">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; 
+               script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; 
+               style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; 
+               font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; 
+               img-src 'self' data:; 
+               frame-src 'none'; 
+               connect-src 'self' https://cdn.jsdelivr.net; 
+               form-action 'self';">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="no-referrer">
@@ -647,6 +648,17 @@
         </div>
     </div>
 
-    <script src="js/admin-dashboard.js"></script>
+    <!-- ===== سیستم اصلی ===== -->
+<script src="js/core/config.js"></script>
+<script src="js/core/event-bus.js"></script>
+<script src="js/providers/mock-database.js"></script>
+<script src="js/core/payment-interface.js"></script>
+<script src="js/providers/mock-payment.js"></script>
+<script src="js/business/order-manager.js"></script>
+<script src="js/bootstrap.js"></script>
+
+<!-- ===== پنل ادمین ===== -->
+<script src="js/admin-dashboard.js"></script>
+<script src="js/ui/admin-sync.js"></script>
 </body>
 </html>
