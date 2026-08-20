@@ -54,7 +54,7 @@ class OrderManager {
                 paymentTransactionId: null,
                 refId: null,
                 time: 'همین الان',
-                items: orderData.items.reduce((sum, item) => sum + item.quantity, 0),
+                itemsCount: orderData.items.reduce((sum, item) => sum + item.quantity, 0),
                 phone: orderData.phone.trim()
             };
             
@@ -203,6 +203,11 @@ class OrderManager {
      * رزرو موجودی (قبل از پرداخت)
      */
     async reserveStock(items) {
+        if (!items || !Array.isArray(items)) {
+            console.warn('⚠️ آیتم‌ها برای رزرو موجودی معتبر نیستند:', items);
+            return;
+        }
+        
         for (const item of items) {
             const product = await this.database.getProduct(item.productId);
             if (!product) {
@@ -218,6 +223,11 @@ class OrderManager {
      * تایید قطعی موجودی (پس از پرداخت موفق)
      */
     async confirmStock(items) {
+        if (!items || !Array.isArray(items)) {
+            console.warn('⚠️ آیتم‌ها برای تایید موجودی معتبر نیستند:', items);
+            return;
+        }
+        
         for (const item of items) {
             await this.database.updateProductStock(item.productId, -item.quantity);
             await this.database.incrementProductSales(item.productId, {
@@ -237,6 +247,11 @@ class OrderManager {
      * آزادسازی موجودی (در صورت لغو یا失敗)
      */
     async releaseStock(items) {
+        if (!items || !Array.isArray(items)) {
+            console.warn('⚠️ آیتم‌ها برای آزادسازی موجودی معتبر نیستند:', items);
+            return;
+        }
+        
         for (const item of items) {
             await this.database.updateProductStock(item.productId, item.quantity);
         }
