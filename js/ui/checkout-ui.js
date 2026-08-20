@@ -44,16 +44,11 @@
         element.style.display = 'block';
     }
 
-    function hideMessage(element) {
-        element.style.display = 'none';
-    }
-
     // ============================================
     // ===== مدیریت مراحل =====
     // ============================================
 
     window.goToStep = function(step) {
-        // به‌روزرسانی مراحل
         steps.forEach((s, index) => {
             const stepNum = index + 1;
             s.classList.remove('active', 'done');
@@ -61,12 +56,10 @@
             if (stepNum === step) s.classList.add('active');
         });
 
-        // به‌روزرسانی بخش‌ها
         sections.forEach((s, index) => {
             s.classList.toggle('active', index + 1 === step);
         });
 
-        // اسکرول به بالا
         document.querySelector('.checkout-container').scrollIntoView({ behavior: 'smooth' });
     };
 
@@ -145,7 +138,6 @@
         const address = document.getElementById('address').value.trim();
         const notes = document.getElementById('notes').value.trim();
 
-        // اعتبارسنجی
         if (!name || name.length < 2) {
             alert('❌ لطفاً نام و نام خانوادگی را وارد کنید.');
             return;
@@ -168,7 +160,6 @@
             return;
         }
 
-        // ساخت داده‌های سفارش
         const orderData = {
             name: name,
             phone: phone,
@@ -185,16 +176,12 @@
         };
 
         try {
-            // ایجاد سفارش
             currentOrder = await window.App.orderManager.createOrder(orderData);
             
-            // ذخیره اطلاعات در localStorage برای نمایش بعدی
             localStorage.setItem('tehranbattery_last_order', JSON.stringify(currentOrder));
 
-            // نمایش شماره موبایل در مرحله تایید
             confirmPhone.textContent = phone;
 
-            // تولید کد تایید (شبیه‌سازی)
             verificationCode = Math.floor(10000 + Math.random() * 90000);
             console.log(`📱 کد تایید برای ${phone}: ${verificationCode}`);
 
@@ -203,7 +190,6 @@
                 'success'
             );
 
-            // رفتن به مرحله ۲
             goToStep(2);
             verificationInput.value = '';
             verificationInput.focus();
@@ -218,7 +204,6 @@
     // ===== مرحله ۲: تایید کد =====
     // ============================================
 
-    // ارسال مجدد کد
     resendBtn.addEventListener('click', function() {
         if (!currentOrder) {
             alert('❌ سفارشی یافت نشد. لطفاً دوباره اقدام کنید.');
@@ -238,7 +223,6 @@
         verificationInput.focus();
     });
 
-    // تایید کد
     verifyBtn.addEventListener('click', function() {
         const code = verificationInput.value.trim();
 
@@ -250,7 +234,6 @@
         if (parseInt(code) === verificationCode) {
             showMessage(verificationMessage, '✅ کد تایید صحیح است!', 'success');
 
-            // رفتن به مرحله پرداخت
             setTimeout(() => {
                 const total = updateTotal();
                 finalAmount.textContent = formatPrice(total);
@@ -264,7 +247,6 @@
         }
     });
 
-    // Enter در فیلد کد
     verificationInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             verifyBtn.click();
@@ -281,7 +263,6 @@
             return;
         }
 
-        // نمایش مودال پرداخت
         const total = updateTotal();
         modalAmount.textContent = formatPrice(total);
         modalIcon.textContent = '💳';
@@ -296,23 +277,19 @@
     // ============================================
 
     window.simulatePayment = async function(status) {
-        // غیرفعال کردن دکمه‌ها
         const buttons = document.querySelectorAll('#modalActions button');
         buttons.forEach(btn => btn.disabled = true);
         modalMessage.textContent = '⏳ در حال پردازش...';
 
         try {
-            // شروع پرداخت
             const paymentResult = await window.App.orderManager.initiatePayment(currentOrder.id);
             paymentTransactionId = paymentResult.transactionId;
 
-            // تعیین کد بر اساس وضعیت
             let code = '';
             if (status === 'success') code = '12345';
             else if (status === 'failed') code = '99999';
             else if (status === 'pending') code = '33333';
 
-            // تایید پرداخت
             const verifyResult = await window.App.orderManager.verifyPayment({
                 transactionId: paymentTransactionId,
                 authority: paymentTransactionId,
@@ -320,10 +297,8 @@
                 code: code
             });
 
-            // بستن مودال
             paymentModal.classList.remove('active');
 
-            // نمایش نتیجه
             if (verifyResult.success) {
                 showResult('success', {
                     title: '🎉 پرداخت با موفقیت انجام شد!',
@@ -331,7 +306,6 @@
                     detail: `کد سفارش: ${currentOrder.orderCode}`
                 });
 
-                // پاک کردن سبد خرید
                 localStorage.removeItem('tehranbattery_cart');
                 cart = [];
                 renderCartSummary();
@@ -356,7 +330,6 @@
             alert('❌ خطا در پرداخت: ' + error.message);
         }
 
-        // فعال کردن دکمه‌ها
         buttons.forEach(btn => btn.disabled = false);
     };
 
@@ -385,9 +358,6 @@
             <div style="margin-top: 16px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                 <a href="/" class="btn-secondary">
                     <i class="fas fa-home"></i> بازگشت به خانه
-                </a>
-                <a href="/track-order.html" class="btn-secondary">
-                    <i class="fas fa-search"></i> پیگیری سفارش
                 </a>
             </div>
         `;
