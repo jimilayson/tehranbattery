@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>تسویه حساب | طهران باتری</title>
+
+    <!-- ===== هدرهای امنیتی ===== -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; 
+                   style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; 
+                   img-src 'self' data:; 
+                   frame-src 'none'; 
+                   connect-src 'self'; 
+                   form-action 'self';">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- ===== فونت وزیرمتن ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- ===== Font Awesome 6 ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" 
+          integrity="sha512-avXb6zE2yjG1O0vVv1D1UqB5pCb1LbIVQrMlE+O0I0Lw6LzIe0dJUb5q5L5r5gRx4zZM5Y0w==" 
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* ===== استایل‌های پایه ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
+            background: #080B10;
+            color: #C5CED9;
+            direction: rtl;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .checkout-container {
+            max-width: 800px;
+            width: 100%;
+            background: #182333;
+            border-radius: 16px;
+            border: 1px solid #26364A;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .checkout-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #26364A;
+        }
+
+        .checkout-header h1 {
+            color: #F5F7FA;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .checkout-header a {
+            color: #7A8A9E;
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: auto;
+            transition: 0.3s;
+        }
+
+        .checkout-header a:hover {
+            color: #F5F7FA;
+        }
+
+        /* ===== مراحل ===== */
+        .checkout-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .checkout-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            left: 0;
+            height: 2px;
+            background: #26364A;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            position: relative;
+            z-index: 1;
+            background: #182333;
+            padding: 0 8px;
+        }
+
+        .step .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #26364A;
+            color: #8E9AAA;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .step.active .step-number {
+            background: #7A8A9E;
+            color: #F5F7FA;
+        }
+
+        .step.done .step-number {
+            background: #2ED573;
+            color: #F5F7FA;
+        }
+
+        .step .step-label {
+            font-size: 11px;
+            color: #8E9AAA;
+            white-space: nowrap;
+        }
+
+        .step.active .step-label {
+            color: #F5F7FA;
+        }
+
+        /* ===== فرم‌ها ===== */
+        .form-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #C5CED9;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: #243247;
+            border: 1px solid #26364A;
+            border-radius: 8px;
+            color: #F5F7FA;
+            font-size: 16px;
+            font-family: inherit;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #7A8A9E;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(122, 138, 158, 0.2);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #667384;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px;
+            background: #7A8A9E;
+            color: #F5F7FA;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            background: #8E9EAF;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: transparent;
+            color: #C5CED9;
+            border: 1px solid #26364A;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-secondary:hover {
+            background: #243247;
+            color: #F5F7FA;
+        }
+
+        /* ===== سبد خرید ===== */
+        .cart-summary {
+            background: #101722;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #1a2538;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-item-name {
+            color: #F5F7FA;
+            font-weight: 500;
+        }
+
+        .cart-item-meta {
+            color: #8E9AAA;
+            font-size: 13px;
+        }
+
+        .cart-item-price {
+            color: #F5F7FA;
+            font-weight: 700;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-top: 2px solid #26364A;
+            margin-top: 8px;
+        }
+
+        .cart-total .label {
+            color: #C5CED9;
+            font-weight: 500;
+        }
+
+        .cart-total .amount {
+            color: #F5F7FA;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* ===== کد تایید ===== */
+        .verification-code {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .verification-code input {
+            flex: 1;
+            text-align: center;
+            letter-spacing: 4px;
+            font-size: 20px;
+        }
+
+        .verification-code .btn-secondary {
+            white-space: nowrap;
+        }
+
+        /* ===== پیام‌ها ===== */
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: rgba(46, 213, 115, 0.15);
+            color: #2ED573;
+            border: 1px solid rgba(46, 213, 115, 0.2);
+        }
+
+        .message.error {
+            background: rgba(255, 77, 77, 0.15);
+            color: #FF4D4D;
+            border: 1px solid rgba(255, 77, 77, 0.2);
+        }
+
+        .message.info {
+            background: rgba(122, 138, 158, 0.15);
+            color: #7A8A9E;
+            border: 1px solid rgba(122, 138, 158, 0.2);
+        }
+
+        /* ===== مودال پرداخت ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(8, 11, 16, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #182333;
+            border: 1px solid #26364A;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 500px;
+            width: 100%;
+            animation: slideUp 0.3s ease;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            color: #F5F7FA;
+            margin-bottom: 12px;
+        }
+
+        .modal-content .modal-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .modal-content .modal-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #F5F7FA;
+            margin: 8px 0 16px;
+        }
+
+        .modal-content .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .modal-content .modal-actions button {
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+
+        .modal-content .modal-actions .btn-success {
+            background: #2ED573;
+            color: #F5F7FA;
+        }
+
+        .modal-content .modal-actions .btn-success:hover {
+            background: #26b86a;
+        }
+
+        .modal-content .modal-actions .btn-danger {
+            background: #FF4D4D;
+            color: #F5F7FA;
+        }
+
+        .modal-content .modal-actions .btn-danger:hover {
+            background: #e04444;
+        }
+
+        .modal-content .modal-actions .btn-warning {
+            background: #FFD166;
+            color: #080B10;
+        }
+
+        .modal-content .modal-actions .btn-warning:hover {
+            background: #f5c45a;
+        }
+
+        .modal-content .modal-note {
+            color: #8E9AAA;
+            font-size: 13px;
+            margin-top: 16px;
+        }
+
+        /* ===== نتیجه نهایی ===== */
+        .result-box {
+            text-align: center;
+            padding: 24px;
+        }
+
+        .result-box .result-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .result-box .result-title {
+            color: #F5F7FA;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .result-box .result-code {
+            background: #101722;
+            padding: 12px 24px;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 20px;
+            font-weight: 700;
+            color: #7A8A9E;
+            letter-spacing: 2px;
+            margin: 12px 0;
+            direction: ltr;
+        }
+
+        .result-box .result-detail {
+            color: #8E9AAA;
+            margin-bottom: 16px;
+        }
+
+        /* ===== انیمیشن‌ها ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== ریسپانسیو ===== */
+        @media (max-width: 768px) {
+            .checkout-container {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .checkout-steps {
+                gap: 0;
+            }
+
+            .step .step-label {
+                font-size: 9px;
+            }
+
+            .checkout-header h1 {
+                font-size: 20px;
+            }
+
+            .cart-total .amount {
+                font-size: 18px;
+            }
+
+            .verification-code {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                padding: 24px;
+                margin: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checkout-container {
+                padding: 16px;
+            }
+
+            .checkout-header h1 {
+                font-size: 18px;
+            }
+
+            .step .step-number {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+
+            .step .step-label {
+                font-size: 8px;
+            }
+
+            .modal-content .modal-amount {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="checkout-container">
+        <!-- ===== هدر ===== -->
+        <div class="checkout-header">
+            <a href="javascript:history.back()">
+                <i class="fas fa-arrow-right"></i> بازگشت
+            </a>
+            <h1><i class="fas fa-shopping-cart"></i> تسویه حساب</h1>
+        </div>
+
+        <!-- ===== مراحل ===== -->
+        <div class="checkout-steps" id="checkoutSteps">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <span class="step-label">اطلاعات</span>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <span class="step-label">تایید</span>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <span class="step-label">پرداخت</span>
+            </div>
+            <div class="step" data-step="4">
+                <div class="step-number">4</div>
+                <span class="step-label">اتمام</span>
+            </div>
+        </div>
+
+        <!-- ===== مرحله ۱: اطلاعات ===== -->
+        <div class="form-section active" id="step1">
+            <h3 style="color: #F5F7FA; margin-bottom: 16px;">👤 اطلاعات شما</h3>
+
+            <div id="cartSummary" class="cart-summary">
+                <!-- توسط JS پر می‌شود -->
+            </div>
+
+            <form id="infoForm">
+                <div class="form-group">
+                    <label>نام و نام خانوادگی</label>
+                    <input type="text" id="fullName" placeholder="مثلاً علی رضایی" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>شماره موبایل</label>
+                        <input type="tel" id="phone" placeholder="۰۹۱۲۳۴۵۶۷۸۹" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ایمیل (اختیاری)</label>
+                        <input type="email" id="email" placeholder="example@email.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>آدرس</label>
+                    <textarea id="address" placeholder="آدرس کامل خود را وارد کنید" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>توضیحات (اختیاری)</label>
+                    <textarea id="notes" placeholder="هر توضیح اضافی..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-arrow-left"></i> ادامه
+                </button>
+            </form>
+        </div>
+
+        <!-- ===== مرحله ۲: تایید ===== -->
+        <div class="form-section" id="step2">
+            <h3 style="color: #F5F7FA; margin-bottom: 16px;">🔐 تایید شماره موبایل</h3>
+
+            <div id="verificationMessage" class="message info">
+                <i class="fas fa-info-circle"></i>
+                کد تایید به شماره <strong id="confirmPhone"></strong> ارسال شد
+            </div>
+
+            <div class="form-group">
+                <label>کد تایید</label>
+                <div class="verification-code">
+                    <input type="text" id="verificationCode" placeholder="۵ رقمی" maxlength="5" inputmode="numeric">
+                    <button type="button" class="btn-secondary" id="resendCodeBtn">
+                        <i class="fas fa-redo"></i> ارسال مجدد
+                    </button>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 16px;">
+                <button type="button" class="btn-secondary" onclick="goToStep(1)">
+                    <i class="fas fa-arrow-right"></i> بازگشت
+                </button>
+                <button type="button" class="btn-primary" id="verifyBtn">
+                    <i class="fas fa-check"></i> تایید و ادامه
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== مرحله ۳: پرداخت ===== -->
+        <div class="form-section" id="step3">
+            <h3 style="color: #F5F7FA; margin-bottom: 16px;">💳 درگاه پرداخت</h3>
+
+            <p style="color: #8E9AAA; margin-bottom: 16px; text-align: center;">
+                شما در حال اتصال به درگاه پرداخت زرین‌پال هستید
+            </p>
+
+            <div style="background: #101722; border-radius: 8px; padding: 16px; text-align: center; margin-bottom: 16px;">
+                <div style="color: #8E9AAA; font-size: 14px;">مبلغ قابل پرداخت</div>
+                <div style="color: #F5F7FA; font-size: 32px; font-weight: 700;" id="finalAmount">۰ تومان</div>
+            </div>
+
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                <button type="button" class="btn-secondary" onclick="goToStep(2)">
+                    <i class="fas fa-arrow-right"></i> بازگشت
+                </button>
+                <button type="button" class="btn-primary" id="payBtn">
+                    <i class="fas fa-credit-card"></i> پرداخت
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== مرحله ۴: نتیجه ===== -->
+        <div class="form-section" id="step4">
+            <div class="result-box" id="resultBox">
+                <!-- توسط JS پر می‌شود -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== مودال پرداخت ===== -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon">💳</div>
+            <h2 id="modalTitle">اتصال به درگاه پرداخت</h2>
+            <div class="modal-amount" id="modalAmount">۰ تومان</div>
+            <p id="modalMessage" style="color: #8E9AAA; margin-bottom: 8px;">
+                در حال اتصال به زرین‌پال...
+            </p>
+            <div class="modal-actions" id="modalActions">
+                <button class="btn-success" onclick="simulatePayment('success')">
+                    ✅ پرداخت موفق
+                </button>
+                <button class="btn-danger" onclick="simulatePayment('failed')">
+                    ❌ پرداخت ناموفق
+                </button>
+                <button class="btn-warning" onclick="simulatePayment('pending')">
+                    ⏳ در انتظار تایید
+                </button>
+            </div>
+            <div class="modal-note">
+                ⚠️ این یک محیط شبیه‌سازی است. در نسخه نهایی به درگاه واقعی متصل می‌شود.
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== اسکریپت‌های اصلی ===== -->
+    <script src="js/core/config.js"></script>
+    <script src="js/core/event-bus.js"></script>
+    <script src="js/providers/mock-database.js"></script>
+    <script src="js/core/payment-interface.js"></script>
+    <script src="js/providers/mock-payment.js"></script>
+    <script src="js/business/order-manager.js"></script>
+    <script src="js/bootstrap.js"></script>
+
+    <!-- ===== اسکریپت اختصاصی تسویه حساب ===== -->
+    <script src="js/ui/checkout-ui.js"></script>
+
+</body>
+</html>

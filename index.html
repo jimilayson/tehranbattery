@@ -16,28 +16,19 @@
     <meta property="og:url" content="https://tehranbattery.vercel.app">
     
     <!-- ===== هدرهای امنیتی ===== -->
-    <!-- جلوگیری از ایندکس شدن صفحات حساس توسط موتورهای جستجو -->
     <meta name="robots" content="index, follow">
-    
-    <!-- سیاست امنیتی محتوا (CSP) - جلوگیری از حملات XSS -->
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self'; 
-                   script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; 
+                   script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; 
                    style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; 
                    font-src 'self' https://cdnjs.cloudflare.com; 
                    img-src 'self' data:; 
                    frame-src https://www.google.com; 
                    connect-src 'self';">
-    
-    <!-- جلوگیری از نمایش سایت در iframe (کلیک‌جکینگ) -->
     <meta http-equiv="X-Frame-Options" content="DENY">
-    
-    <!-- جلوگیری از MIME type sniffing -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    
-    <!-- سیاست ارجاع دهنده -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    
+
     <!-- ===== فونت و استایل ===== -->
     <link rel="stylesheet" href="css/style.css?v=4.1">
     <link rel="stylesheet" 
@@ -65,6 +56,109 @@
         "priceRange": "$$"
     }
     </script>
+
+    <style>
+        /* ===== استایل اختصاصی سبد خرید در هدر ===== */
+        .header-cart {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-left: 12px;
+        }
+
+        .cart-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            padding: 8px 12px;
+            border-radius: var(--radius-full);
+            transition: var(--transition-normal);
+            position: relative;
+            text-decoration: none;
+        }
+
+        .cart-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        .cart-link .cart-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--danger);
+            color: var(--text-primary);
+            font-size: 11px;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        .cart-badge.show {
+            display: flex;
+        }
+
+        /* ===== استایل نوتیفیکیشن سبد خرید ===== */
+        .cart-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--primary);
+            box-shadow: var(--shadow-lg);
+            z-index: 9999;
+            font-family: var(--font-family);
+            animation: slideUp 0.3s ease;
+            max-width: 90%;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== ریسپانسیو ===== */
+        @media (max-width: 768px) {
+            .header-cart {
+                margin-left: 4px;
+            }
+            .cart-link .cart-label {
+                display: none;
+            }
+            .cart-link {
+                padding: 6px 10px;
+                font-size: 16px;
+            }
+            .cart-badge {
+                width: 18px;
+                height: 18px;
+                font-size: 10px;
+                top: -4px;
+                right: -4px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- ===== HEADER ===== -->
@@ -88,11 +182,22 @@
                     <span></span><span></span><span></span>
                 </div>
             </nav>
-            <div class="header-emergency">
-                <a href="tel:02112345678" class="emergency-btn">
-                    <i class="fas fa-phone-alt"></i>
-                    <span>تماس فوری</span>
-                </a>
+            <div class="header-actions" style="display: flex; align-items: center; gap: 8px;">
+                <!-- ===== سبد خرید ===== -->
+                <div class="header-cart">
+                    <a href="checkout.html" class="cart-link" title="مشاهده سبد خرید">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-label">سبد خرید</span>
+                        <span class="cart-badge" id="cartBadge">۰</span>
+                    </a>
+                </div>
+                <!-- ===== تماس فوری ===== -->
+                <div class="header-emergency">
+                    <a href="tel:02112345678" class="emergency-btn">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>تماس فوری</span>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
@@ -227,6 +332,7 @@
                     </div>
                 </div>
                 <div class="shop-grid">
+                    <!-- ===== محصول ۱: باتری ۶۰ آمپر ===== -->
                     <div class="product-card">
                         <div class="product-image">
                             <img src="assets/images/battery.jpg" alt="باتری ۶۰ آمپر ایرانی" class="product-img" data-fallback="باتری">
@@ -248,12 +354,14 @@
                                 <span>(۱۲۴ نظر)</span>
                             </div>
                             <span class="price">۲,۵۰۰,۰۰۰ تومان</span>
-                            <button class="btn-order">
+                            <button class="btn-order" onclick="addToCart(1, 'باتری ۶۰ آمپر', 2500000)">
                                 <i class="fas fa-shopping-cart"></i>
-                                ثبت سفارش
+                                افزودن به سبد خرید
                             </button>
                         </div>
                     </div>
+
+                    <!-- ===== محصول ۲: دینام خودرو ===== -->
                     <div class="product-card">
                         <div class="product-image">
                             <img src="assets/images/alternator.jpg" alt="دینام خودرو اورجینال" class="product-img" data-fallback="دینام">
@@ -275,12 +383,14 @@
                                 <span>(۸۹ نظر)</span>
                             </div>
                             <span class="price">۴,۸۰۰,۰۰۰ تومان</span>
-                            <button class="btn-order">
+                            <button class="btn-order" onclick="addToCart(2, 'دینام خودرو', 4800000)">
                                 <i class="fas fa-shopping-cart"></i>
-                                ثبت سفارش
+                                افزودن به سبد خرید
                             </button>
                         </div>
                     </div>
+
+                    <!-- ===== محصول ۳: استارت ۱۲ ولت ===== -->
                     <div class="product-card">
                         <div class="product-image">
                             <img src="assets/images/starter.jpg" alt="استارت ۱۲ ولت" class="product-img" data-fallback="استارت">
@@ -302,12 +412,14 @@
                                 <span>(۶۷ نظر)</span>
                             </div>
                             <span class="price">۳,۲۰۰,۰۰۰ تومان</span>
-                            <button class="btn-order">
+                            <button class="btn-order" onclick="addToCart(3, 'استارت ۱۲ ولت', 3200000)">
                                 <i class="fas fa-shopping-cart"></i>
-                                ثبت سفارش
+                                افزودن به سبد خرید
                             </button>
                         </div>
                     </div>
+
+                    <!-- ===== محصول ۴: کمپرسور کولر ===== -->
                     <div class="product-card">
                         <div class="product-image">
                             <img src="assets/images/compressor.jpg" alt="کمپرسور کولر خودرو" class="product-img" data-fallback="کمپرسور">
@@ -329,9 +441,9 @@
                                 <span>(۴۵ نظر)</span>
                             </div>
                             <span class="price">۵,۵۰۰,۰۰۰ تومان</span>
-                            <button class="btn-order">
+                            <button class="btn-order" onclick="addToCart(4, 'کمپرسور کولر', 5500000)">
                                 <i class="fas fa-shopping-cart"></i>
-                                ثبت سفارش
+                                افزودن به سبد خرید
                             </button>
                         </div>
                     </div>
@@ -699,7 +811,38 @@
         </div>
     </footer>
 
-    <!-- ===== اسکریپت‌ها ===== -->
+    <!-- ============================================ -->
+    <!-- ===== اسکریپت‌های اصلی ===== -->
+    <!-- ============================================ -->
+    
+    <!-- ===== ۱. اسکریپت قبلی ===== -->
     <script src="js/main.js?v=4.1"></script>
+    
+    <!-- ===== ۲. سیستم جدید طهران باتری ===== -->
+    <!-- تنظیمات مرکزی -->
+    <script src="js/core/config.js"></script>
+    
+    <!-- سیستم رویدادها -->
+    <script src="js/core/event-bus.js"></script>
+    
+    <!-- دیتابیس شبیه‌سازی -->
+    <script src="js/providers/mock-database.js"></script>
+    
+    <!-- رابط پرداخت -->
+    <script src="js/core/payment-interface.js"></script>
+    
+    <!-- پرداخت شبیه‌سازی -->
+    <script src="js/providers/mock-payment.js"></script>
+    
+    <!-- مدیریت سفارشات -->
+    <script src="js/business/order-manager.js"></script>
+    
+    <!-- راه‌اندازی سیستم -->
+    <script src="js/bootstrap.js"></script>
+    
+    <!-- ===== ۳. سیستم سبد خرید و همگام‌سازی ===== -->
+    <script src="js/ui/cart-ui.js"></script>
+    <script src="js/ui/admin-sync.js"></script>
+    
 </body>
 </html>
