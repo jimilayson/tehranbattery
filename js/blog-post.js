@@ -87,9 +87,33 @@
         
         document.title = `${post.title} | طهران باتری`;
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // ===== تشخیص اسکرول برای تغییر ظاهر هدر =====
+        setupStickyHeader();
+    }
+    
+    // ===== تابع تشخیص اسکرول =====
+    function setupStickyHeader() {
+        const header = document.getElementById('articleHeader');
+        if (!header) return;
+        
+        // بررسی اولیه
+        if (window.scrollY > 10) {
+            header.classList.add('scrolled');
+        }
+        
+        // گوش دادن به رویداد اسکرول
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }, { passive: true });
     }
     
     document.addEventListener('DOMContentLoaded', function() {
         loadPost();
     });
+    
 })();
