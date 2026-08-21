@@ -260,6 +260,22 @@ if (window.App && window.App.database) {
 }
 
 // ============================================
+// ===== تبدیل اعداد انگلیسی به فارسی =====
+// ============================================
+
+function toPersianNumber(num) {
+    if (num === undefined || num === null) return '';
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    return String(num).replace(/[0-9]/g, function(w) {
+        return persianDigits[+w];
+    });
+}
+
+function formatPriceFa(price) {
+    return toPersianNumber(price.toLocaleString('fa-IR')) + ' تومان';
+}
+
+// ============================================
 // ===== توابع کمکی =====
 // ============================================
 
@@ -372,33 +388,33 @@ function updateKPIs() {
     const todayRevenue = todayOrders.reduce((sum, o) => sum + o.total, 0);
     
     const todayRevenueEl = document.getElementById('todayRevenue');
-    if (todayRevenueEl) todayRevenueEl.textContent = formatPrice(todayRevenue);
+    if (todayRevenueEl) todayRevenueEl.textContent = formatPriceFa(todayRevenue);
     
     const todayOrdersEl = document.getElementById('todayOrders');
-    if (todayOrdersEl) todayOrdersEl.textContent = todayOrders.length;
+    if (todayOrdersEl) todayOrdersEl.textContent = toPersianNumber(todayOrders.length);
     
     const pending = orders.filter(o => o.status === 'pending' || o.status === 'registered');
     const pendingEl = document.getElementById('pendingOrders');
-    if (pendingEl) pendingEl.textContent = pending.length;
+    if (pendingEl) pendingEl.textContent = toPersianNumber(pending.length);
     
     const shipping = orders.filter(o => o.status === 'shipping');
     const shippingEl = document.getElementById('shippingOrders');
-    if (shippingEl) shippingEl.textContent = shipping.length;
+    if (shippingEl) shippingEl.textContent = toPersianNumber(shipping.length);
     
     const newCustomersEl = document.getElementById('newCustomers');
-    if (newCustomersEl) newCustomersEl.textContent = Math.floor(Math.random() * 10) + 5;
+    if (newCustomersEl) newCustomersEl.textContent = toPersianNumber(Math.floor(Math.random() * 10) + 5);
     
     const batteries = orders.reduce((sum, o) => sum + (o.items || 0), 0);
     const batteriesEl = document.getElementById('batteriesSold');
-    if (batteriesEl) batteriesEl.textContent = batteries;
+    if (batteriesEl) batteriesEl.textContent = toPersianNumber(batteries);
     
     const critical = products.filter(p => p.stock <= p.minStock);
     const criticalEl = document.getElementById('criticalStock');
-    if (criticalEl) criticalEl.textContent = critical.length;
+    if (criticalEl) criticalEl.textContent = toPersianNumber(critical.length);
     
     const cancelled = orders.filter(o => o.status === 'cancelled' || o.status === 'returned');
     const cancelledEl = document.getElementById('cancelledOrders');
-    if (cancelledEl) cancelledEl.textContent = cancelled.length;
+    if (cancelledEl) cancelledEl.textContent = toPersianNumber(cancelled.length);
 }
 
 // ============================================
@@ -482,12 +498,12 @@ function renderProducts(page = 1) {
         const stockLabel = getStockLabel(p.stock, p.minStock);
         return `
             <tr>
-                <td>${p.id}</td>
+                <td>${toPersianNumber(p.id)}</td>
                 <td><strong>${p.name}</strong></td>
                 <td>${p.brand || '-'}</td>
-                <td>${p.amp || '-'} آمپر</td>
-                <td>${formatPrice(p.price)}</td>
-                <td>${p.stock}</td>
+                <td>${toPersianNumber(p.amp) || '-'} آمپر</td>
+                <td>${formatPriceFa(p.price)}</td>
+                <td>${toPersianNumber(p.stock)}</td>
                 <td><span class="stock-status ${stockStatus}">${stockLabel}</span></td>
                 <td>
                     <div class="action-buttons">
@@ -571,10 +587,10 @@ function renderAllOrders(page = 1) {
                             (o.items ? o.items.map(i => i.name).join('، ') : '-');
         return `
             <tr>
-                <td><strong>#${o.id}</strong></td>
+                <td><strong>#${toPersianNumber(o.id)}</strong></td>
                 <td>${sanitizeHtml(customerName)}</td>
                 <td>${productsList}</td>
-                <td>${formatPrice(o.total)}</td>
+                <td>${formatPriceFa(o.total)}</td>
                 <td><span class="status-badge ${getStatusClass(o.status)}">${getStatusLabel(o.status)}</span></td>
                 <td>${o.time || o.createdAt || '-'}</td>
                 <td>
@@ -626,16 +642,16 @@ function renderCustomers(page = 1) {
     const pageData = customersPagination.getPage(page);
     
     const totalEl = document.getElementById('totalCustomers');
-    if (totalEl) totalEl.textContent = customers.length;
+    if (totalEl) totalEl.textContent = toPersianNumber(customers.length);
     
     const todayEl = document.getElementById('todayCustomers');
-    if (todayEl) todayEl.textContent = Math.floor(Math.random() * 5) + 2;
+    if (todayEl) todayEl.textContent = toPersianNumber(Math.floor(Math.random() * 5) + 2);
     
     const monthEl = document.getElementById('monthCustomers');
-    if (monthEl) monthEl.textContent = Math.floor(Math.random() * 20) + 10;
+    if (monthEl) monthEl.textContent = toPersianNumber(Math.floor(Math.random() * 20) + 10);
     
     const returnEl = document.getElementById('returnCustomers');
-    if (returnEl) returnEl.textContent = customers.filter(c => c.orders > 1).length;
+    if (returnEl) returnEl.textContent = toPersianNumber(customers.filter(c => c.orders > 1).length);
     
     const tbody = document.getElementById('customerList');
     if (!tbody) return;
@@ -644,8 +660,8 @@ function renderCustomers(page = 1) {
         <tr>
             <td><strong>${sanitizeHtml(c.name)}</strong></td>
             <td>${c.phone}</td>
-            <td>${c.orders}</td>
-            <td>${formatPrice(c.totalSpent || 0)}</td>
+            <td>${toPersianNumber(c.orders)}</td>
+            <td>${formatPriceFa(c.totalSpent || 0)}</td>
             <td>${c.lastOrder || '-'}</td>
             <td><span class="customer-status ${c.status}">${c.status === 'active' ? '✅ فعال' : c.status === 'new' ? '🆕 جدید' : '❌ غیرفعال'}</span></td>
         </tr>
@@ -671,24 +687,24 @@ function renderConsultings(page = 1) {
     const pageData = consultingPagination.getPage(page);
     
     const newEl = document.getElementById('consultingNewCount');
-    if (newEl) newEl.textContent = consultings.filter(c => c.status === 'new').length;
+    if (newEl) newEl.textContent = toPersianNumber(consultings.filter(c => c.status === 'new').length);
     
     const reviewingEl = document.getElementById('consultingReviewingCount');
-    if (reviewingEl) reviewingEl.textContent = consultings.filter(c => c.status === 'reviewing').length;
+    if (reviewingEl) reviewingEl.textContent = toPersianNumber(consultings.filter(c => c.status === 'reviewing').length);
     
     const answeredEl = document.getElementById('consultingAnsweredCount');
-    if (answeredEl) answeredEl.textContent = consultings.filter(c => c.status === 'answered').length;
+    if (answeredEl) answeredEl.textContent = toPersianNumber(consultings.filter(c => c.status === 'answered').length);
     
     const tbody = document.getElementById('consultingList');
     if (!tbody) return;
     
     tbody.innerHTML = pageData.map(c => `
         <tr>
-            <td>#${c.id}</td>
+            <td>#${toPersianNumber(c.id)}</td>
             <td><strong>${sanitizeHtml(c.customer)}</strong></td>
             <td>${c.car}</td>
             <td>${c.model}</td>
-            <td>${c.year}</td>
+            <td>${toPersianNumber(c.year)}</td>
             <td>${c.suggested}</td>
             <td><span class="consulting-status-badge status-${c.status}">${getStatusLabel(c.status)}</span></td>
             <td>${c.time}</td>
@@ -719,11 +735,11 @@ window.viewOrder = function(id) {
     const productsList = Array.isArray(order.products) ? order.products.join('، ') : 
                         (order.items ? order.items.map(i => i.name).join('، ') : '-');
     
-    alert(`📋 جزئیات سفارش #${order.id}\n\n` +
+    alert(`📋 جزئیات سفارش #${toPersianNumber(order.id)}\n\n` +
           `👤 مشتری: ${customerName}\n` +
           `📱 تماس: ${customerPhone}\n` +
           `📦 محصولات: ${productsList}\n` +
-          `💰 مبلغ: ${formatPrice(order.total)}\n` +
+          `💰 مبلغ: ${formatPriceFa(order.total)}\n` +
           `📊 وضعیت: ${getStatusLabel(order.status)}\n` +
           `⏰ زمان: ${order.time || order.createdAt || '-'}`);
 };
@@ -739,7 +755,7 @@ window.openOrderStatusModal = function(id) {
 window.changeOrderStatus = function(status) {
     if (!currentOrderId) return;
     if (DataService.updateOrderStatus(currentOrderId, status)) {
-        showNotification(`✅ وضعیت سفارش #${currentOrderId} به "${getStatusLabel(status)}" تغییر یافت`);
+        showNotification(`✅ وضعیت سفارش #${toPersianNumber(currentOrderId)} به "${getStatusLabel(status)}" تغییر یافت`);
         closeModal('orderStatusModal');
         currentOrderId = null;
         refreshDashboard();
@@ -774,7 +790,7 @@ window.openConsultingStatusModal = function(id) {
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">🚗 خودرو:</span>
-                    <span class="detail-value">${consulting.car} ${consulting.model} (${consulting.year})</span>
+                    <span class="detail-value">${consulting.car} ${consulting.model} (${toPersianNumber(consulting.year)})</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">🔋 باتری پیشنهادی:</span>
@@ -810,7 +826,7 @@ window.applyConsultingStatus = function() {
     const newStatus = statusSelect ? statusSelect.value : 'answered';
     
     if (DataService.updateConsultingStatus(currentConsultingId, newStatus)) {
-        showNotification(`✅ وضعیت مشاوره #${currentConsultingId} به "${getStatusLabel(newStatus)}" تغییر یافت`);
+        showNotification(`✅ وضعیت مشاوره #${toPersianNumber(currentConsultingId)} به "${getStatusLabel(newStatus)}" تغییر یافت`);
         closeModal('consultingStatusModal');
         currentConsultingId = null;
         refreshDashboard();
@@ -860,7 +876,7 @@ function renderPagination(containerId, pagination, renderFunc) {
         <button class="pagination-btn" onclick="${renderFunc.name}(${info.current + 1})" ${info.current >= info.totalPages ? 'disabled' : ''}>
             <i class="fas fa-chevron-left"></i>
         </button>
-        <span class="pagination-info">${info.start} - ${info.end} از ${info.total}</span>
+        <span class="pagination-info">${toPersianNumber(info.start)} - ${toPersianNumber(info.end)} از ${toPersianNumber(info.total)}</span>
     `;
     
     container.innerHTML = html;
@@ -934,7 +950,7 @@ function updateOrderStatus(orders) {
     statuses.forEach(status => {
         const count = orders.filter(o => o.status === status).length;
         const el = document.getElementById('status-' + status);
-        if (el) el.textContent = count;
+        if (el) el.textContent = toPersianNumber(count);
     });
 }
 
@@ -958,8 +974,8 @@ function updateBrandSales(products) {
                 <div class="brand-bar">
                     <div class="brand-bar-fill" style="width: ${percent}%"></div>
                 </div>
-                <span class="brand-percent">${percent}%</span>
-                <span class="brand-detail">${data.sales} عدد | ${formatPrice(data.revenue)}</span>
+                <span class="brand-percent">${toPersianNumber(percent)}%</span>
+                <span class="brand-detail">${toPersianNumber(data.sales)} عدد | ${formatPriceFa(data.revenue)}</span>
             </div>
         `;
     }).join('');
@@ -988,8 +1004,8 @@ function updateAmpSales(products) {
                     <div class="amp-bar">
                         <div class="amp-bar-fill" style="width: ${percent}%"></div>
                     </div>
-                    <span class="amp-percent">${percent}%</span>
-                    <span class="amp-detail">${data.sales} عدد | ${formatPrice(data.revenue)}</span>
+                    <span class="amp-percent">${toPersianNumber(percent)}%</span>
+                    <span class="amp-detail">${toPersianNumber(data.sales)} عدد | ${formatPriceFa(data.revenue)}</span>
                 </div>
             `;
         }).join('');
@@ -1006,14 +1022,14 @@ function updateTopProducts(products) {
         const share = totalSales > 0 ? Math.round((p.sales / totalSales) * 100) : 0;
         return `
             <div class="top-product">
-                <div class="top-product-rank">#${index + 1}</div>
+                <div class="top-product-rank">#${toPersianNumber(index + 1)}</div>
                 <div class="top-product-info">
                     <div class="top-product-name">${p.name}</div>
                     <div class="top-product-detail">
-                        <span>${p.sales} عدد فروش</span>
-                        <span>${formatPrice(p.revenue || (p.sales * p.price))}</span>
-                        <span>موجودی: ${p.stock}</span>
-                        <span>سهم: ${share}%</span>
+                        <span>${toPersianNumber(p.sales)} عدد فروش</span>
+                        <span>${formatPriceFa(p.revenue || (p.sales * p.price))}</span>
+                        <span>موجودی: ${toPersianNumber(p.stock)}</span>
+                        <span>سهم: ${toPersianNumber(share)}%</span>
                     </div>
                 </div>
             </div>
@@ -1038,8 +1054,8 @@ function updateCriticalStock(products) {
             <div class="critical-item ${status}">
                 <div class="critical-info">
                     <span class="critical-name">${p.name}</span>
-                    <span class="critical-stock">موجودی: ${p.stock} عدد</span>
-                    <span class="critical-min">حداقل: ${p.minStock}</span>
+                    <span class="critical-stock">موجودی: ${toPersianNumber(p.stock)} عدد</span>
+                    <span class="critical-min">حداقل: ${toPersianNumber(p.minStock)}</span>
                 </div>
                 <span class="critical-status">${label}</span>
             </div>
@@ -1054,22 +1070,22 @@ function updateSystemAlerts(orders, products) {
     
     const paidNotShipped = orders.filter(o => (o.status === 'approved' || o.status === 'preparing'));
     if (paidNotShipped.length > 0) {
-        alerts.push({ type: 'danger', text: `${paidNotShipped.length} سفارش تأیید شده ولی در حال آماده‌سازی` });
+        alerts.push({ type: 'danger', text: `${toPersianNumber(paidNotShipped.length)} سفارش تأیید شده ولی در حال آماده‌سازی` });
     }
     
     const outOfStock = products.filter(p => p.stock === 0);
     if (outOfStock.length > 0) {
-        alerts.push({ type: 'danger', text: `${outOfStock.length} محصول ناموجود شد: ${outOfStock.map(p => p.name).join('، ')}` });
+        alerts.push({ type: 'danger', text: `${toPersianNumber(outOfStock.length)} محصول ناموجود شد: ${outOfStock.map(p => p.name).join('، ')}` });
     }
     
     const critical = products.filter(p => p.stock > 0 && p.stock <= p.minStock);
     if (critical.length > 0) {
-        alerts.push({ type: 'warning', text: `${critical.length} محصول به حداقل موجودی رسید` });
+        alerts.push({ type: 'warning', text: `${toPersianNumber(critical.length)} محصول به حداقل موجودی رسید` });
     }
     
     const noAnswer = consultings.filter(c => c.status === 'new' || c.status === 'reviewing');
     if (noAnswer.length > 0) {
-        alerts.push({ type: 'warning', text: `${noAnswer.length} درخواست مشاوره بدون پاسخ` });
+        alerts.push({ type: 'warning', text: `${toPersianNumber(noAnswer.length)} درخواست مشاوره بدون پاسخ` });
     }
     
     const container = document.getElementById('systemAlerts');
@@ -1095,7 +1111,7 @@ function updateLowSalesProducts(products) {
     container.innerHTML = lowSales.map(p => `
         <div class="low-product-item">
             <span class="product-name">${p.name}</span>
-            <span class="product-sales">${p.sales} فروش در ۳۰ روز گذشته</span>
+            <span class="product-sales">${toPersianNumber(p.sales)} فروش در ۳۰ روز گذشته</span>
         </div>
     `).join('');
 }
