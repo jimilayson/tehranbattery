@@ -1103,6 +1103,258 @@ function updateLowSalesProducts(products) {
 }
 
 // ============================================
+// ===== مدیریت مقالات مجله =====
+// ============================================
+
+// دریافت مقالات از دیتابیس
+function getBlogPosts() {
+    if (window.App && window.App.database) {
+        return window.App.database.data.blogPosts || [];
+    }
+    try {
+        const saved = localStorage.getItem('tehranbattery_database');
+        if (saved) {
+            const data = JSON.parse(saved);
+            return data.blogPosts || [];
+        }
+    } catch (e) {
+        console.warn('⚠️ خطا در دریافت مقالات:', e);
+    }
+    return [];
+}
+
+// ذخیره مقالات در دیتابیس
+function saveBlogPosts(posts) {
+    if (window.App && window.App.database) {
+        window.App.database.data.blogPosts = posts;
+        window.App.database.saveData();
+    } else {
+        try {
+            const saved = localStorage.getItem('tehranbattery_database');
+            if (saved) {
+                const data = JSON.parse(saved);
+                data.blogPosts = posts;
+                localStorage.setItem('tehranbattery_database', JSON.stringify(data));
+            }
+        } catch (e) {
+            console.warn('⚠️ خطا در ذخیره مقالات:', e);
+        }
+    }
+}
+
+// رندر مقالات در جدول
+function renderBlogPostsTable(page = 1) {
+    const posts = getBlogPosts();
+    const pagination = new Pagination(posts, 8);
+    const pageData = pagination.getPage(page);
+    
+    const tbody = document.getElementById('blogList');
+    if (!tbody) return;
+    
+    tbody.innerHTML = pageData.map(post => `
+        <tr>
+            <td>${toPersianNumber(post.id)}</td>
+            <td><strong>${post.title}</strong></td>
+            <td><span class="blog-category-badge">${post.category}</span></td>
+            <td>${post.date}</td>
+            <td>${toPersianNumber(post.views || 0)}</td>
+            <td>
+                <div class="action-buttons">
+                    <button onclick="editBlogPost(${post.id})" class="btn-action btn-edit">
+                        ✏️ ویرایش
+                    </button>
+                    <button onclick="deleteBlogPost(${post.id})" class="btn-action btn-delete">
+                        🗑️ حذف
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+    
+    renderPagination('blogPagination', pagination, renderBlogPostsTable);
+}
+
+// نمایش مودال افزودن مقاله
+window.showAddBlogModal = function() {
+    document.getElementById('addBlogModal').style.display = 'flex';
+};
+
+// افزودن مقاله جدید
+document.addEventListener('DOMContentLoaded', function() {
+    const addBlogForm = document.getElementById('addBlogForm');
+    if (addBlogForm) {
+        addBlogForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('blogTitle')?.value.trim() || '';
+            const category = document.getElementById('blogCategory')?.value || '';
+            const summary = document.getElementById('blogSummary')?.value.trim() || '';
+            const content = document.getElementById('blogContent')?.value.trim() || '';
+            
+            const imageInput = document.getElementById('blogImage');
+            let image = 'assets/images/blog-default.jpg';
+            
+            if (imageInput && imageInput.files && imageInput.files[0]) {
+                try {
+                    image = await getImageBase64(imageInput.files[0]);
+                } catch (e) {
+                    console.warn('⚠️ خطا در تبدیل تصویر:', e);
+                }
+            }
+            
+            if (!title || !category || !content) {
+                alert('❌ لطفاً عنوان، دسته‌بندی و متن مقاله را وارد کنید.');
+                return;
+            }
+            
+            if (summary.length > 150) {
+                alert('❌ خلاصه مقاله نباید بیشتر از ۱۵۰ کاراکتر باشد.');
+                return;
+            }
+            
+            if (content.length > 5000) {
+                alert('❌ متن مقاله نباید بیشتر از ۵۰۰۰ کاراکتر باشد.');
+                return;
+            }
+            
+            const newPost = {
+                id: Date.now(),
+                title: title,
+                category: category,
+                summary: summary || content.substring(0, 150) + '...',
+                content: content,
+                image: image,
+                date: new Date().toLocaleDateString('fa-IR'),
+                views: 0,
+                comments: 0
+            };
+            
+            const posts = getBlogPosts();
+            posts.push(newPost);
+            saveBlogPosts(posts);
+            
+            showNotification('✅ مقاله با موفقیت اضافه شد');
+            closeModal('addBlogModal');
+            addBlogForm.reset();
+            renderBlogPostsTable();
+            notifyDatabaseChange();
+        });
+    }
+});
+
+// ویرایش مقاله
+window.editBlogPost = function(id) {
+    const posts = getBlogPosts();
+    const post = posts.find(p => p.id === id);
+    if (!post) return;
+    
+    document.getElementById('editBlogId').value = post.id;
+    document.getElementById('editBlogTitle').value = post.title;
+    document.getElementById('editBlogCategory').value = post.category;
+    document.getElementById('editBlogSummary').value = post.summary || '';
+    document.getElementById('editBlogContent').value = post.content;
+    
+    const previewDiv = document.getElementById('editBlogImagePreview');
+    const previewImg = document.getElementById('editBlogPreviewImg');
+    const currentText = document.getElementById('editBlogCurrentImage');
+    
+    if (previewImg && post.image && post.image !== 'assets/images/blog-default.jpg') {
+        previewImg.src = post.image;
+        previewImg.style.display = 'block';
+        if (currentText) currentText.style.display = 'none';
+    } else if (currentText) {
+        currentText.textContent = 'تصویر فعلی: assets/images/blog-default.jpg';
+        currentText.style.display = 'inline';
+    }
+    
+    document.getElementById('editBlogModal').style.display = 'flex';
+};
+
+// ذخیره ویرایش مقاله
+document.addEventListener('DOMContentLoaded', function() {
+    const editBlogForm = document.getElementById('editBlogForm');
+    if (editBlogForm) {
+        editBlogForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = parseInt(document.getElementById('editBlogId')?.value) || 0;
+            const title = document.getElementById('editBlogTitle')?.value.trim() || '';
+            const category = document.getElementById('editBlogCategory')?.value || '';
+            const summary = document.getElementById('editBlogSummary')?.value.trim() || '';
+            const content = document.getElementById('editBlogContent')?.value.trim() || '';
+            
+            const imageInput = document.getElementById('editBlogImage');
+            let image = null;
+            
+            if (imageInput && imageInput.files && imageInput.files[0]) {
+                try {
+                    image = await getImageBase64(imageInput.files[0]);
+                } catch (e) {
+                    console.warn('⚠️ خطا در تبدیل تصویر:', e);
+                }
+            }
+            
+            if (!title || !category || !content) {
+                alert('❌ لطفاً عنوان، دسته‌بندی و متن مقاله را وارد کنید.');
+                return;
+            }
+            
+            if (summary.length > 150) {
+                alert('❌ خلاصه مقاله نباید بیشتر از ۱۵۰ کاراکتر باشد.');
+                return;
+            }
+            
+            if (content.length > 5000) {
+                alert('❌ متن مقاله نباید بیشتر از ۵۰۰۰ کاراکتر باشد.');
+                return;
+            }
+            
+            const posts = getBlogPosts();
+            const index = posts.findIndex(p => p.id === id);
+            
+            if (index !== -1) {
+                posts[index] = {
+                    ...posts[index],
+                    title: title,
+                    category: category,
+                    summary: summary || content.substring(0, 150) + '...',
+                    content: content,
+                    image: image || posts[index].image
+                };
+                saveBlogPosts(posts);
+                
+                showNotification('✅ مقاله با موفقیت ویرایش شد');
+                closeModal('editBlogModal');
+                renderBlogPostsTable();
+                notifyDatabaseChange();
+            }
+        });
+    }
+});
+
+// حذف مقاله
+window.deleteBlogPost = function(id) {
+    if (!confirm('آیا از حذف این مقاله مطمئن هستید؟')) return;
+    
+    const posts = getBlogPosts();
+    const filtered = posts.filter(p => p.id !== id);
+    saveBlogPosts(filtered);
+    
+    showNotification('🗑️ مقاله با موفقیت حذف شد');
+    renderBlogPostsTable();
+    notifyDatabaseChange();
+};
+
+function notifyDatabaseChange() {
+    try {
+        localStorage.setItem('tehranbattery_last_change', Date.now().toString());
+        console.log('🔔 تغییر در دیتابیس اعلام شد');
+    } catch (e) {
+        console.warn('⚠️ خطا در اعلام تغییر:', e);
+    }
+}
+
+// ============================================
 // ===== نوتیفیکیشن =====
 // ============================================
 
@@ -1406,6 +1658,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'orders': 'مدیریت سفارشات',
                 'customers': 'مدیریت مشتریان',
                 'consulting': 'مدیریت مشاوره',
+                'blog-manager': 'مدیریت مجله',
                 'reports': 'گزارش‌ها',
                 'settings': 'تنظیمات'
             };
@@ -1461,6 +1714,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     refreshDashboard();
     initSalesChart();
+    renderBlogPostsTable();
     
     // ============================================
     // ===== کلیک خارج از مودال =====
