@@ -2,102 +2,26 @@
 // ===== مدیریت مقالات مجله خودرو =====
 // ============================================
 
-/**
- * بارگذاری مقالات از دیتابیس
- */
-function loadBlogPosts() {
-    const blogGrid = document.querySelector('.blog-grid');
-    if (!blogGrid) return;
-    
-    // دریافت مقالات از دیتابیس
-    let posts = [];
-    
+function getBlogPosts() {
     if (window.App && window.App.database) {
-        posts = window.App.database.data.blogPosts || [];
-    } else {
-        try {
-            const saved = localStorage.getItem('tehranbattery_database');
-            if (saved) {
-                const data = JSON.parse(saved);
-                posts = data.blogPosts || [];
-            }
-        } catch (e) {
-            console.warn('⚠️ خطا در بارگذاری مقالات:', e);
-        }
+        return window.App.database.data.blogPosts || [];
     }
-    
-    // اگر مقاله‌ای وجود نداشت، مقالات پیش‌فرض را اضافه کن
-    if (posts.length === 0) {
-        posts = getDefaultBlogPosts();
-        if (window.App && window.App.database) {
-            window.App.database.data.blogPosts = posts;
-            window.App.database.saveData();
-        } else {
-            try {
-                const saved = localStorage.getItem('tehranbattery_database');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    data.blogPosts = posts;
-                    localStorage.setItem('tehranbattery_database', JSON.stringify(data));
-                }
-            } catch (e) {
-                console.warn('⚠️ خطا در ذخیره مقالات پیش‌فرض:', e);
-            }
+    try {
+        const saved = localStorage.getItem('tehranbattery_database');
+        if (saved) {
+            const data = JSON.parse(saved);
+            return data.blogPosts || [];
         }
+    } catch (e) {
+        console.warn('⚠️ خطا در دریافت مقالات:', e);
     }
-    
-    renderBlogPosts(posts);
+    return [];
 }
 
-/**
- * مقالات پیش‌فرض (در صورت خالی بودن دیتابیس)
- */
-function getDefaultBlogPosts() {
-    return [
-        {
-            id: 1,
-            title: 'نگهداری اصولی از باتری خودرو',
-            summary: 'نکات طلایی برای افزایش عمر باتری خودرو و جلوگیری از خرابی زودهنگام',
-            content: 'متن کامل مقاله...',
-            category: 'باتری و سیستم شارژ',
-            image: 'assets/images/blog3.jpg',
-            date: '۲۸ مهر ۱۴۰۵',
-            views: 3456,
-            comments: 21
-        },
-        {
-            id: 2,
-            title: 'علائم خرابی دینام خودرو',
-            summary: 'شناخت نشانه‌های خرابی دینام و راهکارهای پیشگیری از آسیب به باتری',
-            content: 'متن کامل مقاله...',
-            category: 'برق و الکترونیک خودرو',
-            image: 'assets/images/blog2.jpg',
-            date: '۵ آبان ۱۴۰۵',
-            views: 1876,
-            comments: 8
-        },
-        {
-            id: 3,
-            title: 'راهنمای انتخاب باتری مناسب خودرو',
-            summary: 'چگونه باتری مناسب برای خودرو خود انتخاب کنیم؟ راهنمای جامع خرید',
-            content: 'متن کامل مقاله...',
-            category: 'راهنمای خرید قطعات',
-            image: 'assets/images/blog1.jpg',
-            date: '۱۲ آبان ۱۴۰۵',
-            views: 2345,
-            comments: 12
-        }
-    ];
-}
-
-/**
- * رندر مقالات در صفحه
- */
 function renderBlogPosts(posts) {
     const blogGrid = document.querySelector('.blog-grid');
     if (!blogGrid) return;
     
-    // فیلتر بر اساس دسته‌بندی
     const activeCategory = document.querySelector('.category-tag.active');
     const category = activeCategory ? activeCategory.textContent.trim() : 'همه';
     
@@ -118,7 +42,6 @@ function renderBlogPosts(posts) {
     }
     
     blogGrid.innerHTML = filteredPosts.map(post => {
-        // محدود کردن خلاصه به ۱۵۰ کاراکتر
         const summary = post.summary && post.summary.length > 150 
             ? post.summary.substring(0, 150) + '...' 
             : post.summary || '';
@@ -146,26 +69,21 @@ function renderBlogPosts(posts) {
     }).join('');
 }
 
-/**
- * فیلتر مقالات بر اساس دسته‌بندی
- */
+function loadBlogPosts() {
+    const posts = getBlogPosts();
+    renderBlogPosts(posts);
+}
+
 function setupBlogFilters() {
     const categoryTags = document.querySelectorAll('.category-tag');
-    
     categoryTags.forEach(tag => {
         tag.addEventListener('click', function() {
             categoryTags.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
-            
-            // بارگذاری مجدد مقالات با فیلتر جدید
             loadBlogPosts();
         });
     });
 }
-
-// ============================================
-// ===== بارگذاری اولیه =====
-// ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
     loadBlogPosts();
