@@ -1179,28 +1179,21 @@ window.showAddBlogModal = function() {
     document.getElementById('addBlogModal').style.display = 'flex';
 };
 
-// افزودن مقاله جدید
+// افزودن مقاله جدید (با نام فایل تصویر)
 document.addEventListener('DOMContentLoaded', function() {
     const addBlogForm = document.getElementById('addBlogForm');
     if (addBlogForm) {
-        addBlogForm.addEventListener('submit', async function(e) {
+        addBlogForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const title = document.getElementById('blogTitle')?.value.trim() || '';
             const category = document.getElementById('blogCategory')?.value || '';
             const summary = document.getElementById('blogSummary')?.value.trim() || '';
             const content = document.getElementById('blogContent')?.value.trim() || '';
+            const imageName = document.getElementById('blogImageName')?.value.trim() || '';
             
-            const imageInput = document.getElementById('blogImage');
-            let image = 'assets/images/blog-default.jpg';
-            
-            if (imageInput && imageInput.files && imageInput.files[0]) {
-                try {
-                    image = await getImageBase64(imageInput.files[0]);
-                } catch (e) {
-                    console.warn('⚠️ خطا در تبدیل تصویر:', e);
-                }
-            }
+            // ===== ساخت مسیر تصویر بر اساس نام فایل =====
+            const image = imageName ? `assets/images/${imageName}` : 'assets/images/blog-default.jpg';
             
             if (!title || !category || !content) {
                 alert('❌ لطفاً عنوان، دسته‌بندی و متن مقاله را وارد کنید.');
@@ -1253,19 +1246,7 @@ window.editBlogPost = function(id) {
     document.getElementById('editBlogCategory').value = post.category;
     document.getElementById('editBlogSummary').value = post.summary || '';
     document.getElementById('editBlogContent').value = post.content;
-    
-    const previewDiv = document.getElementById('editBlogImagePreview');
-    const previewImg = document.getElementById('editBlogPreviewImg');
-    const currentText = document.getElementById('editBlogCurrentImage');
-    
-    if (previewImg && post.image && post.image !== 'assets/images/blog-default.jpg') {
-        previewImg.src = post.image;
-        previewImg.style.display = 'block';
-        if (currentText) currentText.style.display = 'none';
-    } else if (currentText) {
-        currentText.textContent = 'تصویر فعلی: assets/images/blog-default.jpg';
-        currentText.style.display = 'inline';
-    }
+    document.getElementById('editBlogImageName').value = post.image ? post.image.replace('assets/images/', '') : '';
     
     document.getElementById('editBlogModal').style.display = 'flex';
 };
@@ -1274,7 +1255,7 @@ window.editBlogPost = function(id) {
 document.addEventListener('DOMContentLoaded', function() {
     const editBlogForm = document.getElementById('editBlogForm');
     if (editBlogForm) {
-        editBlogForm.addEventListener('submit', async function(e) {
+        editBlogForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const id = parseInt(document.getElementById('editBlogId')?.value) || 0;
@@ -1282,17 +1263,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const category = document.getElementById('editBlogCategory')?.value || '';
             const summary = document.getElementById('editBlogSummary')?.value.trim() || '';
             const content = document.getElementById('editBlogContent')?.value.trim() || '';
+            const imageName = document.getElementById('editBlogImageName')?.value.trim() || '';
             
-            const imageInput = document.getElementById('editBlogImage');
-            let image = null;
-            
-            if (imageInput && imageInput.files && imageInput.files[0]) {
-                try {
-                    image = await getImageBase64(imageInput.files[0]);
-                } catch (e) {
-                    console.warn('⚠️ خطا در تبدیل تصویر:', e);
-                }
-            }
+            // ===== ساخت مسیر تصویر بر اساس نام فایل =====
+            const image = imageName ? `assets/images/${imageName}` : 'assets/images/blog-default.jpg';
             
             if (!title || !category || !content) {
                 alert('❌ لطفاً عنوان، دسته‌بندی و متن مقاله را وارد کنید.');
@@ -1319,7 +1293,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     category: category,
                     summary: summary || content.substring(0, 150) + '...',
                     content: content,
-                    image: image || posts[index].image
+                    image: image
                 };
                 saveBlogPosts(posts);
                 
