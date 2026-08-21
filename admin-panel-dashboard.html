@@ -56,6 +56,9 @@
                 <a href="#consulting" data-section="consulting">
                     <i class="fas fa-headset"></i> <span>مشاوره</span>
                 </a>
+                <a href="#blog-manager" data-section="blog-manager">
+                    <i class="fas fa-newspaper"></i> <span>مدیریت مجله</span>
+                </a>
                 <a href="#reports" data-section="reports">
                     <i class="fas fa-chart-bar"></i> <span>گزارش‌ها</span>
                 </a>
@@ -417,6 +420,35 @@
             </section>
 
             <!-- ========================================== -->
+            <!-- بخش مدیریت مجله -->
+            <!-- ========================================== -->
+            <section id="section-blog-manager" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-newspaper"></i> مدیریت مجله خودرو</h2>
+                    <button class="add-product-btn" onclick="showAddBlogModal()">
+                        <i class="fas fa-plus"></i> افزودن مقاله جدید
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>عنوان مقاله</th>
+                                <th>دسته‌بندی</th>
+                                <th>تاریخ</th>
+                                <th>بازدید</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="blogList"></tbody>
+                    </table>
+                </div>
+                <div class="pagination-container" id="blogPagination"></div>
+            </section>
+
+            <!-- ========================================== -->
             <!-- بخش گزارش‌ها -->
             <!-- ========================================== -->
             <section id="section-reports" class="admin-section">
@@ -473,99 +505,97 @@
         </main>
     </div>
 
-   <!-- ===== مودال افزودن محصول ===== -->
-<div id="addProductModal" class="modal">
-    <div class="modal-content">
-        <span class="modal-close" onclick="closeModal('addProductModal')">&times;</span>
-        <h3>➕ افزودن محصول جدید</h3>
-        <form id="addProductForm" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>نام محصول</label>
-                <input type="text" id="prodName" placeholder="مثلاً باتری ۶۶ آمپر" required>
-            </div>
-            <div class="form-group">
-                <label>برند</label>
-                <input type="text" id="prodBrand" placeholder="مثلاً ایران باتری" required>
-            </div>
-            <div class="form-group">
-                <label>آمپراژ</label>
-                <input type="text" id="prodAmp" inputmode="numeric" placeholder="مثلاً ۶۶" required>
-            </div>
-            <div class="form-group">
-                <label>قیمت (تومان)</label>
-                <input type="text" id="prodPrice" inputmode="numeric" placeholder="مثلاً ۵۸۰۰۰۰۰" required>
-            </div>
-            <div class="form-group">
-                <label>موجودی</label>
-                <input type="text" id="prodStock" inputmode="numeric" placeholder="مثلاً ۱۰" required>
-            </div>
-            <div class="form-group">
-                <label>حداقل موجودی</label>
-                <input type="text" id="prodMinStock" inputmode="numeric" placeholder="مثلاً ۵" value="۵">
-            </div>
-            <!-- ===== فیلد آپلود تصویر ===== -->
-            <div class="form-group">
-                <label>تصویر محصول</label>
-                <input type="file" id="prodImage" accept="image/*" onchange="previewImage(this, 'addImagePreview')">
-                <div id="addImagePreview" style="margin-top: 8px; display: none;">
-                    <img id="addPreviewImg" src="#" alt="پیش‌نمایش تصویر" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid var(--border-color);">
-                    <button type="button" onclick="removeImage('addImagePreview', 'prodImage')" style="display: block; margin-top: 4px; background: var(--danger); color: var(--text-primary); border: none; border-radius: 4px; padding: 2px 12px; cursor: pointer; font-family: inherit;">✕ حذف تصویر</button>
+    <!-- ===== مودال افزودن محصول ===== -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('addProductModal')">&times;</span>
+            <h3>➕ افزودن محصول جدید</h3>
+            <form id="addProductForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>نام محصول</label>
+                    <input type="text" id="prodName" placeholder="مثلاً باتری ۶۶ آمپر" required>
                 </div>
-            </div>
-            <button type="submit" class="btn-primary">✅ افزودن محصول</button>
-        </form>
+                <div class="form-group">
+                    <label>برند</label>
+                    <input type="text" id="prodBrand" placeholder="مثلاً ایران باتری" required>
+                </div>
+                <div class="form-group">
+                    <label>آمپراژ</label>
+                    <input type="text" id="prodAmp" inputmode="numeric" placeholder="مثلاً ۶۶" required>
+                </div>
+                <div class="form-group">
+                    <label>قیمت (تومان)</label>
+                    <input type="text" id="prodPrice" inputmode="numeric" placeholder="مثلاً ۵۸۰۰۰۰۰" required>
+                </div>
+                <div class="form-group">
+                    <label>موجودی</label>
+                    <input type="text" id="prodStock" inputmode="numeric" placeholder="مثلاً ۱۰" required>
+                </div>
+                <div class="form-group">
+                    <label>حداقل موجودی</label>
+                    <input type="text" id="prodMinStock" inputmode="numeric" placeholder="مثلاً ۵" value="۵">
+                </div>
+                <div class="form-group">
+                    <label>تصویر محصول</label>
+                    <input type="file" id="prodImage" accept="image/*" onchange="previewImage(this, 'addImagePreview')">
+                    <div id="addImagePreview" style="margin-top: 8px; display: none;">
+                        <img id="addPreviewImg" src="#" alt="پیش‌نمایش تصویر" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <button type="button" onclick="removeImage('addImagePreview', 'prodImage')" style="display: block; margin-top: 4px; background: var(--danger); color: var(--text-primary); border: none; border-radius: 4px; padding: 2px 12px; cursor: pointer; font-family: inherit;">✕ حذف تصویر</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">✅ افزودن محصول</button>
+            </form>
+        </div>
     </div>
-</div>
 
-   <!-- ===== مودال ویرایش محصول ===== -->
-<div id="editProductModal" class="modal">
-    <div class="modal-content">
-        <span class="modal-close" onclick="closeModal('editProductModal')">&times;</span>
-        <h3>✏️ ویرایش محصول</h3>
-        <form id="editProductForm" enctype="multipart/form-data">
-            <input type="hidden" id="editProductId">
-            <div class="form-group">
-                <label>نام محصول</label>
-                <input type="text" id="editProdName" required>
-            </div>
-            <div class="form-group">
-                <label>برند</label>
-                <input type="text" id="editProdBrand" required>
-            </div>
-            <div class="form-group">
-                <label>آمپراژ</label>
-                <input type="text" id="editProdAmp" inputmode="numeric" required>
-            </div>
-            <div class="form-group">
-                <label>قیمت (تومان)</label>
-                <input type="text" id="editProdPrice" inputmode="numeric" required>
-            </div>
-            <div class="form-group">
-                <label>موجودی</label>
-                <input type="text" id="editProdStock" inputmode="numeric" required>
-            </div>
-            <div class="form-group">
-                <label>حداقل موجودی</label>
-                <input type="text" id="editProdMinStock" inputmode="numeric" required>
-            </div>
-            <div class="form-group">
-                <label>تعداد فروش</label>
-                <input type="text" id="editProdSales" readonly>
-            </div>
-            <!-- ===== فیلد آپلود تصویر ===== -->
-            <div class="form-group">
-                <label>تصویر محصول</label>
-                <input type="file" id="editProdImage" accept="image/*" onchange="previewImage(this, 'editImagePreview')">
-                <div id="editImagePreview" style="margin-top: 8px;">
-                    <img id="editPreviewImg" src="#" alt="پیش‌نمایش تصویر" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid var(--border-color); display: none;">
-                    <span id="editCurrentImageText" style="color: var(--text-muted); font-size: 13px;">تصویر فعلی: assets/images/battery.jpg</span>
-                    <button type="button" onclick="removeImage('editImagePreview', 'editProdImage')" style="display: block; margin-top: 4px; background: var(--danger); color: var(--text-primary); border: none; border-radius: 4px; padding: 2px 12px; cursor: pointer; font-family: inherit;">✕ حذف تصویر</button>
+    <!-- ===== مودال ویرایش محصول ===== -->
+    <div id="editProductModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('editProductModal')">&times;</span>
+            <h3>✏️ ویرایش محصول</h3>
+            <form id="editProductForm" enctype="multipart/form-data">
+                <input type="hidden" id="editProductId">
+                <div class="form-group">
+                    <label>نام محصول</label>
+                    <input type="text" id="editProdName" required>
                 </div>
-            </div>
-            <button type="submit" class="btn-primary">✅ ذخیره تغییرات</button>
-        </form>
+                <div class="form-group">
+                    <label>برند</label>
+                    <input type="text" id="editProdBrand" required>
+                </div>
+                <div class="form-group">
+                    <label>آمپراژ</label>
+                    <input type="text" id="editProdAmp" inputmode="numeric" required>
+                </div>
+                <div class="form-group">
+                    <label>قیمت (تومان)</label>
+                    <input type="text" id="editProdPrice" inputmode="numeric" required>
+                </div>
+                <div class="form-group">
+                    <label>موجودی</label>
+                    <input type="text" id="editProdStock" inputmode="numeric" required>
+                </div>
+                <div class="form-group">
+                    <label>حداقل موجودی</label>
+                    <input type="text" id="editProdMinStock" inputmode="numeric" required>
+                </div>
+                <div class="form-group">
+                    <label>تعداد فروش</label>
+                    <input type="text" id="editProdSales" readonly>
+                </div>
+                <div class="form-group">
+                    <label>تصویر محصول</label>
+                    <input type="file" id="editProdImage" accept="image/*" onchange="previewImage(this, 'editImagePreview')">
+                    <div id="editImagePreview" style="margin-top: 8px;">
+                        <img id="editPreviewImg" src="#" alt="پیش‌نمایش تصویر" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid var(--border-color); display: none;">
+                        <span id="editCurrentImageText" style="color: var(--text-muted); font-size: 13px;">تصویر فعلی: assets/images/battery.jpg</span>
+                        <button type="button" onclick="removeImage('editImagePreview', 'editProdImage')" style="display: block; margin-top: 4px; background: var(--danger); color: var(--text-primary); border: none; border-radius: 4px; padding: 2px 12px; cursor: pointer; font-family: inherit;">✕ حذف تصویر</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">✅ ذخیره تغییرات</button>
+            </form>
+        </div>
     </div>
-</div>
 
     <!-- ===== مودال تغییر وضعیت سفارش ===== -->
     <div id="orderStatusModal" class="modal">
@@ -600,6 +630,92 @@
                 </select>
             </div>
             <button onclick="applyConsultingStatus()" class="btn-primary">✅ اعمال تغییر</button>
+        </div>
+    </div>
+
+    <!-- ===== مودال افزودن مقاله ===== -->
+    <div id="addBlogModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('addBlogModal')">&times;</span>
+            <h3>📝 افزودن مقاله جدید</h3>
+            <form id="addBlogForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>عنوان مقاله</label>
+                    <input type="text" id="blogTitle" placeholder="عنوان مقاله را وارد کنید" required>
+                </div>
+                <div class="form-group">
+                    <label>دسته‌بندی</label>
+                    <select id="blogCategory" required>
+                        <option value="">انتخاب دسته‌بندی</option>
+                        <option value="مکانیک خودرو">مکانیک خودرو</option>
+                        <option value="برق و الکترونیک خودرو">برق و الکترونیک خودرو</option>
+                        <option value="باتری و سیستم شارژ">باتری و سیستم شارژ</option>
+                        <option value="نگهداری و تعمیرات">نگهداری و تعمیرات</option>
+                        <option value="راهنمای خرید قطعات">راهنمای خرید قطعات</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>خلاصه مقاله (حداکثر ۱۵۰ کاراکتر)</label>
+                    <textarea id="blogSummary" rows="2" placeholder="خلاصه مقاله را وارد کنید" maxlength="150"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>متن کامل مقاله (حداکثر ۵۰۰۰ کاراکتر)</label>
+                    <textarea id="blogContent" rows="6" placeholder="متن کامل مقاله را وارد کنید" required maxlength="5000"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>تصویر مقاله (ابعاد پیشنهادی: ۸۰۰×۴۵۰ پیکسل)</label>
+                    <input type="file" id="blogImage" accept="image/*" onchange="previewImage(this, 'addBlogImagePreview')">
+                    <div id="addBlogImagePreview" style="margin-top: 8px; display: none;">
+                        <img id="addBlogPreviewImg" src="#" alt="پیش‌نمایش" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <button type="button" onclick="removeImage('addBlogImagePreview', 'blogImage')" style="display: block; margin-top: 4px; background: var(--danger); color: var(--text-primary); border: none; border-radius: 4px; padding: 2px 12px; cursor: pointer; font-family: inherit;">✕ حذف تصویر</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">✅ انتشار مقاله</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== مودال ویرایش مقاله ===== -->
+    <div id="editBlogModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('editBlogModal')">&times;</span>
+            <h3>✏️ ویرایش مقاله</h3>
+            <form id="editBlogForm" enctype="multipart/form-data">
+                <input type="hidden" id="editBlogId">
+                <div class="form-group">
+                    <label>عنوان مقاله</label>
+                    <input type="text" id="editBlogTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>دسته‌بندی</label>
+                    <select id="editBlogCategory" required>
+                        <option value="">انتخاب دسته‌بندی</option>
+                        <option value="مکانیک خودرو">مکانیک خودرو</option>
+                        <option value="برق و الکترونیک خودرو">برق و الکترونیک خودرو</option>
+                        <option value="باتری و سیستم شارژ">باتری و سیستم شارژ</option>
+                        <option value="نگهداری و تعمیرات">نگهداری و تعمیرات</option>
+                        <option value="راهنمای خرید قطعات">راهنمای خرید قطعات</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>خلاصه مقاله (حداکثر ۱۵۰ کاراکتر)</label>
+                    <textarea id="editBlogSummary" rows="2" maxlength="150"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>متن کامل مقاله (حداکثر ۵۰۰۰ کاراکتر)</label>
+                    <textarea id="editBlogContent" rows="6" required maxlength="5000"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>تصویر مقاله</label>
+                    <input type="file" id="editBlogImage" accept="image/*" onchange="previewImage(this, 'editBlogImagePreview')">
+                    <div id="editBlogImagePreview" style="margin-top: 8px;">
+                        <img id="editBlogPreviewImg" src="#" alt="پیش‌نمایش" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid var(--border-color); display: none;">
+                        <span id="editBlogCurrentImage" style="color: var(--text-muted); font-size: 13px;">تصویر فعلی: assets/images/blog-default.jpg</span>
+                        <button type="button" onclick="removeImage('editBlogImagePreview', 'editBlogImage')" style="display: block; margin-top: 4px; background: var(--danger); color: var(--text-primary); border: none; border-radius: 4px; padding: 2px 12px; cursor: pointer; font-family: inherit;">✕ حذف تصویر</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">✅ ذخیره تغییرات</button>
+            </form>
         </div>
     </div>
 
