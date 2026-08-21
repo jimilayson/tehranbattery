@@ -42,11 +42,9 @@ if (window.App && window.App.database) {
                 createdAt: new Date().toISOString()
             };
             products.push(newProduct);
-            // ✅ ذخیره در localStorage
             mainDb.saveData();
             console.log('💾 محصول جدید در دیتابیس ذخیره شد:', newProduct.name);
             
-            // انتشار رویداد برای همگام‌سازی
             if (window.App && window.App.eventBus) {
                 window.App.eventBus.emit(SystemEvents.PRODUCT_ADDED, newProduct);
             }
@@ -60,11 +58,9 @@ if (window.App && window.App.database) {
             if (index !== -1) {
                 const oldName = products[index].name;
                 products[index] = { ...products[index], ...data };
-                // ✅ ذخیره در localStorage
                 mainDb.saveData();
                 console.log('✏️ محصول ویرایش شد:', oldName);
                 
-                // انتشار رویداد برای همگام‌سازی
                 if (window.App && window.App.eventBus) {
                     window.App.eventBus.emit(SystemEvents.PRODUCT_UPDATED, { id, data });
                 }
@@ -81,11 +77,9 @@ if (window.App && window.App.database) {
                 const deletedName = products[index].name;
                 const deletedProduct = products[index];
                 products.splice(index, 1);
-                // ✅ ذخیره در localStorage
                 mainDb.saveData();
                 console.log('🗑️ محصول حذف شد:', deletedName);
                 
-                // انتشار رویداد برای همگام‌سازی
                 if (window.App && window.App.eventBus) {
                     window.App.eventBus.emit(SystemEvents.PRODUCT_DELETED, deletedProduct);
                 }
@@ -122,10 +116,9 @@ if (window.App && window.App.database) {
     console.log(`📊 ${DataService.getOrders().length} سفارش، ${DataService.getProducts().length} محصول`);
     
 } else {
-    // Fallback: استفاده از دیتابیس مستقل
+    // Fallback
     console.warn('⚠️ سیستم اصلی یافت نشد، از دیتابیس مستقل استفاده می‌شود');
     
-    // ===== داده‌های نمونه (فقط در صورت نبود سیستم اصلی) =====
     let mockProducts = [
         { id: 1, name: 'باتری ۶۶ آمپر', brand: 'ایران باتری', amp: 66, price: 5800000, stock: 12, minStock: 5, sales: 128, revenue: 742400000, image: 'assets/images/battery.jpg', compatible: 'سمند، ۲۰۶، ۲۰۷', rating: 5, reviews: 128 },
         { id: 2, name: 'باتری ۵۵ آمپر', brand: 'سپاهان باتری', amp: 55, price: 4900000, stock: 8, minStock: 5, sales: 78, revenue: 382200000, image: 'assets/images/battery.jpg', compatible: 'پژو ۴۰۵، تیبا', rating: 5, reviews: 78 },
@@ -181,7 +174,6 @@ if (window.App && window.App.database) {
                 createdAt: new Date().toISOString()
             };
             mockProducts.push(newProduct);
-            // ✅ ذخیره در localStorage
             try {
                 const saved = localStorage.getItem('tehranbattery_database');
                 if (saved) {
@@ -200,7 +192,6 @@ if (window.App && window.App.database) {
             const index = mockProducts.findIndex(p => p.id === id);
             if (index !== -1) {
                 mockProducts[index] = { ...mockProducts[index], ...data };
-                // ✅ ذخیره در localStorage
                 try {
                     const saved = localStorage.getItem('tehranbattery_database');
                     if (saved) {
@@ -222,7 +213,6 @@ if (window.App && window.App.database) {
             if (index !== -1) {
                 const deletedName = mockProducts[index].name;
                 mockProducts.splice(index, 1);
-                // ✅ ذخیره در localStorage
                 try {
                     const saved = localStorage.getItem('tehranbattery_database');
                     if (saved) {
@@ -260,22 +250,7 @@ if (window.App && window.App.database) {
 }
 
 // ============================================
-// ===== تبدیل اعداد فارسی به انگلیسی =====
-// ============================================
-
-function toEnglishNumber(str) {
-    if (typeof str !== 'string') return str;
-    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-    const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    let result = str;
-    persianDigits.forEach((p, i) => {
-        result = result.replace(new RegExp(p, 'g'), englishDigits[i]);
-    });
-    return result;
-}
-
-// ============================================
-// ===== تبدیل اعداد انگلیسی به فارسی =====
+// ===== توابع تبدیل اعداد =====
 // ============================================
 
 function toPersianNumber(num) {
@@ -286,8 +261,44 @@ function toPersianNumber(num) {
     });
 }
 
+function toEnglishNumber(str) {
+    if (typeof str !== 'string') return str;
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    let result = str;
+    
+    // تبدیل اعداد فارسی
+    persianDigits.forEach((p, i) => {
+        result = result.replace(new RegExp(p, 'g'), englishDigits[i]);
+    });
+    
+    // تبدیل اعداد عربی
+    arabicDigits.forEach((a, i) => {
+        result = result.replace(new RegExp(a, 'g'), englishDigits[i]);
+    });
+    
+    // حذف جداکننده‌های هزارگان
+    result = result.replace(/,|٬/g, '');
+    
+    return result;
+}
+
+function normalizeNumber(value) {
+    if (value === undefined || value === null || value === '') return 0;
+    if (typeof value === 'number') return value;
+    const cleaned = toEnglishNumber(String(value));
+    const num = parseFloat(cleaned);
+    return isNaN(num) ? 0 : num;
+}
+
+function formatPersianNumber(value) {
+    if (value === undefined || value === null) return '';
+    return toPersianNumber(value);
+}
+
 function formatPriceFa(price) {
-    return toPersianNumber(price.toLocaleString('fa-IR')) + ' تومان';
+    return toPersianNumber(Number(price).toLocaleString('fa-IR')) + ' تومان';
 }
 
 // ============================================
@@ -299,14 +310,6 @@ function sanitizeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
-}
-
-function formatPrice(price) {
-    return price.toLocaleString('fa-IR') + ' تومان';
-}
-
-function formatNumber(num) {
-    return num.toLocaleString('fa-IR');
 }
 
 function getStatusLabel(status) {
@@ -546,32 +549,18 @@ window.editProduct = function(id) {
     const product = products.find(p => p.id === id);
     if (!product) return;
     
-    const editIdEl = document.getElementById('editProductId');
-    if (editIdEl) editIdEl.value = product.id;
+    document.getElementById('editProductId').value = product.id;
+    document.getElementById('editProdName').value = product.name;
+    document.getElementById('editProdBrand').value = product.brand || 'ایران باتری';
     
-    const editNameEl = document.getElementById('editProdName');
-    if (editNameEl) editNameEl.value = product.name;
+    // ✅ نمایش فارسی در فرم ویرایش
+    document.getElementById('editProdAmp').value = toPersianNumber(product.amp);
+    document.getElementById('editProdPrice').value = toPersianNumber(product.price);
+    document.getElementById('editProdStock').value = toPersianNumber(product.stock);
+    document.getElementById('editProdMinStock').value = toPersianNumber(product.minStock || 5);
+    document.getElementById('editProdSales').value = toPersianNumber(product.sales || 0);
     
-    const editBrandEl = document.getElementById('editProdBrand');
-    if (editBrandEl) editBrandEl.value = product.brand || 'ایران باتری';
-    
-    const editAmpEl = document.getElementById('editProdAmp');
-    if (editAmpEl) editAmpEl.value = product.amp || '۶۶';
-    
-    const editPriceEl = document.getElementById('editProdPrice');
-    if (editPriceEl) editPriceEl.value = product.price;
-    
-    const editStockEl = document.getElementById('editProdStock');
-    if (editStockEl) editStockEl.value = product.stock;
-    
-    const editMinStockEl = document.getElementById('editProdMinStock');
-    if (editMinStockEl) editMinStockEl.value = product.minStock || 5;
-    
-    const editSalesEl = document.getElementById('editProdSales');
-    if (editSalesEl) editSalesEl.value = product.sales || 0;
-    
-    const modal = document.getElementById('editProductModal');
-    if (modal) modal.style.display = 'flex';
+    document.getElementById('editProductModal').style.display = 'flex';
 };
 
 window.deleteProduct = function(id) {
@@ -656,17 +645,10 @@ function renderCustomers(page = 1) {
     customersPagination = new Pagination(filtered, 8);
     const pageData = customersPagination.getPage(page);
     
-    const totalEl = document.getElementById('totalCustomers');
-    if (totalEl) totalEl.textContent = toPersianNumber(customers.length);
-    
-    const todayEl = document.getElementById('todayCustomers');
-    if (todayEl) todayEl.textContent = toPersianNumber(Math.floor(Math.random() * 5) + 2);
-    
-    const monthEl = document.getElementById('monthCustomers');
-    if (monthEl) monthEl.textContent = toPersianNumber(Math.floor(Math.random() * 20) + 10);
-    
-    const returnEl = document.getElementById('returnCustomers');
-    if (returnEl) returnEl.textContent = toPersianNumber(customers.filter(c => c.orders > 1).length);
+    document.getElementById('totalCustomers').textContent = toPersianNumber(customers.length);
+    document.getElementById('todayCustomers').textContent = toPersianNumber(Math.floor(Math.random() * 5) + 2);
+    document.getElementById('monthCustomers').textContent = toPersianNumber(Math.floor(Math.random() * 20) + 10);
+    document.getElementById('returnCustomers').textContent = toPersianNumber(customers.filter(c => c.orders > 1).length);
     
     const tbody = document.getElementById('customerList');
     if (!tbody) return;
@@ -701,14 +683,9 @@ function renderConsultings(page = 1) {
     consultingPagination = new Pagination(filtered, 8);
     const pageData = consultingPagination.getPage(page);
     
-    const newEl = document.getElementById('consultingNewCount');
-    if (newEl) newEl.textContent = toPersianNumber(consultings.filter(c => c.status === 'new').length);
-    
-    const reviewingEl = document.getElementById('consultingReviewingCount');
-    if (reviewingEl) reviewingEl.textContent = toPersianNumber(consultings.filter(c => c.status === 'reviewing').length);
-    
-    const answeredEl = document.getElementById('consultingAnsweredCount');
-    if (answeredEl) answeredEl.textContent = toPersianNumber(consultings.filter(c => c.status === 'answered').length);
+    document.getElementById('consultingNewCount').textContent = toPersianNumber(consultings.filter(c => c.status === 'new').length);
+    document.getElementById('consultingReviewingCount').textContent = toPersianNumber(consultings.filter(c => c.status === 'reviewing').length);
+    document.getElementById('consultingAnsweredCount').textContent = toPersianNumber(consultings.filter(c => c.status === 'answered').length);
     
     const tbody = document.getElementById('consultingList');
     if (!tbody) return;
@@ -763,8 +740,7 @@ let currentOrderId = null;
 
 window.openOrderStatusModal = function(id) {
     currentOrderId = id;
-    const modal = document.getElementById('orderStatusModal');
-    if (modal) modal.style.display = 'flex';
+    document.getElementById('orderStatusModal').style.display = 'flex';
 };
 
 window.changeOrderStatus = function(status) {
@@ -827,18 +803,14 @@ window.openConsultingStatusModal = function(id) {
         `;
     }
     
-    const statusSelect = document.getElementById('consultingNewStatus');
-    if (statusSelect) statusSelect.value = consulting.status;
-    
-    const modal = document.getElementById('consultingStatusModal');
-    if (modal) modal.style.display = 'flex';
+    document.getElementById('consultingNewStatus').value = consulting.status;
+    document.getElementById('consultingStatusModal').style.display = 'flex';
 };
 
 window.applyConsultingStatus = function() {
     if (!currentConsultingId) return;
     
-    const statusSelect = document.getElementById('consultingNewStatus');
-    const newStatus = statusSelect ? statusSelect.value : 'answered';
+    const newStatus = document.getElementById('consultingNewStatus').value;
     
     if (DataService.updateConsultingStatus(currentConsultingId, newStatus)) {
         showNotification(`✅ وضعیت مشاوره #${toPersianNumber(currentConsultingId)} به "${getStatusLabel(newStatus)}" تغییر یافت`);
@@ -898,27 +870,15 @@ function renderPagination(containerId, pagination, renderFunc) {
 }
 
 // ============================================
-// ===== ناوبری =====
-// ============================================
-
-window.navigateTo = function(section) {
-    const navLinks = document.querySelectorAll('.admin-nav a');
-    const targetLink = document.querySelector(`.admin-nav a[data-section="${section}"]`);
-    if (targetLink) targetLink.click();
-};
-
-// ============================================
 // ===== مودال‌ها =====
 // ============================================
 
 window.showAddProductModal = function() {
-    const modal = document.getElementById('addProductModal');
-    if (modal) modal.style.display = 'flex';
+    document.getElementById('addProductModal').style.display = 'flex';
 };
 
 window.closeModal = function(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.style.display = 'none';
+    document.getElementById(id).style.display = 'none';
 };
 
 // ============================================
@@ -1178,102 +1138,95 @@ window.logout = function() {
 };
 
 // ============================================
-// ===== رویدادهای فرم‌ها =====
+// ===== راه‌اندازی اصلی (همه چیز در یکجا) =====
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // ===== تبدیل خودکار اعداد فارسی به انگلیسی در فیلدهای عددی =====
-    const numberInputs = document.querySelectorAll('#prodPrice, #prodStock, #prodMinStock, #editProdPrice, #editProdStock, #editProdMinStock, #editProdAmp, #prodAmp');
+    // ============================================
+    // ===== ۱. تبدیل خودکار اعداد فارسی در فیلدهای عددی =====
+    // ============================================
+    
+    const numberInputs = document.querySelectorAll(
+        '#prodPrice, #prodStock, #prodMinStock, ' +
+        '#editProdPrice, #editProdStock, #editProdMinStock, ' +
+        '#editProdAmp, #prodAmp'
+    );
+    
     numberInputs.forEach(input => {
         if (input) {
-            input.addEventListener('input', function() {
-                this.value = toEnglishNumber(this.value);
+            // ❌ حذف تبدیل هنگام تایپ - کاربر باید فارسی ببیند
+            // فقط هنگام blur یا submit تبدیل می‌شود
+            input.addEventListener('blur', function() {
+                // فقط نمایش فارسی (عدد را به فارسی تبدیل کن)
+                const num = normalizeNumber(this.value);
+                if (num !== 0 || this.value.trim() !== '') {
+                    this.value = formatPersianNumber(num);
+                }
             });
         }
     });
     
-    // ===== فرم افزودن محصول =====
+    // ============================================
+    // ===== ۲. فرم افزودن محصول =====
+    // ============================================
+    
     const addForm = document.getElementById('addProductForm');
     if (addForm) {
         addForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const nameEl = document.getElementById('prodName');
-            const brandEl = document.getElementById('prodBrand');
-            const ampEl = document.getElementById('prodAmp');
-            const priceEl = document.getElementById('prodPrice');
-            const stockEl = document.getElementById('prodStock');
-            const minStockEl = document.getElementById('prodMinStock');
+            const name = document.getElementById('prodName')?.value.trim() || '';
+            const brand = document.getElementById('prodBrand')?.value || 'ایران باتری';
             
-            const name = nameEl ? nameEl.value.trim() : '';
-            const brand = brandEl ? brandEl.value : 'ایران باتری';
-            // ✅ تبدیل اعداد فارسی به انگلیسی
-            const amp = ampEl ? parseInt(toEnglishNumber(ampEl.value)) || 60 : 60;
-            const price = priceEl ? parseInt(toEnglishNumber(priceEl.value)) || 0 : 0;
-            const stock = stockEl ? parseInt(toEnglishNumber(stockEl.value)) || 0 : 0;
-            const minStock = minStockEl ? parseInt(toEnglishNumber(minStockEl.value)) || 5 : 5;
+            // ✅ نرمال‌سازی اعداد
+            const amp = normalizeNumber(document.getElementById('prodAmp')?.value);
+            const price = normalizeNumber(document.getElementById('prodPrice')?.value);
+            const stock = normalizeNumber(document.getElementById('prodStock')?.value);
+            const minStock = normalizeNumber(document.getElementById('prodMinStock')?.value) || 5;
             
             if (!name || !price || isNaN(stock)) {
                 alert('❌ لطفاً تمام فیلدها را به درستی پر کنید.');
                 return;
             }
             
-            const product = {
-                name: name,
-                brand: brand,
-                amp: amp,
-                price: price,
-                stock: stock,
-                minStock: minStock
-            };
+            const product = { name, brand, amp, price, stock, minStock };
             
             if (DataService.addProduct(product)) {
                 showNotification('✅ محصول جدید با موفقیت اضافه شد');
                 closeModal('addProductModal');
-                if (addForm) addForm.reset();
+                this.reset();
                 refreshDashboard();
                 renderProducts(productsPagination ? productsPagination.currentPage : 1);
             }
         });
     }
     
-    // ===== فرم ویرایش محصول =====
+    // ============================================
+    // ===== ۳. فرم ویرایش محصول =====
+    // ============================================
+    
     const editForm = document.getElementById('editProductForm');
     if (editForm) {
         editForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const idEl = document.getElementById('editProductId');
-            const nameEl = document.getElementById('editProdName');
-            const brandEl = document.getElementById('editProdBrand');
-            const ampEl = document.getElementById('editProdAmp');
-            const priceEl = document.getElementById('editProdPrice');
-            const stockEl = document.getElementById('editProdStock');
-            const minStockEl = document.getElementById('editProdMinStock');
+            const id = parseInt(document.getElementById('editProductId')?.value) || 0;
+            const name = document.getElementById('editProdName')?.value.trim() || '';
+            const brand = document.getElementById('editProdBrand')?.value || 'ایران باتری';
             
-            const id = idEl ? parseInt(idEl.value) : 0;
-            const name = nameEl ? nameEl.value.trim() : '';
-            const brand = brandEl ? brandEl.value : 'ایران باتری';
-            // ✅ تبدیل اعداد فارسی به انگلیسی
-            const amp = ampEl ? parseInt(toEnglishNumber(ampEl.value)) || 60 : 60;
-            const price = priceEl ? parseInt(toEnglishNumber(priceEl.value)) || 0 : 0;
-            const stock = stockEl ? parseInt(toEnglishNumber(stockEl.value)) || 0 : 0;
-            const minStock = minStockEl ? parseInt(toEnglishNumber(minStockEl.value)) || 5 : 5;
+            // ✅ نرمال‌سازی اعداد
+            const amp = normalizeNumber(document.getElementById('editProdAmp')?.value);
+            const price = normalizeNumber(document.getElementById('editProdPrice')?.value);
+            const stock = normalizeNumber(document.getElementById('editProdStock')?.value);
+            const minStock = normalizeNumber(document.getElementById('editProdMinStock')?.value) || 5;
             
             if (!name || !price || isNaN(stock)) {
                 alert('❌ لطفاً تمام فیلدها را به درستی پر کنید.');
                 return;
             }
             
-            const updates = {
-                name: name,
-                brand: brand,
-                amp: amp,
-                price: price,
-                stock: stock,
-                minStock: minStock
-            };
+            const updates = { name, brand, amp, price, stock, minStock };
             
             if (DataService.updateProduct(id, updates)) {
                 showNotification('✅ محصول با موفقیت ویرایش شد');
@@ -1283,14 +1236,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
-
-// ============================================
-// ===== راه‌اندازی =====
-// ============================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    // ===== ناوبری =====
+    
+    // ============================================
+    // ===== ۴. ناوبری =====
+    // ============================================
+    
     const navLinks = document.querySelectorAll('.admin-nav a');
     const sections = document.querySelectorAll('.admin-section');
     const pageTitle = document.getElementById('pageTitle');
@@ -1328,7 +1278,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // ===== دکمه‌های نمودار =====
+    // ============================================
+    // ===== ۵. دکمه‌های نمودار =====
+    // ============================================
+    
     document.querySelectorAll('.chart-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
@@ -1337,7 +1290,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // ===== زمان =====
+    // ============================================
+    // ===== ۶. زمان =====
+    // ============================================
+    
     function updateTime() {
         const el = document.getElementById('adminTime');
         if (el) {
@@ -1348,24 +1304,36 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTime();
     setInterval(updateTime, 10000);
     
-    // ===== سایدبار اوورلی =====
+    // ============================================
+    // ===== ۷. سایدبار اوورلی =====
+    // ============================================
+    
     const overlay = document.createElement('div');
     overlay.className = 'sidebar-overlay';
     overlay.onclick = toggleSidebar;
     document.body.appendChild(overlay);
     
-    // ===== بارگذاری اولیه =====
+    // ============================================
+    // ===== ۸. بارگذاری اولیه =====
+    // ============================================
+    
     refreshDashboard();
     initSalesChart();
     
-    // ===== کلیک خارج از مودال =====
+    // ============================================
+    // ===== ۹. کلیک خارج از مودال =====
+    // ============================================
+    
     window.onclick = function(event) {
         if (event.target.classList.contains('modal')) {
             event.target.style.display = 'none';
         }
     };
     
-    // ===== مدیریت ریسایز =====
+    // ============================================
+    // ===== ۱۰. مدیریت ریسایز =====
+    // ============================================
+    
     window.addEventListener('resize', function() {
         if (window.innerWidth > 768) {
             const sidebar = document.getElementById('adminSidebar');
