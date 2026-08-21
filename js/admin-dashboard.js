@@ -545,13 +545,31 @@ window.editProduct = function(id) {
     
     document.getElementById('editProductId').value = product.id;
     document.getElementById('editProdName').value = product.name;
-    document.getElementById('editProdBrand').value = product.brand || 'ایران باتری';
+    document.getElementById('editProdBrand').value = product.brand || '';
     
     document.getElementById('editProdAmp').value = toPersianNumber(product.amp);
     document.getElementById('editProdPrice').value = toPersianNumber(product.price);
     document.getElementById('editProdStock').value = toPersianNumber(product.stock);
     document.getElementById('editProdMinStock').value = toPersianNumber(product.minStock || 5);
     document.getElementById('editProdSales').value = toPersianNumber(product.sales || 0);
+    
+    // ===== نمایش تصویر فعلی =====
+    const previewDiv = document.getElementById('editImagePreview');
+    const previewImg = document.getElementById('editPreviewImg');
+    const currentText = document.getElementById('editCurrentImageText');
+    
+    if (previewImg && product.image && product.image !== 'assets/images/battery.jpg') {
+        previewImg.src = product.image;
+        previewImg.style.display = 'block';
+        if (currentText) currentText.style.display = 'none';
+    } else if (currentText) {
+        currentText.textContent = 'تصویر فعلی: assets/images/battery.jpg';
+        currentText.style.display = 'inline';
+    }
+    
+    // Reset file input
+    const fileInput = document.getElementById('editProdImage');
+    if (fileInput) fileInput.value = '';
     
     document.getElementById('editProductModal').style.display = 'flex';
 };
@@ -1131,96 +1149,182 @@ window.logout = function() {
 };
 
 // ============================================
+// ===== مدیریت تصویر محصولات =====
+// ============================================
+
+/**
+ * پیش‌نمایش تصویر قبل از آپلود
+ */
+window.previewImage = function(input, previewId) {
+    const previewDiv = document.getElementById(previewId);
+    const previewImg = previewDiv?.querySelector('img');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            if (previewImg) {
+                previewImg.src = e.target.result;
+                previewImg.style.display = 'block';
+            }
+            if (previewDiv) {
+                previewDiv.style.display = 'block';
+                const textSpan = previewDiv.querySelector('#editCurrentImageText');
+                if (textSpan) textSpan.style.display = 'none';
+            }
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+};
+
+/**
+ * حذف تصویر انتخاب شده
+ */
+window.removeImage = function(previewId, inputId) {
+    const previewDiv = document.getElementById(previewId);
+    const input = document.getElementById(inputId);
+    
+    if (input) input.value = '';
+    
+    if (previewDiv) {
+        const img = previewDiv.querySelector('img');
+        if (img) {
+            img.src = '#';
+            img.style.display = 'none';
+        }
+        const textSpan = previewDiv.querySelector('#editCurrentImageText');
+        if (textSpan) textSpan.style.display = 'inline';
+    }
+};
+
+/**
+ * تبدیل فایل انتخاب شده به Base64
+ */
+function getImageBase64(file) {
+    return new Promise((resolve, reject) => {
+        if (!file) {
+            resolve(null);
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            resolve(e.target.result);
+        };
+        reader.onerror = function(e) {
+            reject(e);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// ============================================
 // ===== راه‌اندازی اصلی =====
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
     
     // ============================================
-// ===== Inputهای عددی - تبدیل همه اعداد انگلیسی به فارسی =====
-// ============================================
-
-const numberInputs = document.querySelectorAll(
-    '#prodPrice, #prodStock, #prodMinStock, ' +
-    '#editProdPrice, #editProdStock, #editProdMinStock, ' +
-    '#editProdAmp, #prodAmp'
-);
-
-numberInputs.forEach(input => {
-    if (input) {
-        // 🔥 تبدیل همه اعداد انگلیسی (Num Pad و Number Row) به فارسی
-        input.addEventListener('keydown', function(e) {
-            // بررسی: آیا کلید عددی (0-9) فشار داده شده است؟
-            if (e.key >= '0' && e.key <= '9') {
-                const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-                const englishDigit = parseInt(e.key);
-                const persianChar = persianDigits[englishDigit];
-                
-                // جلوگیری از ورود عدد انگلیسی
-                e.preventDefault();
-                
-                // وارد کردن عدد فارسی
-                const start = this.selectionStart;
-                const end = this.selectionEnd;
-                const value = this.value;
-                this.value = value.substring(0, start) + persianChar + value.substring(end);
-                
-                // قرار دادن cursor در جای درست
-                this.selectionStart = this.selectionEnd = start + 1;
-            }
-        });
-        
-        // ✅ فقط هنگام blur، مقدار را فرمت می‌کنیم (نه تبدیل)
-        input.addEventListener('blur', function() {
-            const raw = this.value.trim();
-            if (raw === '') return;
+    // ===== Inputهای عددی - تبدیل همه اعداد انگلیسی به فارسی =====
+    // ============================================
+    
+    const numberInputs = document.querySelectorAll(
+        '#prodPrice, #prodStock, #prodMinStock, ' +
+        '#editProdPrice, #editProdStock, #editProdMinStock, ' +
+        '#editProdAmp, #prodAmp'
+    );
+    
+    numberInputs.forEach(input => {
+        if (input) {
+            // 🔥 تبدیل همه اعداد انگلیسی (Num Pad و Number Row) به فارسی
+            input.addEventListener('keydown', function(e) {
+                // بررسی: آیا کلید عددی (0-9) فشار داده شده است؟
+                if (e.key >= '0' && e.key <= '9') {
+                    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+                    const englishDigit = parseInt(e.key);
+                    const persianChar = persianDigits[englishDigit];
+                    
+                    // جلوگیری از ورود عدد انگلیسی
+                    e.preventDefault();
+                    
+                    // وارد کردن عدد فارسی
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    const value = this.value;
+                    this.value = value.substring(0, start) + persianChar + value.substring(end);
+                    
+                    // قرار دادن cursor در جای درست
+                    this.selectionStart = this.selectionEnd = start + 1;
+                }
+            });
             
-            const num = normalizeNumber(raw);
-            if (num !== 0 || raw !== '') {
-                this.value = toPersianNumber(num);
-            }
-        });
-        
-        // ✅ هنگام focus، اگر مقدار فارسی است، عدد خام را نمایش بده
-        input.addEventListener('focus', function() {
-            const raw = this.value.trim();
-            if (raw === '') return;
-            const num = normalizeNumber(raw);
-            if (num !== 0 || raw !== '') {
-                this.value = String(num);
-            }
-        });
-    }
-});
+            // ✅ فقط هنگام blur، مقدار را فرمت می‌کنیم (نه تبدیل)
+            input.addEventListener('blur', function() {
+                const raw = this.value.trim();
+                if (raw === '') return;
+                
+                const num = normalizeNumber(raw);
+                if (num !== 0 || raw !== '') {
+                    this.value = toPersianNumber(num);
+                }
+            });
+            
+            // ✅ هنگام focus، اگر مقدار فارسی است، عدد خام را نمایش بده
+            input.addEventListener('focus', function() {
+                const raw = this.value.trim();
+                if (raw === '') return;
+                const num = normalizeNumber(raw);
+                if (num !== 0 || raw !== '') {
+                    this.value = String(num);
+                }
+            });
+        }
+    });
     
     // ============================================
-    // ===== ۲. فرم افزودن محصول =====
+    // ===== فرم افزودن محصول =====
     // ============================================
     
     const addForm = document.getElementById('addProductForm');
     if (addForm) {
-        addForm.addEventListener('submit', function(e) {
+        addForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const name = document.getElementById('prodName')?.value.trim() || '';
-            const brand = document.getElementById('prodBrand')?.value || 'ایران باتری';
-            
+            const brand = document.getElementById('prodBrand')?.value.trim() || '';
             const amp = normalizeNumber(document.getElementById('prodAmp')?.value);
             const price = normalizeNumber(document.getElementById('prodPrice')?.value);
             const stock = normalizeNumber(document.getElementById('prodStock')?.value);
             const minStock = normalizeNumber(document.getElementById('prodMinStock')?.value) || 5;
             
-            if (!name || !price || isNaN(stock)) {
+            // دریافت تصویر
+            const imageInput = document.getElementById('prodImage');
+            let image = 'assets/images/battery.jpg';
+            
+            if (imageInput && imageInput.files && imageInput.files[0]) {
+                try {
+                    image = await getImageBase64(imageInput.files[0]);
+                } catch (e) {
+                    console.warn('⚠️ خطا در تبدیل تصویر:', e);
+                }
+            }
+            
+            if (!name || !brand || !price || isNaN(stock)) {
                 alert('❌ لطفاً تمام فیلدها را به درستی پر کنید.');
                 return;
             }
             
-            const product = { name, brand, amp, price, stock, minStock };
+            const product = { name, brand, amp, price, stock, minStock, image };
             
             if (DataService.addProduct(product)) {
                 showNotification('✅ محصول جدید با موفقیت اضافه شد');
                 closeModal('addProductModal');
                 this.reset();
+                // reset preview
+                const previewDiv = document.getElementById('addImagePreview');
+                if (previewDiv) {
+                    previewDiv.style.display = 'none';
+                    const img = previewDiv.querySelector('img');
+                    if (img) img.src = '#';
+                }
                 refreshDashboard();
                 renderProducts(productsPagination ? productsPagination.currentPage : 1);
             }
@@ -1228,29 +1332,43 @@ numberInputs.forEach(input => {
     }
     
     // ============================================
-    // ===== ۳. فرم ویرایش محصول =====
+    // ===== فرم ویرایش محصول =====
     // ============================================
     
     const editForm = document.getElementById('editProductForm');
     if (editForm) {
-        editForm.addEventListener('submit', function(e) {
+        editForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const id = parseInt(document.getElementById('editProductId')?.value) || 0;
             const name = document.getElementById('editProdName')?.value.trim() || '';
-            const brand = document.getElementById('editProdBrand')?.value || 'ایران باتری';
-            
+            const brand = document.getElementById('editProdBrand')?.value.trim() || '';
             const amp = normalizeNumber(document.getElementById('editProdAmp')?.value);
             const price = normalizeNumber(document.getElementById('editProdPrice')?.value);
             const stock = normalizeNumber(document.getElementById('editProdStock')?.value);
             const minStock = normalizeNumber(document.getElementById('editProdMinStock')?.value) || 5;
             
-            if (!name || !price || isNaN(stock)) {
+            // دریافت تصویر جدید (اگر آپلود شده باشد)
+            const imageInput = document.getElementById('editProdImage');
+            let image = null;
+            
+            if (imageInput && imageInput.files && imageInput.files[0]) {
+                try {
+                    image = await getImageBase64(imageInput.files[0]);
+                } catch (e) {
+                    console.warn('⚠️ خطا در تبدیل تصویر:', e);
+                }
+            }
+            
+            if (!name || !brand || !price || isNaN(stock)) {
                 alert('❌ لطفاً تمام فیلدها را به درستی پر کنید.');
                 return;
             }
             
             const updates = { name, brand, amp, price, stock, minStock };
+            if (image) {
+                updates.image = image;
+            }
             
             if (DataService.updateProduct(id, updates)) {
                 showNotification('✅ محصول با موفقیت ویرایش شد');
@@ -1262,7 +1380,7 @@ numberInputs.forEach(input => {
     }
     
     // ============================================
-    // ===== ۴. ناوبری =====
+    // ===== ناوبری =====
     // ============================================
     
     const navLinks = document.querySelectorAll('.admin-nav a');
@@ -1303,7 +1421,7 @@ numberInputs.forEach(input => {
     });
     
     // ============================================
-    // ===== ۵. دکمه‌های نمودار =====
+    // ===== دکمه‌های نمودار =====
     // ============================================
     
     document.querySelectorAll('.chart-btn').forEach(btn => {
@@ -1315,7 +1433,7 @@ numberInputs.forEach(input => {
     });
     
     // ============================================
-    // ===== ۶. زمان =====
+    // ===== زمان =====
     // ============================================
     
     function updateTime() {
@@ -1329,7 +1447,7 @@ numberInputs.forEach(input => {
     setInterval(updateTime, 10000);
     
     // ============================================
-    // ===== ۷. سایدبار اوورلی =====
+    // ===== سایدبار اوورلی =====
     // ============================================
     
     const overlay = document.createElement('div');
@@ -1338,14 +1456,14 @@ numberInputs.forEach(input => {
     document.body.appendChild(overlay);
     
     // ============================================
-    // ===== ۸. بارگذاری اولیه =====
+    // ===== بارگذاری اولیه =====
     // ============================================
     
     refreshDashboard();
     initSalesChart();
     
     // ============================================
-    // ===== ۹. کلیک خارج از مودال =====
+    // ===== کلیک خارج از مودال =====
     // ============================================
     
     window.onclick = function(event) {
@@ -1355,7 +1473,7 @@ numberInputs.forEach(input => {
     };
     
     // ============================================
-    // ===== ۱۰. مدیریت ریسایز =====
+    // ===== مدیریت ریسایز =====
     // ============================================
     
     window.addEventListener('resize', function() {
