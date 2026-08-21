@@ -474,107 +474,83 @@
     </div>
 
     <!-- ===== مودال افزودن محصول ===== -->
-    <div id="addProductModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal('addProductModal')">&times;</span>
-            <h3>➕ افزودن محصول جدید</h3>
-            <form id="addProductForm">
-                <div class="form-group">
-                    <label>نام محصول</label>
-                    <input type="text" id="prodName" placeholder="مثلاً باتری ۶۶ آمپر" required />
-                </div>
-                <div class="form-group">
-                    <label>برند</label>
-                    <select id="prodBrand">
-                        <option value="ایران باتری">ایران باتری</option>
-                        <option value="سپاهان باتری">سپاهان باتری</option>
-                        <option value="بوش">بوش</option>
-                        <option value="دنسو">دنسو</option>
-                        <option value="سایر">سایر</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>آمپراژ</label>
-                    <select id="prodAmp">
-                        <option value="۴۴">۴۴ آمپر</option>
-                        <option value="۵۵">۵۵ آمپر</option>
-                        <option value="۶۰">۶۰ آمپر</option>
-                        <option value="۶۶">۶۶ آمپر</option>
-                        <option value="۷۴">۷۴ آمپر</option>
-                        <option value="سایر">سایر</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>قیمت (تومان)</label>
-                    <!-- تغییر type به text و افزودن inputmode -->
-                    <input type="text" id="prodPrice" inputmode="numeric" placeholder="مثلاً ۵۸۰۰۰۰۰" required />
-                </div>
-                <div class="form-group">
-                    <label>موجودی</label>
-                    <input type="text" id="prodStock" inputmode="numeric" placeholder="مثلاً ۱۰" required />
-                </div>
-                <div class="form-group">
-                    <label>حداقل موجودی</label>
-                    <input type="text" id="prodMinStock" inputmode="numeric" placeholder="مثلاً ۵" value="۵" />
-                </div>
-                <button type="submit" class="btn-primary">✅ افزودن محصول</button>
-            </form>
-        </div>
+<div id="addProductModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal('addProductModal')">&times;</span>
+        <h3>➕ افزودن محصول جدید</h3>
+        <form id="addProductForm">
+            <div class="form-group">
+                <label>نام محصول</label>
+                <input type="text" id="prodName" placeholder="مثلاً باتری ۶۶ آمپر" required>
+            </div>
+            <div class="form-group">
+                <label>برند</label>
+                <!-- ✅ تغییر: select به input تبدیل شد -->
+                <input type="text" id="prodBrand" placeholder="مثلاً ایران باتری" required>
+            </div>
+            <div class="form-group">
+                <label>آمپراژ</label>
+                <!-- ✅ تغییر: select به input تبدیل شد -->
+                <input type="text" id="prodAmp" inputmode="numeric" placeholder="مثلاً ۶۶" required>
+            </div>
+            <div class="form-group">
+                <label>قیمت (تومان)</label>
+                <input type="text" id="prodPrice" inputmode="numeric" placeholder="مثلاً ۵۸۰۰۰۰۰" required>
+            </div>
+            <div class="form-group">
+                <label>موجودی</label>
+                <input type="text" id="prodStock" inputmode="numeric" placeholder="مثلاً ۱۰" required>
+            </div>
+            <div class="form-group">
+                <label>حداقل موجودی</label>
+                <input type="text" id="prodMinStock" inputmode="numeric" placeholder="مثلاً ۵" value="۵">
+            </div>
+            <button type="submit" class="btn-primary">✅ افزودن محصول</button>
+        </form>
     </div>
+</div>
 
-    <!-- ===== مودال ویرایش محصول ===== -->
-    <div id="editProductModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal('editProductModal')">&times;</span>
-            <h3>✏️ ویرایش محصول</h3>
-            <form id="editProductForm">
-                <input type="hidden" id="editProductId" />
-                <div class="form-group">
-                    <label>نام محصول</label>
-                    <input type="text" id="editProdName" required />
-                </div>
-                <div class="form-group">
-                    <label>برند</label>
-                    <select id="editProdBrand">
-                        <option value="ایران باتری">ایران باتری</option>
-                        <option value="سپاهان باتری">سپاهان باتری</option>
-                        <option value="بوش">بوش</option>
-                        <option value="دنسو">دنسو</option>
-                        <option value="سایر">سایر</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>آمپراژ</label>
-                    <!-- برای آمپراژ هم select است، تغییر نمی‌دهیم -->
-                    <select id="editProdAmp">
-                        <option value="۴۴">۴۴ آمپر</option>
-                        <option value="۵۵">۵۵ آمپر</option>
-                        <option value="۶۰">۶۰ آمپر</option>
-                        <option value="۶۶">۶۶ آمپر</option>
-                        <option value="۷۴">۷۴ آمپر</option>
-                        <option value="سایر">سایر</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>قیمت (تومان)</label>
-                    <input type="text" id="editProdPrice" inputmode="numeric" required />
-                </div>
-                <div class="form-group">
-                    <label>موجودی</label>
-                    <input type="text" id="editProdStock" inputmode="numeric" required />
-                </div>
-                <div class="form-group">
-                    <label>حداقل موجودی</label>
-                    <input type="text" id="editProdMinStock" inputmode="numeric" required />
-                </div>
-                <div class="form-group">
-                    <label>تعداد فروش</label>
-                    <input type="text" id="editProdSales" inputmode="numeric" readonly />
-                </div>
-                <button type="submit" class="btn-primary">✅ ذخیره تغییرات</button>
-            </form>
-        </div>
+   <!-- ===== مودال ویرایش محصول ===== -->
+<div id="editProductModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal('editProductModal')">&times;</span>
+        <h3>✏️ ویرایش محصول</h3>
+        <form id="editProductForm">
+            <input type="hidden" id="editProductId">
+            <div class="form-group">
+                <label>نام محصول</label>
+                <input type="text" id="editProdName" required>
+            </div>
+            <div class="form-group">
+                <label>برند</label>
+                <!-- ✅ تغییر: select به input تبدیل شد -->
+                <input type="text" id="editProdBrand" required>
+            </div>
+            <div class="form-group">
+                <label>آمپراژ</label>
+                <!-- ✅ تغییر: select به input تبدیل شد -->
+                <input type="text" id="editProdAmp" inputmode="numeric" required>
+            </div>
+            <div class="form-group">
+                <label>قیمت (تومان)</label>
+                <input type="text" id="editProdPrice" inputmode="numeric" required>
+            </div>
+            <div class="form-group">
+                <label>موجودی</label>
+                <input type="text" id="editProdStock" inputmode="numeric" required>
+            </div>
+            <div class="form-group">
+                <label>حداقل موجودی</label>
+                <input type="text" id="editProdMinStock" inputmode="numeric" required>
+            </div>
+            <div class="form-group">
+                <label>تعداد فروش</label>
+                <input type="text" id="editProdSales" readonly>
+            </div>
+            <button type="submit" class="btn-primary">✅ ذخیره تغییرات</button>
+        </form>
     </div>
+</div>
 
     <!-- ===== مودال تغییر وضعیت سفارش ===== -->
     <div id="orderStatusModal" class="modal">
