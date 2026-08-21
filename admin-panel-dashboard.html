@@ -473,24 +473,22 @@
         </main>
     </div>
 
-    <!-- ===== مودال افزودن محصول ===== -->
+   <!-- ===== مودال افزودن محصول ===== -->
 <div id="addProductModal" class="modal">
     <div class="modal-content">
         <span class="modal-close" onclick="closeModal('addProductModal')">&times;</span>
         <h3>➕ افزودن محصول جدید</h3>
-        <form id="addProductForm">
+        <form id="addProductForm" enctype="multipart/form-data">
             <div class="form-group">
                 <label>نام محصول</label>
                 <input type="text" id="prodName" placeholder="مثلاً باتری ۶۶ آمپر" required>
             </div>
             <div class="form-group">
                 <label>برند</label>
-                <!-- ✅ تغییر: select به input تبدیل شد -->
                 <input type="text" id="prodBrand" placeholder="مثلاً ایران باتری" required>
             </div>
             <div class="form-group">
                 <label>آمپراژ</label>
-                <!-- ✅ تغییر: select به input تبدیل شد -->
                 <input type="text" id="prodAmp" inputmode="numeric" placeholder="مثلاً ۶۶" required>
             </div>
             <div class="form-group">
@@ -505,6 +503,15 @@
                 <label>حداقل موجودی</label>
                 <input type="text" id="prodMinStock" inputmode="numeric" placeholder="مثلاً ۵" value="۵">
             </div>
+            <!-- ===== فیلد آپلود تصویر ===== -->
+            <div class="form-group">
+                <label>تصویر محصول</label>
+                <input type="file" id="prodImage" accept="image/*" onchange="previewImage(this, 'addImagePreview')">
+                <div id="addImagePreview" style="margin-top: 8px; display: none;">
+                    <img id="addPreviewImg" src="#" alt="پیش‌نمایش تصویر" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <button type="button" onclick="removeImage('addImagePreview', 'prodImage')" style="display: block; margin-top: 4px; background: var(--danger); color: var(--text-primary); border: none; border-radius: 4px; padding: 2px 12px; cursor: pointer; font-family: inherit;">✕ حذف تصویر</button>
+                </div>
+            </div>
             <button type="submit" class="btn-primary">✅ افزودن محصول</button>
         </form>
     </div>
@@ -515,7 +522,7 @@
     <div class="modal-content">
         <span class="modal-close" onclick="closeModal('editProductModal')">&times;</span>
         <h3>✏️ ویرایش محصول</h3>
-        <form id="editProductForm">
+        <form id="editProductForm" enctype="multipart/form-data">
             <input type="hidden" id="editProductId">
             <div class="form-group">
                 <label>نام محصول</label>
@@ -523,12 +530,10 @@
             </div>
             <div class="form-group">
                 <label>برند</label>
-                <!-- ✅ تغییر: select به input تبدیل شد -->
                 <input type="text" id="editProdBrand" required>
             </div>
             <div class="form-group">
                 <label>آمپراژ</label>
-                <!-- ✅ تغییر: select به input تبدیل شد -->
                 <input type="text" id="editProdAmp" inputmode="numeric" required>
             </div>
             <div class="form-group">
@@ -546,6 +551,16 @@
             <div class="form-group">
                 <label>تعداد فروش</label>
                 <input type="text" id="editProdSales" readonly>
+            </div>
+            <!-- ===== فیلد آپلود تصویر ===== -->
+            <div class="form-group">
+                <label>تصویر محصول</label>
+                <input type="file" id="editProdImage" accept="image/*" onchange="previewImage(this, 'editImagePreview')">
+                <div id="editImagePreview" style="margin-top: 8px;">
+                    <img id="editPreviewImg" src="#" alt="پیش‌نمایش تصویر" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid var(--border-color); display: none;">
+                    <span id="editCurrentImageText" style="color: var(--text-muted); font-size: 13px;">تصویر فعلی: assets/images/battery.jpg</span>
+                    <button type="button" onclick="removeImage('editImagePreview', 'editProdImage')" style="display: block; margin-top: 4px; background: var(--danger); color: var(--text-primary); border: none; border-radius: 4px; padding: 2px 12px; cursor: pointer; font-family: inherit;">✕ حذف تصویر</button>
+                </div>
             </div>
             <button type="submit" class="btn-primary">✅ ذخیره تغییرات</button>
         </form>
