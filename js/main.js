@@ -146,7 +146,7 @@ function renderProducts(products) {
         const amp = product.amp || '-';
         const price = product.price || 0;
         const stock = product.stock || 0;
-        const image = product.image || 'assets/images/battery.jpg';
+        const image = 'assets/images/BAT.png';
         const compatible = product.compatible || 'خودروهای مختلف';
         const rating = product.rating || 4;
         const reviews = product.reviews || 0;
