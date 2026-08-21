@@ -2006,3 +2006,36 @@ footer {
 .btn-consulting:active {
     transform: translateY(0);
 }
+
+/* ===== نوتیفیکیشن سبد خرید ===== */
+.cart-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 14px 24px;
+    border-radius: var(--radius-md);
+    border: 1px solid #2ED573;
+    box-shadow: var(--shadow-lg);
+    z-index: 9999;
+    font-family: var(--font-family);
+    animation: slideUp 0.3s ease;
+    max-width: 90%;
+    direction: rtl;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
