@@ -101,6 +101,22 @@ function getSecureItem(key) {
 }
 
 // ============================================
+// ===== تبدیل اعداد انگلیسی به فارسی =====
+// ============================================
+
+function toPersianNumber(num) {
+    if (num === undefined || num === null) return '';
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    return String(num).replace(/[0-9]/g, function(w) {
+        return persianDigits[+w];
+    });
+}
+
+function formatPriceFa(price) {
+    return toPersianNumber(price.toLocaleString('fa-IR')) + ' تومان';
+}
+
+// ============================================
 // ===== بارگذاری محصولات از دیتابیس =====
 // ============================================
 
@@ -173,9 +189,9 @@ function renderProducts(products) {
                     </div>
                     <div class="product-rating">
                         ${stars}
-                        <span>(${reviews} نظر)</span>
+                        <span>(${toPersianNumber(reviews)} نظر)</span>
                     </div>
-                    <span class="price">${price.toLocaleString('fa-IR')} تومان</span>
+                    <span class="price">${formatPriceFa(price)}</span>
                     <button class="btn-order" onclick="addToCart(${product.id}, '${name.replace(/'/g, "\\'")}', ${price})" ${!inStock ? 'disabled' : ''}>
                         <i class="fas fa-shopping-cart"></i>
                         ${inStock ? 'افزودن به سبد خرید' : 'ناموجود'}
@@ -244,7 +260,6 @@ function updateFilterOptions(products) {
         Array.from(brands).sort().forEach(brand => {
             filterBrand.innerHTML += `<option value="${brand}">${brand}</option>`;
         });
-        // بازگرداندن انتخاب قبلی اگر هنوز وجود دارد
         if ([...brands].includes(currentValue)) {
             filterBrand.value = currentValue;
         }
@@ -257,7 +272,6 @@ function updateFilterOptions(products) {
         Array.from(amps).sort((a, b) => a - b).forEach(amp => {
             filterAmp.innerHTML += `<option value="${amp}">${amp} آمپر</option>`;
         });
-        // بازگرداندن انتخاب قبلی اگر هنوز وجود دارد
         if ([...amps].includes(Number(currentValue))) {
             filterAmp.value = currentValue;
         }
@@ -271,10 +285,27 @@ function updateFilterOptions(products) {
 // بررسی تغییرات در localStorage (برای صفحات دیگر)
 window.addEventListener('storage', function(e) {
     if (e.key === 'tehranbattery_database' || e.key === 'tehranbattery_last_change') {
-        console.log('🔄 تغییر در دیتابیس شناسایی شد، بارگذاری مجدد محصولات...');
+        console.log('🔄 تغییر در دیتابیس شناسایی شد (storage event)، بارگذاری مجدد محصولات...');
         loadProductsFromDatabase();
     }
 });
+
+// بررسی دوره‌ای تغییرات (هر 3 ثانیه)
+setInterval(function() {
+    const lastChange = localStorage.getItem('tehranbattery_last_change');
+    if (lastChange) {
+        const lastChangeTime = parseInt(lastChange);
+        const currentTime = Date.now();
+        if (currentTime - lastChangeTime < 5000) {
+            const lastLoaded = sessionStorage.getItem('tehranbattery_last_loaded') || '0';
+            if (parseInt(lastLoaded) < lastChangeTime) {
+                console.log('🔄 تغییر جدید در دیتابیس شناسایی شد (interval)، بارگذاری مجدد...');
+                loadProductsFromDatabase();
+                sessionStorage.setItem('tehranbattery_last_loaded', lastChangeTime.toString());
+            }
+        }
+    }
+}, 3000);
 
 // ============================================
 // ===== فیلترهای فروشگاه =====
@@ -555,6 +586,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // تنظیم فیلترها
     setupFilters();
+    
+    // ثبت زمان آخرین بارگذاری
+    sessionStorage.setItem('tehranbattery_last_loaded', Date.now().toString());
     
     console.log('🚗 طهران باتری - نسخه ۴.۲ با بارگذاری پویای محصولات');
 });
