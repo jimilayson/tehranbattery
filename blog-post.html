@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>مقاله | طهران باتری</title>
+    
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; 
+                   style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; 
+                   img-src 'self' data:; 
+                   frame-src 'none'; 
+                   connect-src 'self';">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        /* ===== استایل صفحه مقاله ===== */
+        .article-page {
+            min-height: 100vh;
+            background: var(--bg-primary);
+            padding: 40px 0;
+        }
+        
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+        
+        .article-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .article-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-normal);
+            font-size: 14px;
+        }
+        
+        .article-back:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+        
+        .article-close {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-size: 20px;
+        }
+        
+        .article-close:hover {
+            color: var(--text-primary);
+            border-color: var(--primary);
+        }
+        
+        .article-image {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        
+        .article-image img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+        
+        .article-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        .article-meta .category-badge {
+            background: var(--primary);
+            color: var(--text-primary);
+            padding: 2px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+        }
+        
+        .article-title {
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+        
+        .article-content {
+            color: var(--text-secondary);
+            font-size: var(--font-size-lg);
+            line-height: 2;
+        }
+        
+        .article-content p {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        /* ===== ریسپانسیو ===== */
+        @media (max-width: 768px) {
+            .article-page {
+                padding: 20px 0;
+            }
+            
+            .article-title {
+                font-size: var(--font-size-2xl);
+            }
+            
+            .article-content {
+                font-size: var(--font-size-base);
+            }
+            
+            .article-header {
+                flex-direction: row;
+                gap: 8px;
+            }
+            
+            .article-back span {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .article-container {
+                padding: 0 var(--spacing-sm);
+            }
+            
+            .article-title {
+                font-size: var(--font-size-xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="article-page">
+        <div class="article-container">
+            <!-- هدر مقاله -->
+            <div class="article-header">
+                <a href="index.html#blog" class="article-back">
+                    <i class="fas fa-arrow-right"></i>
+                    <span>بازگشت به مجله</span>
+                </a>
+                <a href="index.html#blog" class="article-close" title="بستن">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+            
+            <!-- محتوای مقاله -->
+            <div id="articleContent">
+                <!-- توسط JavaScript پر می‌شود -->
+                <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i>
+                    <p style="margin-top: 12px;">در حال بارگذاری مقاله...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/core/config.js"></script>
+    <script src="js/core/event-bus.js"></script>
+    <script src="js/providers/mock-database.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/blog-post.js"></script>
+</body>
+</html>
