@@ -7,68 +7,111 @@ let DataService;
 
 if (window.App && window.App.database) {
     // ✅ استفاده از دیتابیس مشترک
+    const mainDb = window.App.database;
+    
     DataService = {
         getProducts: function() { 
-            return window.App.database.data.products || []; 
+            return mainDb.data.products || []; 
         },
         getOrders: function() { 
-            return window.App.database.data.orders || []; 
+            return mainDb.data.orders || []; 
         },
         getCustomers: function() { 
-            return window.App.database.data.customers || []; 
+            return mainDb.data.customers || []; 
         },
         getConsultings: function() { 
-            return window.App.database.data.consultings || []; 
+            return mainDb.data.consultings || []; 
         },
         
         addProduct: function(product) {
-            const products = this.getProducts();
+            const products = mainDb.data.products;
             const newProduct = {
                 id: Date.now(),
-                ...product,
+                name: product.name || 'محصول جدید',
+                brand: product.brand || 'سایر',
+                amp: product.amp || 60,
+                price: product.price || 0,
+                stock: product.stock || 0,
+                minStock: product.minStock || 5,
                 sales: 0,
                 revenue: 0,
+                image: product.image || 'assets/images/battery.jpg',
+                compatible: product.compatible || 'خودروهای مختلف',
+                rating: product.rating || 4.5,
+                reviews: 0,
                 createdAt: new Date().toISOString()
             };
             products.push(newProduct);
+            // ✅ ذخیره در localStorage
+            mainDb.saveData();
+            console.log('💾 محصول جدید در دیتابیس ذخیره شد:', newProduct.name);
+            
+            // انتشار رویداد برای همگام‌سازی
+            if (window.App && window.App.eventBus) {
+                window.App.eventBus.emit(SystemEvents.PRODUCT_ADDED, newProduct);
+            }
+            
             return true;
         },
         
         updateProduct: function(id, data) {
-            const products = this.getProducts();
+            const products = mainDb.data.products;
             const index = products.findIndex(p => p.id === id);
             if (index !== -1) {
+                const oldName = products[index].name;
                 products[index] = { ...products[index], ...data };
+                // ✅ ذخیره در localStorage
+                mainDb.saveData();
+                console.log('✏️ محصول ویرایش شد:', oldName);
+                
+                // انتشار رویداد برای همگام‌سازی
+                if (window.App && window.App.eventBus) {
+                    window.App.eventBus.emit(SystemEvents.PRODUCT_UPDATED, { id, data });
+                }
+                
                 return true;
             }
             return false;
         },
         
         deleteProduct: function(id) {
-            const products = this.getProducts();
+            const products = mainDb.data.products;
             const index = products.findIndex(p => p.id === id);
             if (index !== -1) {
+                const deletedName = products[index].name;
+                const deletedProduct = products[index];
                 products.splice(index, 1);
+                // ✅ ذخیره در localStorage
+                mainDb.saveData();
+                console.log('🗑️ محصول حذف شد:', deletedName);
+                
+                // انتشار رویداد برای همگام‌سازی
+                if (window.App && window.App.eventBus) {
+                    window.App.eventBus.emit(SystemEvents.PRODUCT_DELETED, deletedProduct);
+                }
+                
                 return true;
             }
             return false;
         },
         
         updateOrderStatus: function(id, status) {
-            const orders = this.getOrders();
+            const orders = mainDb.data.orders;
             const order = orders.find(o => o.id === id);
             if (order) {
                 order.status = status;
+                mainDb.saveData();
                 return true;
             }
             return false;
         },
         
         updateConsultingStatus: function(id, status) {
-            const consultings = this.getConsultings();
+            const consultings = mainDb.data.consultings || [];
             const consulting = consultings.find(c => c.id === id);
             if (consulting) {
                 consulting.status = status;
+                mainDb.saveData();
                 return true;
             }
             return false;
@@ -76,20 +119,22 @@ if (window.App && window.App.database) {
     };
     
     console.log('✅ پنل ادمین به دیتابیس مشترک متصل شد');
+    console.log(`📊 ${DataService.getOrders().length} سفارش، ${DataService.getProducts().length} محصول`);
+    
 } else {
     // Fallback: استفاده از دیتابیس مستقل
     console.warn('⚠️ سیستم اصلی یافت نشد، از دیتابیس مستقل استفاده می‌شود');
     
     // ===== داده‌های نمونه (فقط در صورت نبود سیستم اصلی) =====
     let mockProducts = [
-        { id: 1, name: 'باتری ۶۶ آمپر', brand: 'ایران باتری', amp: 66, price: 5800000, stock: 12, minStock: 5, sales: 128, revenue: 742400000 },
-        { id: 2, name: 'باتری ۵۵ آمپر', brand: 'سپاهان باتری', amp: 55, price: 4900000, stock: 8, minStock: 5, sales: 78, revenue: 382200000 },
-        { id: 3, name: 'باتری ۷۴ آمپر', brand: 'بوش', amp: 74, price: 6900000, stock: 2, minStock: 5, sales: 53, revenue: 365700000 },
-        { id: 4, name: 'باتری ۶۰ آمپر', brand: 'ایران باتری', amp: 60, price: 5200000, stock: 15, minStock: 8, sales: 45, revenue: 234000000 },
-        { id: 5, name: 'باتری ۴۴ آمپر', brand: 'دنسو', amp: 44, price: 3800000, stock: 6, minStock: 4, sales: 32, revenue: 121600000 },
-        { id: 6, name: 'باتری ۸۰ آمپر', brand: 'بوش', amp: 80, price: 8500000, stock: 0, minStock: 3, sales: 18, revenue: 153000000 },
-        { id: 7, name: 'باتری ۱۰۰ آمپر', brand: 'ایران باتری', amp: 100, price: 12000000, stock: 1, minStock: 2, sales: 7, revenue: 84000000 },
-        { id: 8, name: 'باتری ۵۰ آمپر', brand: 'سپاهان باتری', amp: 50, price: 4200000, stock: 4, minStock: 3, sales: 22, revenue: 92400000 },
+        { id: 1, name: 'باتری ۶۶ آمپر', brand: 'ایران باتری', amp: 66, price: 5800000, stock: 12, minStock: 5, sales: 128, revenue: 742400000, image: 'assets/images/battery.jpg', compatible: 'سمند، ۲۰۶، ۲۰۷', rating: 5, reviews: 128 },
+        { id: 2, name: 'باتری ۵۵ آمپر', brand: 'سپاهان باتری', amp: 55, price: 4900000, stock: 8, minStock: 5, sales: 78, revenue: 382200000, image: 'assets/images/battery.jpg', compatible: 'پژو ۴۰۵، تیبا', rating: 5, reviews: 78 },
+        { id: 3, name: 'باتری ۷۴ آمپر', brand: 'بوش', amp: 74, price: 6900000, stock: 2, minStock: 5, sales: 53, revenue: 365700000, image: 'assets/images/battery.jpg', compatible: 'تویوتا، نیسان، مزدا', rating: 5, reviews: 53 },
+        { id: 4, name: 'باتری ۶۰ آمپر', brand: 'ایران باتری', amp: 60, price: 5200000, stock: 15, minStock: 8, sales: 45, revenue: 234000000, image: 'assets/images/battery.jpg', compatible: 'پراید، ۲۰۶، پژو', rating: 4.5, reviews: 124 },
+        { id: 5, name: 'باتری ۴۴ آمپر', brand: 'دنسو', amp: 44, price: 3800000, stock: 6, minStock: 4, sales: 32, revenue: 121600000, image: 'assets/images/battery.jpg', compatible: 'پراید، ۲۰۶', rating: 4.5, reviews: 32 },
+        { id: 6, name: 'باتری ۸۰ آمپر', brand: 'بوش', amp: 80, price: 8500000, stock: 0, minStock: 3, sales: 18, revenue: 153000000, image: 'assets/images/battery.jpg', compatible: 'SUV، خودروهای سنگین', rating: 5, reviews: 18 },
+        { id: 7, name: 'باتری ۱۰۰ آمپر', brand: 'ایران باتری', amp: 100, price: 12000000, stock: 1, minStock: 2, sales: 7, revenue: 84000000, image: 'assets/images/battery.jpg', compatible: 'خودروهای سنگین، SUV', rating: 5, reviews: 7 },
+        { id: 8, name: 'باتری ۵۰ آمپر', brand: 'سپاهان باتری', amp: 50, price: 4200000, stock: 4, minStock: 3, sales: 22, revenue: 92400000, image: 'assets/images/battery.jpg', compatible: 'سمند، ۴۰۵', rating: 5, reviews: 22 },
     ];
 
     let mockOrders = [
@@ -102,9 +147,10 @@ if (window.App && window.App.database) {
         { name: 'علی رضایی', phone: '09123456789', orders: 5, totalSpent: 29000000, lastOrder: '۱۴۰۵/۰۵/۱۵', status: 'active' },
         { name: 'محمد احمدی', phone: '09129876543', orders: 3, totalSpent: 14700000, lastOrder: '۱۴۰۵/۰۵/۱۴', status: 'active' },
         { name: 'رضا کریمی', phone: '09127654321', orders: 7, totalSpent: 48300000, lastOrder: '۱۴۰۵/۰۵/۱۴', status: 'active' },
+        { name: 'سارا محمدی', phone: '09125432167', orders: 2, totalSpent: 18000000, lastOrder: '۱۴۰۵/۰۵/۱۳', status: 'inactive' },
+        { name: 'حسین علی‌پور', phone: '09121987654', orders: 1, totalSpent: 5800000, lastOrder: '۱۴۰۵/۰۵/۱۲', status: 'new' },
     ];
 
-    // ✅ متغیر mockConsultings اضافه شد
     let mockConsultings = [
         { id: 1, customer: 'علی رضایی', phone: '09123456789', car: 'پژو ۲۰۶', model: 'تیپ ۵', year: 1398, suggested: 'باتری ۵۵ آمپر', status: 'new', time: '۵ دقیقه پیش', message: 'سلام. ماشین من پژو ۲۰۶ مدل ۱۳۹۸ هست. باتری ماشین ضعیف شده و نمیدونم چه آمپراژی باید تهیه کنم.' },
         { id: 2, customer: 'سارا محمدی', phone: '09129876543', car: 'سمند', model: 'LX', year: 1399, suggested: 'باتری ۶۰ آمپر', status: 'reviewing', time: '۱۵ دقیقه پیش', message: 'سلام. برای سمند مدل ۱۳۹۹ چه باتری مناسب است؟ قیمت و موجودی را هم لطفاً بفرمایید.' },
@@ -118,13 +164,35 @@ if (window.App && window.App.database) {
         getConsultings: function() { return mockConsultings; },
         
         addProduct: function(product) {
-            mockProducts.push({
+            const newProduct = {
                 id: Date.now(),
-                ...product,
+                name: product.name || 'محصول جدید',
+                brand: product.brand || 'سایر',
+                amp: product.amp || 60,
+                price: product.price || 0,
+                stock: product.stock || 0,
+                minStock: product.minStock || 5,
                 sales: 0,
                 revenue: 0,
+                image: product.image || 'assets/images/battery.jpg',
+                compatible: product.compatible || 'خودروهای مختلف',
+                rating: product.rating || 4.5,
+                reviews: 0,
                 createdAt: new Date().toISOString()
-            });
+            };
+            mockProducts.push(newProduct);
+            // ✅ ذخیره در localStorage
+            try {
+                const saved = localStorage.getItem('tehranbattery_database');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    data.products = mockProducts;
+                    localStorage.setItem('tehranbattery_database', JSON.stringify(data));
+                }
+            } catch (e) {
+                console.warn('⚠️ خطا در ذخیره در localStorage:', e);
+            }
+            console.log('💾 محصول جدید در دیتابیس ذخیره شد (fallback):', newProduct.name);
             return true;
         },
         
@@ -132,14 +200,43 @@ if (window.App && window.App.database) {
             const index = mockProducts.findIndex(p => p.id === id);
             if (index !== -1) {
                 mockProducts[index] = { ...mockProducts[index], ...data };
+                // ✅ ذخیره در localStorage
+                try {
+                    const saved = localStorage.getItem('tehranbattery_database');
+                    if (saved) {
+                        const dbData = JSON.parse(saved);
+                        dbData.products = mockProducts;
+                        localStorage.setItem('tehranbattery_database', JSON.stringify(dbData));
+                    }
+                } catch (e) {
+                    console.warn('⚠️ خطا در ذخیره در localStorage:', e);
+                }
+                console.log('✏️ محصول ویرایش شد (fallback):', mockProducts[index].name);
                 return true;
             }
             return false;
         },
         
         deleteProduct: function(id) {
-            mockProducts = mockProducts.filter(p => p.id !== id);
-            return true;
+            const index = mockProducts.findIndex(p => p.id === id);
+            if (index !== -1) {
+                const deletedName = mockProducts[index].name;
+                mockProducts.splice(index, 1);
+                // ✅ ذخیره در localStorage
+                try {
+                    const saved = localStorage.getItem('tehranbattery_database');
+                    if (saved) {
+                        const dbData = JSON.parse(saved);
+                        dbData.products = mockProducts;
+                        localStorage.setItem('tehranbattery_database', JSON.stringify(dbData));
+                    }
+                } catch (e) {
+                    console.warn('⚠️ خطا در ذخیره در localStorage:', e);
+                }
+                console.log('🗑️ محصول حذف شد (fallback):', deletedName);
+                return true;
+            }
+            return false;
         },
         
         updateOrderStatus: function(id, status) {
@@ -821,7 +918,6 @@ function refreshDashboard() {
     updateSystemAlerts(DataService.getOrders(), DataService.getProducts());
     updateLowSalesProducts(DataService.getProducts());
     
-    // رندر جداول
     renderAllOrders(ordersPagination ? ordersPagination.currentPage : 1);
     renderProducts(productsPagination ? productsPagination.currentPage : 1);
     renderCustomers(customersPagination ? customersPagination.currentPage : 1);
@@ -1086,9 +1182,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 amp: amp,
                 price: price,
                 stock: stock,
-                minStock: minStock,
-                sales: 0,
-                revenue: 0
+                minStock: minStock
             };
             
             if (DataService.addProduct(product)) {
