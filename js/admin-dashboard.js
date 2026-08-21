@@ -1178,29 +1178,61 @@ window.logout = function() {
 };
 
 // ============================================
-// ===== رویدادهای فرم‌ها =====
+// ===== رویدادهای فرم‌ها و تبدیل اعداد =====
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // ===== تبدیل خودکار اعداد فارسی به انگلیسی در فیلدهای عددی =====
-    const numberInputs = document.querySelectorAll('#prodPrice, #prodStock, #prodMinStock, #editProdPrice, #editProdStock, #editProdMinStock, #editProdAmp, #prodAmp');
+    // ============================================
+    // ===== ۱. تبدیل خودکار اعداد فارسی به انگلیسی در فیلدهای عددی =====
+    // ============================================
+    
+    // لیست تمام فیلدهای عددی
+    const numberInputs = document.querySelectorAll(
+        '#prodPrice, #prodStock, #prodMinStock, ' +
+        '#editProdPrice, #editProdStock, #editProdMinStock, ' +
+        '#editProdAmp, #prodAmp'
+    );
+    
     numberInputs.forEach(input => {
         if (input) {
+            // هنگام تایپ
             input.addEventListener('input', function() {
-                // تبدیل اعداد فارسی به انگلیسی هنگام تایپ
-                this.value = toEnglishNumber(this.value);
+                const originalValue = this.value;
+                const convertedValue = toEnglishNumber(originalValue);
+                if (originalValue !== convertedValue) {
+                    this.value = convertedValue;
+                }
             });
-            // همچنین هنگام paste کردن
+            
+            // هنگام Paste کردن
             input.addEventListener('paste', function() {
                 setTimeout(() => {
-                    this.value = toEnglishNumber(this.value);
+                    const originalValue = this.value;
+                    const convertedValue = toEnglishNumber(originalValue);
+                    if (originalValue !== convertedValue) {
+                        this.value = convertedValue;
+                    }
                 }, 10);
+            });
+            
+            // هنگام تغییر (برای مواردی که مقدار توسط جاوااسکریپت تغییر می‌کند)
+            input.addEventListener('change', function() {
+                const originalValue = this.value;
+                const convertedValue = toEnglishNumber(originalValue);
+                if (originalValue !== convertedValue) {
+                    this.value = convertedValue;
+                }
             });
         }
     });
     
-    // ===== فرم افزودن محصول =====
+    console.log('✅ تبدیل خودکار اعداد فارسی به انگلیسی فعال شد');
+    
+    // ============================================
+    // ===== ۲. فرم افزودن محصول =====
+    // ============================================
+    
     const addForm = document.getElementById('addProductForm');
     if (addForm) {
         addForm.addEventListener('submit', function(e) {
@@ -1215,7 +1247,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const name = nameEl ? nameEl.value.trim() : '';
             const brand = brandEl ? brandEl.value : 'ایران باتری';
-            // ✅ تبدیل اعداد فارسی به انگلیسی
+            
+            // ✅ اعداد قبلاً توسط event listener تبدیل شده‌اند، اما برای اطمینان دوباره تبدیل می‌کنیم
             const amp = ampEl ? parseInt(toEnglishNumber(ampEl.value)) || 60 : 60;
             const price = priceEl ? parseInt(toEnglishNumber(priceEl.value)) || 0 : 0;
             const stock = stockEl ? parseInt(toEnglishNumber(stockEl.value)) || 0 : 0;
@@ -1245,7 +1278,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ===== فرم ویرایش محصول =====
+    // ============================================
+    // ===== ۳. فرم ویرایش محصول =====
+    // ============================================
+    
     const editForm = document.getElementById('editProductForm');
     if (editForm) {
         editForm.addEventListener('submit', function(e) {
@@ -1262,7 +1298,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const id = idEl ? parseInt(idEl.value) : 0;
             const name = nameEl ? nameEl.value.trim() : '';
             const brand = brandEl ? brandEl.value : 'ایران باتری';
-            // ✅ تبدیل اعداد فارسی به انگلیسی
+            
+            // ✅ اعداد قبلاً توسط event listener تبدیل شده‌اند، اما برای اطمینان دوباره تبدیل می‌کنیم
             const amp = ampEl ? parseInt(toEnglishNumber(ampEl.value)) || 60 : 60;
             const price = priceEl ? parseInt(toEnglishNumber(priceEl.value)) || 0 : 0;
             const stock = stockEl ? parseInt(toEnglishNumber(stockEl.value)) || 0 : 0;
@@ -1290,7 +1327,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
 
 // ============================================
 // ===== راه‌اندازی =====
