@@ -547,7 +547,6 @@ window.editProduct = function(id) {
     document.getElementById('editProdName').value = product.name;
     document.getElementById('editProdBrand').value = product.brand || 'ایران باتری';
     
-    // نمایش فارسی در فرم ویرایش (فیلدها از type="text" هستند)
     document.getElementById('editProdAmp').value = toPersianNumber(product.amp);
     document.getElementById('editProdPrice').value = toPersianNumber(product.price);
     document.getElementById('editProdStock').value = toPersianNumber(product.stock);
@@ -1132,80 +1131,66 @@ window.logout = function() {
 };
 
 // ============================================
-// ===== راه‌اندازی اصلی (یک بار و بدون تعارض) =====
+// ===== راه‌اندازی اصلی =====
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
     
     // ============================================
-    // ===== ۱. Inputهای عددی - تبدیل زنده به فارسی =====
+    // ===== ۱. Inputهای عددی - با پشتیبانی از Num Pad =====
     // ============================================
     
-    // انتخاب تمام فیلدهای عددی (که اکنون type="text" هستند)
     const numberInputs = document.querySelectorAll(
         '#prodPrice, #prodStock, #prodMinStock, ' +
         '#editProdPrice, #editProdStock, #editProdMinStock, ' +
-        '#editProdAmp, #prodAmp'  // اگر select باشند، مشکلی ندارد
+        '#editProdAmp, #prodAmp'
     );
     
     numberInputs.forEach(input => {
-        if (!input) return;
-        
-        // تابع تبدیل کاراکترهای عددی (انگلیسی و فارسی) به فارسی
-        const convertToPersian = function(value) {
-            const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-            const englishDigits = ['0','1','2','3','4','5','6','7','8','9'];
-            let result = '';
-            for (let ch of value) {
-                let index = englishDigits.indexOf(ch);
-                if (index === -1) {
-                    // شاید فارسی باشد
-                    index = persianDigits.indexOf(ch);
-                    if (index !== -1) {
-                        result += persianDigits[index];
-                    } else {
-                        result += ch; // کاراکتر غیرعددی را نگه دار
-                    }
-                } else {
-                    result += persianDigits[index];
+        if (input) {
+            // 🔥 تبدیل اعداد Num Pad به فارسی هنگام تایپ
+            input.addEventListener('keydown', function(e) {
+                // بررسی: آیا کلید Num Pad (0-9) فشار داده شده است؟
+                if (e.key >= '0' && e.key <= '9' && e.location === 3) {
+                    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+                    const englishDigit = parseInt(e.key);
+                    const persianChar = persianDigits[englishDigit];
+                    
+                    // جلوگیری از ورود عدد انگلیسی
+                    e.preventDefault();
+                    
+                    // وارد کردن عدد فارسی
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    const value = this.value;
+                    this.value = value.substring(0, start) + persianChar + value.substring(end);
+                    
+                    // قرار دادن cursor در جای درست
+                    this.selectionStart = this.selectionEnd = start + 1;
                 }
-            }
-            return result;
-        };
-        
-        // رویداد input برای تبدیل زنده هنگام تایپ
-        input.addEventListener('input', function(e) {
-            const raw = this.value;
-            const converted = convertToPersian(raw);
-            if (converted !== raw) {
-                const cursorPos = this.selectionStart;
-                this.value = converted;
-                // حفظ موقعیت مکان‌نما (تقریبی)
-                if (cursorPos !== null) {
-                    this.setSelectionRange(cursorPos, cursorPos);
+            });
+            
+            // ✅ فقط هنگام blur، مقدار را فرمت می‌کنیم (نه تبدیل)
+            input.addEventListener('blur', function() {
+                const raw = this.value.trim();
+                if (raw === '') return;
+                
+                const num = normalizeNumber(raw);
+                if (num !== 0 || raw !== '') {
+                    this.value = toPersianNumber(num);
                 }
-            }
-        });
-        
-        // رویداد blur برای فرمت‌بندی نهایی (در صورت نیاز)
-        input.addEventListener('blur', function() {
-            const raw = this.value.trim();
-            if (raw === '') return;
-            const num = normalizeNumber(raw);
-            if (num !== 0 || raw !== '') {
-                this.value = toPersianNumber(num);
-            }
-        });
-        
-        // رویداد focus برای نمایش عدد خام (برای سهولت ویرایش)
-        input.addEventListener('focus', function() {
-            const raw = this.value.trim();
-            if (raw === '') return;
-            const num = normalizeNumber(raw);
-            if (num !== 0 || raw !== '') {
-                this.value = String(num);
-            }
-        });
+            });
+            
+            // ✅ هنگام focus، اگر مقدار فارسی است، عدد خام را نمایش بده
+            input.addEventListener('focus', function() {
+                const raw = this.value.trim();
+                if (raw === '') return;
+                const num = normalizeNumber(raw);
+                if (num !== 0 || raw !== '') {
+                    this.value = String(num);
+                }
+            });
+        }
     });
     
     // ============================================
@@ -1220,7 +1205,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const name = document.getElementById('prodName')?.value.trim() || '';
             const brand = document.getElementById('prodBrand')?.value || 'ایران باتری';
             
-            // نرمال‌سازی اعداد (تبدیل فارسی/عربی به انگلیسی)
             const amp = normalizeNumber(document.getElementById('prodAmp')?.value);
             const price = normalizeNumber(document.getElementById('prodPrice')?.value);
             const stock = normalizeNumber(document.getElementById('prodStock')?.value);
@@ -1256,7 +1240,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const name = document.getElementById('editProdName')?.value.trim() || '';
             const brand = document.getElementById('editProdBrand')?.value || 'ایران باتری';
             
-            // نرمال‌سازی اعداد (تبدیل فارسی/عربی به انگلیسی)
             const amp = normalizeNumber(document.getElementById('editProdAmp')?.value);
             const price = normalizeNumber(document.getElementById('editProdPrice')?.value);
             const stock = normalizeNumber(document.getElementById('editProdStock')?.value);
