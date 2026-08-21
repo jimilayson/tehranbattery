@@ -279,6 +279,49 @@ function updateFilterOptions(products) {
 }
 
 // ============================================
+// ===== فیلترهای فروشگاه =====
+// ============================================
+
+function setupFilters() {
+    const filterBrand = document.getElementById('filterBrand');
+    const filterAmp = document.getElementById('filterAmp');
+    const productGrid = document.getElementById('productGrid');
+    const productCount = document.getElementById('productCount');
+    
+    if (!filterBrand || !filterAmp || !productGrid) return;
+    
+    function filterProducts() {
+        const brand = filterBrand.value;
+        const amp = filterAmp.value;
+        const cards = productGrid.querySelectorAll('.product-card');
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
+            const cardBrand = card.dataset.brand;
+            const cardAmp = card.dataset.amp;
+            
+            let show = true;
+            if (brand !== 'all' && cardBrand !== brand) show = false;
+            if (amp !== 'all' && cardAmp !== amp) show = false;
+            
+            card.style.display = show ? 'block' : 'none';
+            if (show) visibleCount++;
+        });
+        
+        // به‌روزرسانی تعداد نتایج
+        if (productCount) {
+            productCount.textContent = visibleCount;
+        }
+    }
+    
+    filterBrand.addEventListener('change', filterProducts);
+    filterAmp.addEventListener('change', filterProducts);
+    
+    // اجرای اولیه برای نمایش تعداد
+    setTimeout(filterProducts, 100);
+}
+
+// ============================================
 // ===== گوش دادن به تغییرات دیتابیس =====
 // ============================================
 
@@ -308,38 +351,6 @@ setInterval(function() {
 }, 3000);
 
 // ============================================
-// ===== فیلترهای فروشگاه =====
-// ============================================
-
-function setupFilters() {
-    const filterBrand = document.getElementById('filterBrand');
-    const filterAmp = document.getElementById('filterAmp');
-    const productGrid = document.getElementById('productGrid');
-    
-    if (!filterBrand || !filterAmp || !productGrid) return;
-    
-    function filterProducts() {
-        const brand = filterBrand.value;
-        const amp = filterAmp.value;
-        const cards = productGrid.querySelectorAll('.product-card');
-        
-        cards.forEach(card => {
-            const cardBrand = card.dataset.brand;
-            const cardAmp = card.dataset.amp;
-            
-            let show = true;
-            if (brand !== 'all' && cardBrand !== brand) show = false;
-            if (amp !== 'all' && cardAmp !== amp) show = false;
-            
-            card.style.display = show ? 'block' : 'none';
-        });
-    }
-    
-    filterBrand.addEventListener('change', filterProducts);
-    filterAmp.addEventListener('change', filterProducts);
-}
-
-// ============================================
 // ===== کدهای قبلی (با تغییرات جزئی) =====
 // ============================================
 
@@ -348,31 +359,43 @@ const hamburger = document.getElementById('hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
 if (hamburger && navMenu) {
+    // باز و بسته کردن منو با کلیک روی هامبورگر
     hamburger.addEventListener('click', function(e) {
         e.stopPropagation();
         this.classList.toggle('active');
         navMenu.classList.toggle('active');
+        
+        // جلوگیری از اسکرول پس‌زمینه
         document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
     });
-}
 
-document.querySelectorAll('.nav-menu a').forEach(link => {
-    link.addEventListener('click', function() {
-        if (navMenu) {
+    // بسته شدن منو پس از کلیک روی هر لینک
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', function() {
             navMenu.classList.remove('active');
-            if (hamburger) hamburger.classList.remove('active');
+            hamburger.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    });
+
+    // بسته شدن منو با کلیک روی هر جای دیگر صفحه
+    document.addEventListener('click', function(e) {
+        if (navMenu && !e.target.closest('nav') && navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
             document.body.style.overflow = '';
         }
     });
-});
 
-document.addEventListener('click', function(e) {
-    if (navMenu && !e.target.closest('nav') && navMenu.classList.contains('active')) {
-        navMenu.classList.remove('active');
-        if (hamburger) hamburger.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-});
+    // بسته شدن منو با کلید ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+}
 
 // ===== IMAGE ERROR HANDLING =====
 document.querySelectorAll('.product-img, .cert-img').forEach(img => {
@@ -592,96 +615,3 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('🚗 طهران باتری - نسخه ۴.۲ با بارگذاری پویای محصولات');
 });
-
-/* ===== منوی موبایل ===== */
-.nav-menu {
-    display: flex;
-    gap: var(--spacing-md);
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-/* استایل هامبورگر */
-.hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    padding: var(--spacing-xs);
-    z-index: 1001;
-}
-
-.hamburger span {
-    width: 28px;
-    height: 3px;
-    background: var(--text-primary);
-    border-radius: var(--radius-sm);
-    transition: all 0.3s ease;
-    transform-origin: center;
-}
-
-.hamburger.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-
-.hamburger.active span:nth-child(2) {
-    opacity: 0;
-    transform: scaleX(0);
-}
-
-.hamburger.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
-}
-
-/* ===== ریسپانسیو ===== */
-@media (max-width: 768px) {
-    .nav-menu {
-        display: none;
-        flex-direction: column;
-        background: var(--bg-secondary);
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        padding: 80px var(--spacing-lg) var(--spacing-lg);
-        gap: var(--spacing-sm);
-        border-bottom: 2px solid var(--primary);
-        box-shadow: var(--shadow-lg);
-        z-index: 1000;
-        overflow-y: auto;
-        transform: translateY(-20px);
-        opacity: 0;
-        transition: all 0.3s ease;
-    }
-
-    .nav-menu.active {
-        display: flex;
-        transform: translateY(0);
-        opacity: 1;
-    }
-
-    .nav-menu a {
-        padding: var(--spacing-md) var(--spacing-md);
-        font-size: var(--font-size-base);
-        text-align: center;
-        border-bottom: 1px solid rgba(38, 54, 74, 0.3);
-        width: 100%;
-    }
-
-    .nav-menu a:last-child {
-        border-bottom: none;
-    }
-
-    .nav-menu a::after {
-        display: none;
-    }
-
-    .hamburger {
-        display: flex;
-    }
-    
-    .header-emergency {
-        display: none;
-    }
-}
