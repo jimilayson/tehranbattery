@@ -308,7 +308,7 @@
     </div>
 </section>
 
-        <!-- ===== SHOP ===== -->
+       <!-- ===== SHOP ===== -->
 <section id="shop" class="section" style="padding-top: 0;">
     <div class="container">
         <div class="shop-header" id="shopHeader">
@@ -316,29 +316,34 @@
                 <h2 class="section-title">فروشگاه باتری</h2>
                 <p class="section-subtitle">انواع باتری خودرو با آمپراژ و برندهای مختلف</p>
             </div>
-            <div class="shop-filters">
-                <select class="filter-select" id="filterBrand">
-                    <option value="all">همه برندها</option>
-                    <option value="ایران باتری">ایران باتری</option>
-                    <option value="سپاهان باتری">سپاهان باتری</option>
-                    <option value="بوش">بوش</option>
-                    <option value="دنسو">دنسو</option>
-                </select>
-                <select class="filter-select" id="filterAmp">
-                    <option value="all">همه آمپراژها</option>
-                    <option value="44">۴۴ آمپر</option>
-                    <option value="50">۵۰ آمپر</option>
-                    <option value="55">۵۵ آمپر</option>
-                    <option value="60">۶۰ آمپر</option>
-                    <option value="66">۶۶ آمپر</option>
-                    <option value="74">۷۴ آمپر</option>
-                    <option value="80">۸۰ آمپر</option>
-                    <option value="100">۱۰۰ آمپر</option>
-                </select>
+            <div class="shop-filters-wrapper">
+                <div class="shop-filters">
+                    <select class="filter-select" id="filterBrand">
+                        <option value="all">همه برندها</option>
+                        <option value="ایران باتری">ایران باتری</option>
+                        <option value="سپاهان باتری">سپاهان باتری</option>
+                        <option value="بوش">بوش</option>
+                        <option value="دنسو">دنسو</option>
+                    </select>
+                    <select class="filter-select" id="filterAmp">
+                        <option value="all">همه آمپراژها</option>
+                        <option value="44">۴۴ آمپر</option>
+                        <option value="50">۵۰ آمپر</option>
+                        <option value="55">۵۵ آمپر</option>
+                        <option value="60">۶۰ آمپر</option>
+                        <option value="66">۶۶ آمپر</option>
+                        <option value="74">۷۴ آمپر</option>
+                        <option value="80">۸۰ آمپر</option>
+                        <option value="100">۱۰۰ آمپر</option>
+                    </select>
+                </div>
+                <div class="filter-results" id="filterResults">
+                    <span id="productCount">۰</span> محصول
+                </div>
             </div>
         </div>
         <div class="shop-grid" id="productGrid">
-            <!-- ===== محصولات توسط JavaScript از دیتابیس بارگذاری می‌شوند ===== -->
+            <!-- محصولات توسط JavaScript بارگذاری می‌شوند -->
             <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px; color: var(--text-muted);">
                 <i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i>
                 <p style="margin-top: 12px;">در حال بارگذاری محصولات...</p>
@@ -346,7 +351,6 @@
         </div>
     </div>
 </section>
-
         <!-- ===== SERVICES ===== -->
         <section id="services" class="section alt-bg">
             <div class="container">
