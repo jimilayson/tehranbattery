@@ -260,6 +260,21 @@ if (window.App && window.App.database) {
 }
 
 // ============================================
+// ===== تبدیل اعداد فارسی به انگلیسی =====
+// ============================================
+
+function toEnglishNumber(str) {
+    if (typeof str !== 'string') return str;
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    let result = str;
+    persianDigits.forEach((p, i) => {
+        result = result.replace(new RegExp(p, 'g'), englishDigits[i]);
+    });
+    return result;
+}
+
+// ============================================
 // ===== تبدیل اعداد انگلیسی به فارسی =====
 // ============================================
 
@@ -1167,6 +1182,17 @@ window.logout = function() {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
+    
+    // ===== تبدیل خودکار اعداد فارسی به انگلیسی در فیلدهای عددی =====
+    const numberInputs = document.querySelectorAll('#prodPrice, #prodStock, #prodMinStock, #editProdPrice, #editProdStock, #editProdMinStock, #editProdAmp, #prodAmp');
+    numberInputs.forEach(input => {
+        if (input) {
+            input.addEventListener('input', function() {
+                this.value = toEnglishNumber(this.value);
+            });
+        }
+    });
+    
     // ===== فرم افزودن محصول =====
     const addForm = document.getElementById('addProductForm');
     if (addForm) {
@@ -1182,10 +1208,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const name = nameEl ? nameEl.value.trim() : '';
             const brand = brandEl ? brandEl.value : 'ایران باتری';
-            const amp = ampEl ? parseInt(ampEl.value) : 60;
-            const price = priceEl ? parseInt(priceEl.value) : 0;
-            const stock = stockEl ? parseInt(stockEl.value) : 0;
-            const minStock = minStockEl ? parseInt(minStockEl.value) || 5 : 5;
+            // ✅ تبدیل اعداد فارسی به انگلیسی
+            const amp = ampEl ? parseInt(toEnglishNumber(ampEl.value)) || 60 : 60;
+            const price = priceEl ? parseInt(toEnglishNumber(priceEl.value)) || 0 : 0;
+            const stock = stockEl ? parseInt(toEnglishNumber(stockEl.value)) || 0 : 0;
+            const minStock = minStockEl ? parseInt(toEnglishNumber(minStockEl.value)) || 5 : 5;
             
             if (!name || !price || isNaN(stock)) {
                 alert('❌ لطفاً تمام فیلدها را به درستی پر کنید.');
@@ -1228,10 +1255,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const id = idEl ? parseInt(idEl.value) : 0;
             const name = nameEl ? nameEl.value.trim() : '';
             const brand = brandEl ? brandEl.value : 'ایران باتری';
-            const amp = ampEl ? parseInt(ampEl.value) : 60;
-            const price = priceEl ? parseInt(priceEl.value) : 0;
-            const stock = stockEl ? parseInt(stockEl.value) : 0;
-            const minStock = minStockEl ? parseInt(minStockEl.value) || 5 : 5;
+            // ✅ تبدیل اعداد فارسی به انگلیسی
+            const amp = ampEl ? parseInt(toEnglishNumber(ampEl.value)) || 60 : 60;
+            const price = priceEl ? parseInt(toEnglishNumber(priceEl.value)) || 0 : 0;
+            const stock = stockEl ? parseInt(toEnglishNumber(stockEl.value)) || 0 : 0;
+            const minStock = minStockEl ? parseInt(toEnglishNumber(minStockEl.value)) || 5 : 5;
             
             if (!name || !price || isNaN(stock)) {
                 alert('❌ لطفاً تمام فیلدها را به درستی پر کنید.');
