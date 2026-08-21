@@ -66,10 +66,11 @@
     
     function renderPost(post, container) {
         const paragraphs = post.content ? post.content.split('\n').filter(p => p.trim()) : [];
+        const imageUrl = post.image || 'assets/images/blog-default.jpg';
         
         container.innerHTML = `
             <div class="article-image">
-                <img src="${post.image || 'assets/images/blog-default.jpg'}" alt="${post.title}" 
+                <img src="${imageUrl}" alt="${post.title}" 
                      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%22450%22%3E%3Crect width=%22800%22 height=%22450%22 fill=%22%23243247%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%237A8A9E%22 font-size=%2228%22 font-family=%22Vazirmatn, Tahoma, sans-serif%22%3E${post.title}%3C/text%3E%3C/svg%3E'">
             </div>
             <div class="article-meta">
