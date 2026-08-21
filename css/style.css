@@ -2039,3 +2039,99 @@ footer {
         transform: translateY(0);
     }
 }
+
+/* ================================================================
+   ===== دکمه‌های CTA (دعوت به اقدام) =====
+   ================================================================ */
+
+/* ===== دکمه مشاوره رایگان (اصلی) ===== */
+.btn-consulting {
+    background: #2ED573;
+    color: var(--text-primary);
+    box-shadow: 0 4px 20px rgba(46, 213, 115, 0.35);
+    padding: var(--spacing-md) var(--spacing-2xl);
+    font-size: var(--font-size-base);
+    min-height: 52px;
+}
+
+.btn-consulting:hover,
+.btn-consulting:focus {
+    background: #26b86a;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 30px rgba(46, 213, 115, 0.5);
+}
+
+.btn-consulting:active {
+    transform: translateY(0);
+}
+
+.btn-consulting i {
+    font-size: var(--font-size-lg);
+}
+
+/* ===== دکمه تماس فوری (ثانویه) ===== */
+.btn-emergency {
+    background: #FF9F43;
+    color: var(--text-primary);
+    box-shadow: 0 4px 20px rgba(255, 159, 67, 0.3);
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: var(--font-size-sm);
+    min-height: 48px;
+}
+
+.btn-emergency:hover,
+.btn-emergency:focus {
+    background: #f1903a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 159, 67, 0.4);
+}
+
+.btn-emergency:active {
+    transform: translateY(0);
+}
+
+.btn-emergency i {
+    font-size: var(--font-size-base);
+}
+
+/* ===== دکمه مشاهده محصولات (ثالث) ===== */
+.btn-secondary {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--text-primary);
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: var(--font-size-sm);
+    min-height: 48px;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background: var(--primary);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+}
+
+/* ===== هدر CTA ===== */
+.hero-cta {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-xl);
+    align-items: center;
+}
+
+/* ===== ریسپانسیو ===== */
+@media (max-width: 480px) {
+    .hero-cta {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .hero-cta .btn-primary,
+    .hero-cta .btn-secondary,
+    .hero-cta .btn-gold {
+        width: 100%;
+        justify-content: center;
+        min-height: 50px;
+    }
+}
