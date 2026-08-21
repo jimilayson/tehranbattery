@@ -2,6 +2,15 @@
 // ===== مدیریت مقالات مجله خودرو =====
 // ============================================
 
+// ===== ۵ دسته‌بندی ثابت =====
+const BLOG_CATEGORIES = [
+    'مکانیک خودرو',
+    'برق و الکترونیک خودرو',
+    'باتری و سیستم شارژ',
+    'نگهداری و تعمیرات',
+    'راهنمای خرید قطعات'
+];
+
 function getBlogPosts() {
     if (window.App && window.App.database) {
         return window.App.database.data.blogPosts || [];
@@ -46,7 +55,6 @@ function renderBlogPosts(posts) {
             ? post.summary.substring(0, 150) + '...' 
             : post.summary || '';
         
-        // ===== تصویر مقاله از مسیر ذخیره‌شده خوانده می‌شود =====
         const imageUrl = post.image || 'assets/images/blog-default.jpg';
         
         return `
