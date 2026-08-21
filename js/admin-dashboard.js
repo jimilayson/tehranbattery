@@ -1137,7 +1137,7 @@ window.logout = function() {
 document.addEventListener('DOMContentLoaded', function() {
     
     // ============================================
-    // ===== ۱. Inputهای عددی - با پشتیبانی از Num Pad =====
+    // ===== ۱. Inputهای عددی - تبدیل همه اعداد انگلیسی به فارسی =====
     // ============================================
     
     const numberInputs = document.querySelectorAll(
@@ -1148,10 +1148,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     numberInputs.forEach(input => {
         if (input) {
-            // 🔥 تبدیل اعداد Num Pad به فارسی هنگام تایپ
+            // 🔥 تبدیل همه اعداد انگلیسی (Num Pad و Number Row) به فارسی
             input.addEventListener('keydown', function(e) {
-                // بررسی: آیا کلید Num Pad (0-9) فشار داده شده است؟
-                if (e.key >= '0' && e.key <= '9' && e.location === 3) {
+                // بررسی: آیا کلید عددی (0-9) فشار داده شده است؟
+                // این شامل هر دو Num Pad (location: 3) و Number Row (location: 0) می‌شود
+                if (e.key >= '0' && e.key <= '9') {
                     const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
                     const englishDigit = parseInt(e.key);
                     const persianChar = persianDigits[englishDigit];
