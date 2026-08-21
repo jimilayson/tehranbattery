@@ -634,90 +634,92 @@
     </div>
 
     <!-- ===== مودال افزودن مقاله ===== -->
-    <div id="addBlogModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal('addBlogModal')">&times;</span>
-            <h3>📝 افزودن مقاله جدید</h3>
-            <form id="addBlogForm" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label>عنوان مقاله</label>
-                    <input type="text" id="blogTitle" placeholder="عنوان مقاله را وارد کنید" required>
-                </div>
-                <div class="form-group">
-                    <label>دسته‌بندی</label>
-                    <select id="blogCategory" required>
-                        <option value="">انتخاب دسته‌بندی</option>
-                        <option value="مکانیک خودرو">مکانیک خودرو</option>
-                        <option value="برق و الکترونیک خودرو">برق و الکترونیک خودرو</option>
-                        <option value="باتری و سیستم شارژ">باتری و سیستم شارژ</option>
-                        <option value="نگهداری و تعمیرات">نگهداری و تعمیرات</option>
-                        <option value="راهنمای خرید قطعات">راهنمای خرید قطعات</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>خلاصه مقاله (حداکثر ۱۵۰ کاراکتر)</label>
-                    <textarea id="blogSummary" rows="2" placeholder="خلاصه مقاله را وارد کنید" maxlength="150"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>متن کامل مقاله (حداکثر ۵۰۰۰ کاراکتر)</label>
-                    <textarea id="blogContent" rows="6" placeholder="متن کامل مقاله را وارد کنید" required maxlength="5000"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>تصویر مقاله (ابعاد پیشنهادی: ۸۰۰×۴۵۰ پیکسل)</label>
-                    <input type="file" id="blogImage" accept="image/*" onchange="previewImage(this, 'addBlogImagePreview')">
-                    <div id="addBlogImagePreview" style="margin-top: 8px; display: none;">
-                        <img id="addBlogPreviewImg" src="#" alt="پیش‌نمایش" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid var(--border-color);">
-                        <button type="button" onclick="removeImage('addBlogImagePreview', 'blogImage')" style="display: block; margin-top: 4px; background: var(--danger); color: var(--text-primary); border: none; border-radius: 4px; padding: 2px 12px; cursor: pointer; font-family: inherit;">✕ حذف تصویر</button>
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary">✅ انتشار مقاله</button>
-            </form>
-        </div>
+<div id="addBlogModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal('addBlogModal')">&times;</span>
+        <h3>📝 افزودن مقاله جدید</h3>
+        <form id="addBlogForm">
+            <div class="form-group">
+                <label>عنوان مقاله</label>
+                <input type="text" id="blogTitle" placeholder="عنوان مقاله را وارد کنید" required>
+            </div>
+            <div class="form-group">
+                <label>دسته‌بندی</label>
+                <select id="blogCategory" required>
+                    <option value="">انتخاب دسته‌بندی</option>
+                    <option value="مکانیک خودرو">مکانیک خودرو</option>
+                    <option value="برق و الکترونیک خودرو">برق و الکترونیک خودرو</option>
+                    <option value="باتری و سیستم شارژ">باتری و سیستم شارژ</option>
+                    <option value="نگهداری و تعمیرات">نگهداری و تعمیرات</option>
+                    <option value="راهنمای خرید قطعات">راهنمای خرید قطعات</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>خلاصه مقاله (حداکثر ۱۵۰ کاراکتر)</label>
+                <textarea id="blogSummary" rows="2" placeholder="خلاصه مقاله را وارد کنید" maxlength="150"></textarea>
+            </div>
+            <div class="form-group">
+                <label>متن کامل مقاله (حداکثر ۵۰۰۰ کاراکتر)</label>
+                <textarea id="blogContent" rows="6" placeholder="متن کامل مقاله را وارد کنید" required maxlength="5000"></textarea>
+            </div>
+            <!-- ===== جدید: فقط نام فایل تصویر ===== -->
+            <div class="form-group">
+                <label>نام فایل تصویر</label>
+                <input type="text" id="blogImageName" placeholder="مثلاً battery-1.jpg" 
+                       style="direction: ltr; font-size: 14px;">
+                <small style="color: var(--text-muted); display: block; margin-top: 4px;">
+                    ⚠️ فقط نام فایل را وارد کنید (مثلاً battery-1.jpg). 
+                    فایل باید در پوشه <strong>assets/images/</strong> موجود باشد.
+                </small>
+            </div>
+            <button type="submit" class="btn-primary">✅ انتشار مقاله</button>
+        </form>
     </div>
+</div>
 
-    <!-- ===== مودال ویرایش مقاله ===== -->
-    <div id="editBlogModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal('editBlogModal')">&times;</span>
-            <h3>✏️ ویرایش مقاله</h3>
-            <form id="editBlogForm" enctype="multipart/form-data">
-                <input type="hidden" id="editBlogId">
-                <div class="form-group">
-                    <label>عنوان مقاله</label>
-                    <input type="text" id="editBlogTitle" required>
-                </div>
-                <div class="form-group">
-                    <label>دسته‌بندی</label>
-                    <select id="editBlogCategory" required>
-                        <option value="">انتخاب دسته‌بندی</option>
-                        <option value="مکانیک خودرو">مکانیک خودرو</option>
-                        <option value="برق و الکترونیک خودرو">برق و الکترونیک خودرو</option>
-                        <option value="باتری و سیستم شارژ">باتری و سیستم شارژ</option>
-                        <option value="نگهداری و تعمیرات">نگهداری و تعمیرات</option>
-                        <option value="راهنمای خرید قطعات">راهنمای خرید قطعات</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>خلاصه مقاله (حداکثر ۱۵۰ کاراکتر)</label>
-                    <textarea id="editBlogSummary" rows="2" maxlength="150"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>متن کامل مقاله (حداکثر ۵۰۰۰ کاراکتر)</label>
-                    <textarea id="editBlogContent" rows="6" required maxlength="5000"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>تصویر مقاله</label>
-                    <input type="file" id="editBlogImage" accept="image/*" onchange="previewImage(this, 'editBlogImagePreview')">
-                    <div id="editBlogImagePreview" style="margin-top: 8px;">
-                        <img id="editBlogPreviewImg" src="#" alt="پیش‌نمایش" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid var(--border-color); display: none;">
-                        <span id="editBlogCurrentImage" style="color: var(--text-muted); font-size: 13px;">تصویر فعلی: assets/images/blog-default.jpg</span>
-                        <button type="button" onclick="removeImage('editBlogImagePreview', 'editBlogImage')" style="display: block; margin-top: 4px; background: var(--danger); color: var(--text-primary); border: none; border-radius: 4px; padding: 2px 12px; cursor: pointer; font-family: inherit;">✕ حذف تصویر</button>
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary">✅ ذخیره تغییرات</button>
-            </form>
-        </div>
+<!-- ===== مودال ویرایش مقاله ===== -->
+<div id="editBlogModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal('editBlogModal')">&times;</span>
+        <h3>✏️ ویرایش مقاله</h3>
+        <form id="editBlogForm">
+            <input type="hidden" id="editBlogId">
+            <div class="form-group">
+                <label>عنوان مقاله</label>
+                <input type="text" id="editBlogTitle" required>
+            </div>
+            <div class="form-group">
+                <label>دسته‌بندی</label>
+                <select id="editBlogCategory" required>
+                    <option value="">انتخاب دسته‌بندی</option>
+                    <option value="مکانیک خودرو">مکانیک خودرو</option>
+                    <option value="برق و الکترونیک خودرو">برق و الکترونیک خودرو</option>
+                    <option value="باتری و سیستم شارژ">باتری و سیستم شارژ</option>
+                    <option value="نگهداری و تعمیرات">نگهداری و تعمیرات</option>
+                    <option value="راهنمای خرید قطعات">راهنمای خرید قطعات</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>خلاصه مقاله (حداکثر ۱۵۰ کاراکتر)</label>
+                <textarea id="editBlogSummary" rows="2" maxlength="150"></textarea>
+            </div>
+            <div class="form-group">
+                <label>متن کامل مقاله (حداکثر ۵۰۰۰ کاراکتر)</label>
+                <textarea id="editBlogContent" rows="6" required maxlength="5000"></textarea>
+            </div>
+            <!-- ===== جدید: فقط نام فایل تصویر ===== -->
+            <div class="form-group">
+                <label>نام فایل تصویر</label>
+                <input type="text" id="editBlogImageName" placeholder="مثلاً battery-1.jpg" 
+                       style="direction: ltr; font-size: 14px;">
+                <small style="color: var(--text-muted); display: block; margin-top: 4px;">
+                    ⚠️ فقط نام فایل را وارد کنید. فایل باید در پوشه <strong>assets/images/</strong> موجود باشد.
+                </small>
+            </div>
+            <button type="submit" class="btn-primary">✅ ذخیره تغییرات</button>
+        </form>
     </div>
+</div>
 
     <!-- ===== اسکریپت‌های اصلی ===== -->
     <script src="js/core/config.js"></script>
