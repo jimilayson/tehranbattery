@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     
     <!-- ===== SEO Meta Tags ===== -->
-    <title>طهران باتری | تعمیرگاه تخصصی و فروش لوازم یدکی خودرو</title>
-    <meta name="description" content="تعمیرگاه تخصصی خودروهای ایرانی و خارجی، فروش لوازم یدکی، خدمات برق خودرو، کولر، باتری و عیب‌یابی تخصصی با ضمانت کیفیت">
-    <meta name="keywords" content="تعمیرگاه خودرو, تعمیرات تخصصی, لوازم یدکی, برق خودرو, باتری خودرو, کولر خودرو, عیب‌یابی خودرو">
+    <title>طهران باتری | فروش تخصصی باتری خودرو</title>
+    <meta name="description" content="فروش تخصصی باتری خودروهای ایرانی و خارجی، انواع باتری با آمپراژ و برندهای مختلف، ضمانت کیفیت و قیمت مناسب">
+    <meta name="keywords" content="باتری خودرو, فروش باتری, باتری ماشین, باتری ایرانی, باتری خارجی, آمپراژ باتری">
     
     <!-- ===== Open Graph ===== -->
-    <meta property="og:title" content="طهران باتری | تعمیرگاه تخصصی و فروش لوازم یدکی">
-    <meta property="og:description" content="تعمیرات تخصصی خودروهای ایرانی و خارجی با بهترین کیفیت">
+    <meta property="og:title" content="طهران باتری | فروش تخصصی باتری خودرو">
+    <meta property="og:description" content="فروش تخصصی باتری خودروهای ایرانی و خارجی با بهترین کیفیت">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tehranbattery.vercel.app">
     
@@ -30,7 +30,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <!-- ===== فونت و استایل ===== -->
-    <link rel="stylesheet" href="css/style.css?v=4.1">
+    <link rel="stylesheet" href="css/style.css?v=4.2">
     <link rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" 
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" 
@@ -43,7 +43,7 @@
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
         "name": "طهران باتری",
-        "description": "تعمیرگاه تخصصی خودروهای ایرانی و خارجی، فروش لوازم یدکی",
+        "description": "فروش تخصصی باتری خودروهای ایرانی و خارجی",
         "address": {
             "@type": "PostalAddress",
             "streetAddress": "تهران، خیابان آزادی، خیابان تهران‌پارس، پلاک ۱۲",
@@ -138,6 +138,60 @@
             }
         }
 
+        /* ===== استایل دکمه افزودن به سبد خرید ===== */
+        .btn-order {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--primary);
+            color: var(--text-primary);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-family: var(--font-family);
+        }
+
+        .btn-order:hover {
+            background: #2ED573 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(46, 213, 115, 0.3);
+        }
+
+        .btn-order:active {
+            transform: translateY(0);
+        }
+
+        /* ===== استایل فیلترهای فروشگاه ===== */
+        .shop-filters {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-family: var(--font-family);
+            min-width: 140px;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
         /* ===== ریسپانسیو ===== */
         @media (max-width: 768px) {
             .header-cart {
@@ -157,6 +211,13 @@
                 top: -4px;
                 right: -4px;
             }
+            .shop-filters {
+                width: 100%;
+                flex-direction: column;
+            }
+            .filter-select {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -166,12 +227,12 @@
         <div class="container header-flex">
             <div class="logo">
                 <h1>طهران باتری</h1>
-                <span class="logo-tagline">تعمیرگاه تخصصی و فروش قطعات</span>
+                <span class="logo-tagline">فروش تخصصی باتری خودرو</span>
             </div>
             <nav>
                 <ul class="nav-menu">
-                    <li><a href="#services">خدمات ما</a></li>
                     <li><a href="#shop">فروشگاه</a></li>
+                    <li><a href="#services">خدمات ما</a></li>
                     <li><a href="#about">درباره ما</a></li>
                     <li><a href="#testimonials">نظرات مشتریان</a></li>
                     <li><a href="#blog">مجله خودرو</a></li>
@@ -211,12 +272,12 @@
                         <i class="fas fa-star"></i>
                         <span>بیش از ۱۵ سال تجربه</span>
                     </div>
-                    <h1>خدمات تخصصی انواع اتومبیل‌های ایرانی و خارجی</h1>
-                    <p class="subtitle">مکانیکی حرفه‌ای و بورس لوازم یدکی خودرو</p>
+                    <h1>فروش تخصصی باتری خودروهای ایرانی و خارجی</h1>
+                    <p class="subtitle">انواع باتری با آمپراژ و برندهای مختلف، ضمانت کیفیت و قیمت مناسب</p>
                     <div class="hero-cta">
-                        <a href="#contact" class="btn-primary">
-                            <i class="fas fa-headset"></i>
-                            مشاوره رایگان
+                        <a href="#shop" class="btn-primary">
+                            <i class="fas fa-shopping-cart"></i>
+                            مشاهده محصولات
                         </a>
                         <a href="tel:02112345678" class="btn-gold">
                             <i class="fas fa-phone-alt"></i>
@@ -237,210 +298,106 @@
                             <span class="stat-label">رضایت مشتریان</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number">۵۰۰+</span>
-                            <span class="stat-label">قطعه موجود</span>
+                            <span class="stat-number">۲۰+</span>
+                            <span class="stat-label">مدل باتری</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== SERVICES ===== -->
-        <section id="services" class="section">
-            <div class="container">
-                <h2 class="section-title">خدمات ما</h2>
-                <p class="section-subtitle">خدمات تخصصی با بهترین کیفیت و ضمانت</p>
-                <div class="grid-3">
-                    <div class="card">
-                        <div class="card-icon">
-                            <i class="fas fa-car"></i>
-                        </div>
-                        <h3>تعمیرات تخصصی خودرو</h3>
-                        <p>عیب‌یابی، سرویس و تعمیر خودروهای ایرانی و خارجی توسط تکنسین متخصص</p>
-                        <div class="card-badge">ضمانت کیفیت</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <h3>برق خودرو و سیستم الکتریکی</h3>
-                        <p>تعمیر استارت، دینام، سیم‌کشی، ECU و مشکلات برقی خودرو</p>
-                        <div class="card-badge">تخصصی</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon">
-                            <i class="fas fa-snowflake"></i>
-                        </div>
-                        <h3>سیستم کولر خودرو</h3>
-                        <p>شارژ گاز کولر، تعمیر کمپرسور، نشت‌یابی و سرویس کامل کولر</p>
-                        <div class="card-badge">اورجینال</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon">
-                            <i class="fas fa-car-battery"></i>
-                        </div>
-                        <h3>باتری و سیستم شارژ</h3>
-                        <p>فروش، تست، تعویض و بررسی تخصصی باتری خودرو</p>
-                        <div class="card-badge">گارانتی</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon">
-                            <i class="fas fa-gears"></i>
-                        </div>
-                        <h3>لوازم یدکی خودرو</h3>
-                        <p>تامین قطعات مصرفی و تخصصی خودروهای داخلی و خارجی</p>
-                        <div class="card-badge">اصل</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon">
-                            <i class="fas fa-magnifying-glass"></i>
-                        </div>
-                        <h3>عیب‌یابی تخصصی</h3>
-                        <p>تشخیص دقیق مشکل خودرو قبل از تعمیر با تجهیزات مدرن</p>
-                        <div class="card-badge">دقیق</div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- ===== SHOP ===== -->
-        <section id="shop" class="section alt-bg">
+<section id="shop" class="section" style="padding-top: 0;">
+    <div class="container">
+        <div class="shop-header" id="shopHeader">
+            <div>
+                <h2 class="section-title">فروشگاه باتری</h2>
+                <p class="section-subtitle">انواع باتری خودرو با آمپراژ و برندهای مختلف</p>
+            </div>
+            <div class="shop-filters">
+                <select class="filter-select" id="filterBrand">
+                    <option value="all">همه برندها</option>
+                    <option value="ایران باتری">ایران باتری</option>
+                    <option value="سپاهان باتری">سپاهان باتری</option>
+                    <option value="بوش">بوش</option>
+                    <option value="دنسو">دنسو</option>
+                </select>
+                <select class="filter-select" id="filterAmp">
+                    <option value="all">همه آمپراژها</option>
+                    <option value="44">۴۴ آمپر</option>
+                    <option value="50">۵۰ آمپر</option>
+                    <option value="55">۵۵ آمپر</option>
+                    <option value="60">۶۰ آمپر</option>
+                    <option value="66">۶۶ آمپر</option>
+                    <option value="74">۷۴ آمپر</option>
+                    <option value="80">۸۰ آمپر</option>
+                    <option value="100">۱۰۰ آمپر</option>
+                </select>
+            </div>
+        </div>
+        <div class="shop-grid" id="productGrid">
+            <!-- ===== محصولات توسط JavaScript از دیتابیس بارگذاری می‌شوند ===== -->
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                <i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i>
+                <p style="margin-top: 12px;">در حال بارگذاری محصولات...</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- ===== SERVICES ===== -->
+        <section id="services" class="section alt-bg">
             <div class="container">
-                <div class="shop-header">
-                    <div>
-                        <h2 class="section-title">فروشگاه قطعات</h2>
-                        <p class="section-subtitle">قطعات اورجینال با بهترین قیمت</p>
+                <h2 class="section-title">خدمات ما</h2>
+                <p class="section-subtitle">خدمات تخصصی باتری با بهترین کیفیت و ضمانت</p>
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-car-battery"></i>
+                        </div>
+                        <h3>فروش باتری</h3>
+                        <p>انواع باتری خودروهای ایرانی و خارجی با بهترین برندها و قیمت مناسب</p>
+                        <div class="card-badge">اورجینال</div>
                     </div>
-                    <div class="shop-filters">
-                        <select class="filter-select">
-                            <option value="all">همه قطعات</option>
-                            <option value="battery">باتری</option>
-                            <option value="electrical">برقی</option>
-                            <option value="cooling">خنک‌کننده</option>
-                        </select>
-                        <select class="filter-select">
-                            <option value="all">همه برندها</option>
-                            <option value="iran">ایران باتری</option>
-                            <option value="bosch">بوش</option>
-                            <option value="denso">دنسو</option>
-                        </select>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>تست و عیب‌یابی باتری</h3>
+                        <p>بررسی سلامت باتری، تست شارژ و دینام با تجهیزات پیشرفته</p>
+                        <div class="card-badge">دقیق</div>
                     </div>
-                </div>
-                <div class="shop-grid">
-                    <!-- ===== محصول ۱: باتری ۶۰ آمپر ===== -->
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="assets/images/battery.jpg" alt="باتری ۶۰ آمپر ایرانی" class="product-img" data-fallback="باتری">
-                            <span class="product-badge">موجود</span>
-                            <span class="product-guarantee"><i class="fas fa-shield-alt"></i> گارانتی</span>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-exchange-alt"></i>
                         </div>
-                        <div class="product-info">
-                            <h4>باتری ۶۰ آمپر</h4>
-                            <div class="product-meta">
-                                <span class="product-brand"><i class="fas fa-tag"></i> ایران باتری</span>
-                                <span class="product-compatible"><i class="fas fa-car"></i> پراید، ۲۰۶، پژو</span>
-                            </div>
-                            <div class="product-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <span>(۱۲۴ نظر)</span>
-                            </div>
-                            <span class="price">۲,۵۰۰,۰۰۰ تومان</span>
-                            <button class="btn-order" onclick="addToCart(1, 'باتری ۶۰ آمپر', 2500000)">
-                                <i class="fas fa-shopping-cart"></i>
-                                افزودن به سبد خرید
-                            </button>
-                        </div>
+                        <h3>تعویض باتری در محل</h3>
+                        <p>تعویض باتری خودرو در محل بدون نیاز به مراجعه به تعمیرگاه</p>
+                        <div class="card-badge">سریع</div>
                     </div>
-
-                    <!-- ===== محصول ۲: دینام خودرو ===== -->
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="assets/images/alternator.jpg" alt="دینام خودرو اورجینال" class="product-img" data-fallback="دینام">
-                            <span class="product-badge">موجود</span>
-                            <span class="product-guarantee"><i class="fas fa-shield-alt"></i> گارانتی</span>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-shield-alt"></i>
                         </div>
-                        <div class="product-info">
-                            <h4>دینام خودرو</h4>
-                            <div class="product-meta">
-                                <span class="product-brand"><i class="fas fa-tag"></i> بوش</span>
-                                <span class="product-compatible"><i class="fas fa-car"></i> سمند، ۴۰۵، تیبا</span>
-                            </div>
-                            <div class="product-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span>(۸۹ نظر)</span>
-                            </div>
-                            <span class="price">۴,۸۰۰,۰۰۰ تومان</span>
-                            <button class="btn-order" onclick="addToCart(2, 'دینام خودرو', 4800000)">
-                                <i class="fas fa-shopping-cart"></i>
-                                افزودن به سبد خرید
-                            </button>
-                        </div>
+                        <h3>گارانتی معتبر</h3>
+                        <p>همه باتری‌ها با گارانتی معتبر و ضمانت بازگشت وجه</p>
+                        <div class="card-badge">معتبر</div>
                     </div>
-
-                    <!-- ===== محصول ۳: استارت ۱۲ ولت ===== -->
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="assets/images/starter.jpg" alt="استارت ۱۲ ولت" class="product-img" data-fallback="استارت">
-                            <span class="product-badge">موجود</span>
-                            <span class="product-guarantee"><i class="fas fa-shield-alt"></i> گارانتی</span>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-truck"></i>
                         </div>
-                        <div class="product-info">
-                            <h4>استارت ۱۲ ولت</h4>
-                            <div class="product-meta">
-                                <span class="product-brand"><i class="fas fa-tag"></i> دنسو</span>
-                                <span class="product-compatible"><i class="fas fa-car"></i> پژو ۲۰۶، ۲۰۷</span>
-                            </div>
-                            <div class="product-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span>(۶۷ نظر)</span>
-                            </div>
-                            <span class="price">۳,۲۰۰,۰۰۰ تومان</span>
-                            <button class="btn-order" onclick="addToCart(3, 'استارت ۱۲ ولت', 3200000)">
-                                <i class="fas fa-shopping-cart"></i>
-                                افزودن به سبد خرید
-                            </button>
-                        </div>
+                        <h3>ارسال سریع</h3>
+                        <p>ارسال باتری به سراسر تهران در سریع‌ترین زمان ممکن</p>
+                        <div class="card-badge">۲۴ ساعته</div>
                     </div>
-
-                    <!-- ===== محصول ۴: کمپرسور کولر ===== -->
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="assets/images/compressor.jpg" alt="کمپرسور کولر خودرو" class="product-img" data-fallback="کمپرسور">
-                            <span class="product-badge">موجود</span>
-                            <span class="product-guarantee"><i class="fas fa-shield-alt"></i> گارانتی</span>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
                         </div>
-                        <div class="product-info">
-                            <h4>کمپرسور کولر</h4>
-                            <div class="product-meta">
-                                <span class="product-brand"><i class="fas fa-tag"></i> ساندن</span>
-                                <span class="product-compatible"><i class="fas fa-car"></i> تویوتا، نیسان</span>
-                            </div>
-                            <div class="product-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span>(۴۵ نظر)</span>
-                            </div>
-                            <span class="price">۵,۵۰۰,۰۰۰ تومان</span>
-                            <button class="btn-order" onclick="addToCart(4, 'کمپرسور کولر', 5500000)">
-                                <i class="fas fa-shopping-cart"></i>
-                                افزودن به سبد خرید
-                            </button>
-                        </div>
+                        <h3>قیمت مناسب</h3>
+                        <p>بهترین قیمت‌ها با تضمین کیفیت و اصالت کالا</p>
+                        <div class="card-badge">مقرون‌به‌صرفه</div>
                     </div>
                 </div>
             </div>
@@ -450,13 +407,13 @@
         <section id="about" class="section">
             <div class="container">
                 <div class="about-banner">
-                    <img src="assets/images/about.jpg" alt="طهران باتری - تعمیرگاه تخصصی خودرو" class="about-image">
+                    <img src="assets/images/about.jpg" alt="طهران باتری - فروش تخصصی باتری خودرو" class="about-image">
                 </div>
                 <div class="about-content">
                     <h2 class="section-title">درباره ما</h2>
                     <div class="about-text">
-                        <p>طهران باتری مجموعه‌ای تخصصی در زمینه تعمیرات خودرو، خدمات برق، مکانیکی و تامین قطعات یدکی خودروهای ایرانی و خارجی است.</p>
-                        <p>با بهره‌گیری از تجربه، تجهیزات مناسب و تامین قطعات باکیفیت، تلاش می‌کنیم خدماتی سریع، دقیق و قابل اعتماد ارائه دهیم.</p>
+                        <p>طهران باتری مجموعه‌ای تخصصی در زمینه فروش باتری خودروهای ایرانی و خارجی با بیش از ۱۵ سال تجربه درخشان است.</p>
+                        <p>ما با بهره‌گیری از تجربه، تامین باتری‌های باکیفیت و ارائه خدمات پس از فروش، تلاش می‌کنیم بهترین تجربه خرید را برای مشتریان عزیز فراهم کنیم.</p>
                         <div class="about-features">
                             <div class="about-feature">
                                 <i class="fas fa-user-tie"></i>
@@ -508,7 +465,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="testimonial-text">"کیفیت کارشون عالی بود. دینام ماشینم رو تعمیر کردن و خیلی سریع و حرفه‌ای کار رو انجام دادن. حتماً به دوستانم پیشنهاد می‌دم."</p>
+                        <p class="testimonial-text">"باتری ۶۶ آمپر ایران باتری رو خریدم. کیفیت عالی و قیمت مناسب. ارسال سریع و حرفه‌ای. حتماً به دوستانم پیشنهاد می‌دم."</p>
                         <span class="testimonial-date">۲ هفته پیش</span>
                     </div>
                     <div class="testimonial-card">
@@ -546,7 +503,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="testimonial-text">"سیستم کولر ماشینم رو کامل سرویس کردن، الان مثل روز اول خنک می‌کنه. ممنون از تیم حرفه‌ای طهران باتری."</p>
+                        <p class="testimonial-text">"باتری ۷۴ آمپر بوش رو سفارش دادم. کیفیت فوق‌العاده و قیمت مناسب. ممنون از تیم حرفه‌ای طهران باتری."</p>
                         <span class="testimonial-date">۳ ماه پیش</span>
                     </div>
                 </div>
@@ -557,30 +514,29 @@
         <section id="blog" class="section">
             <div class="container">
                 <h2 class="section-title">مجله خودرو</h2>
-                <p class="section-subtitle">مطالب تخصصی و آموزشی صنعت خودرو</p>
+                <p class="section-subtitle">مطالب تخصصی و آموزشی درباره باتری خودرو</p>
                 
                 <div class="blog-categories">
                     <span class="category-tag active">همه</span>
-                    <span class="category-tag">آموزش خودرو</span>
-                    <span class="category-tag">نگهداری خودرو</span>
+                    <span class="category-tag">آموزش باتری</span>
+                    <span class="category-tag">نگهداری باتری</span>
                     <span class="category-tag">مشکلات رایج</span>
-                    <span class="category-tag">معرفی قطعات</span>
                     <span class="category-tag">راهنمای خرید</span>
                 </div>
                 
                 <div class="blog-grid">
                     <article class="blog-card">
                         <div class="blog-image">
-                            <img src="assets/images/blog1.jpg" alt="آموزش تعویض روغن خودرو" data-fallback="آموزش">
-                            <span class="blog-category">آموزش خودرو</span>
-                            <span class="blog-date"><i class="far fa-calendar-alt"></i> ۱۲ آبان ۱۴۰۵</span>
+                            <img src="assets/images/blog3.jpg" alt="نگهداری از باتری خودرو" data-fallback="باتری">
+                            <span class="blog-category">نگهداری باتری</span>
+                            <span class="blog-date"><i class="far fa-calendar-alt"></i> ۲۸ مهر ۱۴۰۵</span>
                         </div>
                         <div class="blog-content">
-                            <h3>راهنمای جامع تعویض روغن خودرو</h3>
-                            <p>آموزش گام به گام تعویض روغن و فیلتر روغن در خانه</p>
+                            <h3>نگهداری اصولی از باتری خودرو</h3>
+                            <p>نکات طلایی برای افزایش عمر باتری خودرو</p>
                             <div class="blog-meta">
-                                <span><i class="far fa-eye"></i> ۲,۳۴۵ بازدید</span>
-                                <span><i class="far fa-comment"></i> ۱۲ نظر</span>
+                                <span><i class="far fa-eye"></i> ۳,۴۵۶ بازدید</span>
+                                <span><i class="far fa-comment"></i> ۲۱ نظر</span>
                             </div>
                             <a href="#" class="blog-link">مطالعه مقاله <i class="fas fa-arrow-left"></i></a>
                         </div>
@@ -603,16 +559,16 @@
                     </article>
                     <article class="blog-card">
                         <div class="blog-image">
-                            <img src="assets/images/blog3.jpg" alt="نگهداری از باتری خودرو" data-fallback="باتری">
-                            <span class="blog-category">نگهداری خودرو</span>
-                            <span class="blog-date"><i class="far fa-calendar-alt"></i> ۲۸ مهر ۱۴۰۵</span>
+                            <img src="assets/images/blog1.jpg" alt="راهنمای انتخاب باتری مناسب" data-fallback="راهنما">
+                            <span class="blog-category">راهنمای خرید</span>
+                            <span class="blog-date"><i class="far fa-calendar-alt"></i> ۱۲ آبان ۱۴۰۵</span>
                         </div>
                         <div class="blog-content">
-                            <h3>نگهداری اصولی از باتری خودرو</h3>
-                            <p>نکات طلایی برای افزایش عمر باتری خودرو</p>
+                            <h3>راهنمای انتخاب باتری مناسب خودرو</h3>
+                            <p>چگونه باتری مناسب برای خودرو خود انتخاب کنیم؟</p>
                             <div class="blog-meta">
-                                <span><i class="far fa-eye"></i> ۳,۴۵۶ بازدید</span>
-                                <span><i class="far fa-comment"></i> ۲۱ نظر</span>
+                                <span><i class="far fa-eye"></i> ۲,۳۴۵ بازدید</span>
+                                <span><i class="far fa-comment"></i> ۱۲ نظر</span>
                             </div>
                             <a href="#" class="blog-link">مطالعه مقاله <i class="fas fa-arrow-left"></i></a>
                         </div>
@@ -622,7 +578,7 @@
         </section>
 
         <!-- ===== CONTACT ===== -->
-        <section id="contact" class="section">
+        <section id="contact" class="section alt-bg">
             <div class="container">
                 <h2 class="section-title">تماس با ما</h2>
                 <p class="section-subtitle">همیشه در دسترس شما هستیم</p>
@@ -686,11 +642,10 @@
                             <input type="email" placeholder="ایمیل (اختیاری)">
                             <select required>
                                 <option value="">نوع خدمات مورد نظر</option>
-                                <option value="تعمیرات">تعمیرات خودرو</option>
-                                <option value="برق خودرو">برق خودرو</option>
-                                <option value="کولر">سیستم کولر</option>
-                                <option value="باتری">باتری و شارژ</option>
-                                <option value="قطعات">لوازم یدکی</option>
+                                <option value="خرید باتری">خرید باتری</option>
+                                <option value="مشاوره">مشاوره رایگان</option>
+                                <option value="تعویض">تعویض باتری در محل</option>
+                                <option value="عیب‌یابی">عیب‌یابی باتری</option>
                             </select>
                             <textarea rows="4" placeholder="پیام شما..." required></textarea>
                             <button type="submit" class="btn-primary">
@@ -726,11 +681,11 @@
         <div class="container footer-flex">
             <div class="footer-logo">
                 <h2>طهران باتری</h2>
-                <p>تعمیرگاه و فروش قطعات لوازم یدکی خودرو</p>
+                <p>فروش تخصصی باتری خودرو</p>
                 <div class="footer-trust">
                     <span><i class="fas fa-check-circle"></i> ۱۵ سال تجربه</span>
                     <span><i class="fas fa-check-circle"></i> ضمانت کیفیت</span>
-                    <span><i class="fas fa-check-circle"></i> قطعات اورجینال</span>
+                    <span><i class="fas fa-check-circle"></i> باتری‌های اورجینال</span>
                 </div>
                 <div class="footer-certificates">
                     <img src="assets/images/cert1.png" alt="گواهینامه" class="cert-img" data-fallback="گواهی">
@@ -740,8 +695,8 @@
             </div>
             <div class="footer-links">
                 <h4>دسترسی سریع</h4>
-                <a href="#services">خدمات ما</a>
                 <a href="#shop">فروشگاه</a>
+                <a href="#services">خدمات ما</a>
                 <a href="#about">درباره ما</a>
                 <a href="#testimonials">نظرات مشتریان</a>
                 <a href="#blog">مجله خودرو</a>
@@ -749,11 +704,11 @@
             </div>
             <div class="footer-links">
                 <h4>خدمات ما</h4>
-                <a href="#services">تعمیرات تخصصی</a>
-                <a href="#services">برق خودرو</a>
-                <a href="#services">سیستم کولر</a>
-                <a href="#services">باتری و شارژ</a>
-                <a href="#services">لوازم یدکی</a>
+                <a href="#services">فروش باتری</a>
+                <a href="#services">تست و عیب‌یابی</a>
+                <a href="#services">تعویض در محل</a>
+                <a href="#services">گارانتی معتبر</a>
+                <a href="#services">ارسال سریع</a>
             </div>
             <div class="footer-social">
                 <h4>ما را دنبال کنید</h4>
@@ -785,7 +740,7 @@
     <!-- ============================================ -->
     
     <!-- ===== ۱. اسکریپت قبلی ===== -->
-    <script src="js/main.js?v=4.1"></script>
+    <script src="js/main.js?v=4.2"></script>
     
     <!-- ===== ۲. سیستم جدید طهران باتری ===== -->
     <!-- تنظیمات مرکزی -->
@@ -812,6 +767,40 @@
     <!-- ===== ۳. سیستم سبد خرید و همگام‌سازی ===== -->
     <script src="js/ui/cart-ui.js"></script>
     <script src="js/ui/admin-sync.js"></script>
+    
+    <!-- ===== ۴. فیلترهای فروشگاه ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBrand = document.getElementById('filterBrand');
+            const filterAmp = document.getElementById('filterAmp');
+            const products = document.querySelectorAll('.product-card');
+            
+            function filterProducts() {
+                const brand = filterBrand.value;
+                const amp = filterAmp.value;
+                
+                products.forEach(product => {
+                    const productBrand = product.dataset.brand;
+                    const productAmp = product.dataset.amp;
+                    
+                    let show = true;
+                    
+                    if (brand !== 'all' && productBrand !== brand) {
+                        show = false;
+                    }
+                    
+                    if (amp !== 'all' && productAmp !== amp) {
+                        show = false;
+                    }
+                    
+                    product.style.display = show ? 'block' : 'none';
+                });
+            }
+            
+            filterBrand.addEventListener('change', filterProducts);
+            filterAmp.addEventListener('change', filterProducts);
+        });
+    </script>
     
 </body>
 </html>

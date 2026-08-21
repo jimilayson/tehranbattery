@@ -20,7 +20,7 @@ class MockDatabase {
             if (saved) {
                 const parsed = JSON.parse(saved);
                 console.log('💾 داده‌ها از localStorage بارگذاری شدند');
-                console.log(`📊 ${parsed.orders?.length || 0} سفارش، ${parsed.customers?.length || 0} مشتری`);
+                console.log(`📊 ${parsed.orders?.length || 0} سفارش، ${parsed.customers?.length || 0} مشتری، ${parsed.products?.length || 0} محصول`);
                 return parsed;
             }
         } catch (e) {
@@ -48,21 +48,166 @@ class MockDatabase {
     getDefaultData() {
         return {
             products: [
-                { id: 1, name: 'باتری ۶۶ آمپر', brand: 'ایران باتری', amp: 66, price: 5800000, stock: 12, minStock: 5, sales: 128, revenue: 742400000 },
-                { id: 2, name: 'باتری ۵۵ آمپر', brand: 'سپاهان باتری', amp: 55, price: 4900000, stock: 8, minStock: 5, sales: 78, revenue: 382200000 },
-                { id: 3, name: 'باتری ۷۴ آمپر', brand: 'بوش', amp: 74, price: 6900000, stock: 2, minStock: 5, sales: 53, revenue: 365700000 },
-                { id: 4, name: 'باتری ۶۰ آمپر', brand: 'ایران باتری', amp: 60, price: 5200000, stock: 15, minStock: 8, sales: 45, revenue: 234000000 },
-                { id: 5, name: 'باتری ۴۴ آمپر', brand: 'دنسو', amp: 44, price: 3800000, stock: 6, minStock: 4, sales: 32, revenue: 121600000 },
-                { id: 6, name: 'باتری ۸۰ آمپر', brand: 'بوش', amp: 80, price: 8500000, stock: 0, minStock: 3, sales: 18, revenue: 153000000 },
-                { id: 7, name: 'باتری ۱۰۰ آمپر', brand: 'ایران باتری', amp: 100, price: 12000000, stock: 1, minStock: 2, sales: 7, revenue: 84000000 },
-                { id: 8, name: 'باتری ۵۰ آمپر', brand: 'سپاهان باتری', amp: 50, price: 4200000, stock: 4, minStock: 3, sales: 22, revenue: 92400000 },
+                { 
+                    id: 1, 
+                    name: 'باتری ۶۶ آمپر', 
+                    brand: 'ایران باتری', 
+                    amp: 66, 
+                    price: 5800000, 
+                    stock: 12, 
+                    minStock: 5, 
+                    sales: 128, 
+                    revenue: 742400000,
+                    image: 'assets/images/battery.jpg',
+                    compatible: 'سمند، ۲۰۶، ۲۰۷',
+                    rating: 5,
+                    reviews: 128
+                },
+                { 
+                    id: 2, 
+                    name: 'باتری ۵۵ آمپر', 
+                    brand: 'سپاهان باتری', 
+                    amp: 55, 
+                    price: 4900000, 
+                    stock: 8, 
+                    minStock: 5, 
+                    sales: 78, 
+                    revenue: 382200000,
+                    image: 'assets/images/battery.jpg',
+                    compatible: 'پژو ۴۰۵، تیبا',
+                    rating: 5,
+                    reviews: 78
+                },
+                { 
+                    id: 3, 
+                    name: 'باتری ۷۴ آمپر', 
+                    brand: 'بوش', 
+                    amp: 74, 
+                    price: 6900000, 
+                    stock: 2, 
+                    minStock: 5, 
+                    sales: 53, 
+                    revenue: 365700000,
+                    image: 'assets/images/battery.jpg',
+                    compatible: 'تویوتا، نیسان، مزدا',
+                    rating: 5,
+                    reviews: 53
+                },
+                { 
+                    id: 4, 
+                    name: 'باتری ۶۰ آمپر', 
+                    brand: 'ایران باتری', 
+                    amp: 60, 
+                    price: 5200000, 
+                    stock: 15, 
+                    minStock: 8, 
+                    sales: 45, 
+                    revenue: 234000000,
+                    image: 'assets/images/battery.jpg',
+                    compatible: 'پراید، ۲۰۶، پژو',
+                    rating: 4.5,
+                    reviews: 124
+                },
+                { 
+                    id: 5, 
+                    name: 'باتری ۴۴ آمپر', 
+                    brand: 'دنسو', 
+                    amp: 44, 
+                    price: 3800000, 
+                    stock: 6, 
+                    minStock: 4, 
+                    sales: 32, 
+                    revenue: 121600000,
+                    image: 'assets/images/battery.jpg',
+                    compatible: 'پراید، ۲۰۶',
+                    rating: 4.5,
+                    reviews: 32
+                },
+                { 
+                    id: 6, 
+                    name: 'باتری ۸۰ آمپر', 
+                    brand: 'بوش', 
+                    amp: 80, 
+                    price: 8500000, 
+                    stock: 0, 
+                    minStock: 3, 
+                    sales: 18, 
+                    revenue: 153000000,
+                    image: 'assets/images/battery.jpg',
+                    compatible: 'SUV، خودروهای سنگین',
+                    rating: 5,
+                    reviews: 18
+                },
+                { 
+                    id: 7, 
+                    name: 'باتری ۱۰۰ آمپر', 
+                    brand: 'ایران باتری', 
+                    amp: 100, 
+                    price: 12000000, 
+                    stock: 1, 
+                    minStock: 2, 
+                    sales: 7, 
+                    revenue: 84000000,
+                    image: 'assets/images/battery.jpg',
+                    compatible: 'خودروهای سنگین، SUV',
+                    rating: 5,
+                    reviews: 7
+                },
+                { 
+                    id: 8, 
+                    name: 'باتری ۵۰ آمپر', 
+                    brand: 'سپاهان باتری', 
+                    amp: 50, 
+                    price: 4200000, 
+                    stock: 4, 
+                    minStock: 3, 
+                    sales: 22, 
+                    revenue: 92400000,
+                    image: 'assets/images/battery.jpg',
+                    compatible: 'سمند، ۴۰۵',
+                    rating: 5,
+                    reviews: 22
+                }
             ],
             orders: [],
             customers: [],
             consultings: [
-                { id: 1, customer: 'علی رضایی', phone: '09123456789', car: 'پژو ۲۰۶', model: 'تیپ ۵', year: 1398, suggested: 'باتری ۵۵ آمپر', status: 'new', time: '۵ دقیقه پیش', message: 'سلام. ماشین من پژو ۲۰۶ مدل ۱۳۹۸ هست. باتری ماشین ضعیف شده و نمیدونم چه آمپراژی باید تهیه کنم. راهنمایی می‌خواستم. ممنون.' },
-                { id: 2, customer: 'سارا محمدی', phone: '09129876543', car: 'سمند', model: 'LX', year: 1399, suggested: 'باتری ۶۰ آمپر', status: 'reviewing', time: '۱۵ دقیقه پیش', message: 'سلام. برای سمند مدل ۱۳۹۹ چه باتری مناسب است؟ قیمت و موجودی را هم لطفاً بفرمایید.' },
-                { id: 3, customer: 'رضا کریمی', phone: '09127654321', car: 'تویوتا کرولا', model: '۲۰۲۰', year: 1400, suggested: 'باتری ۷۴ آمپر', status: 'answered', time: '۳۰ دقیقه پیش', message: 'باتری ۷۴ آمپر بوش موجود دارید؟ قیمت چقدر است؟' },
+                { 
+                    id: 1, 
+                    customer: 'علی رضایی', 
+                    phone: '09123456789', 
+                    car: 'پژو ۲۰۶', 
+                    model: 'تیپ ۵', 
+                    year: 1398, 
+                    suggested: 'باتری ۵۵ آمپر', 
+                    status: 'new', 
+                    time: '۵ دقیقه پیش', 
+                    message: 'سلام. ماشین من پژو ۲۰۶ مدل ۱۳۹۸ هست. باتری ماشین ضعیف شده و نمیدونم چه آمپراژی باید تهیه کنم. راهنمایی می‌خواستم. ممنون.' 
+                },
+                { 
+                    id: 2, 
+                    customer: 'سارا محمدی', 
+                    phone: '09129876543', 
+                    car: 'سمند', 
+                    model: 'LX', 
+                    year: 1399, 
+                    suggested: 'باتری ۶۰ آمپر', 
+                    status: 'reviewing', 
+                    time: '۱۵ دقیقه پیش', 
+                    message: 'سلام. برای سمند مدل ۱۳۹۹ چه باتری مناسب است؟ قیمت و موجودی را هم لطفاً بفرمایید.' 
+                },
+                { 
+                    id: 3, 
+                    customer: 'رضا کریمی', 
+                    phone: '09127654321', 
+                    car: 'تویوتا کرولا', 
+                    model: '۲۰۲۰', 
+                    year: 1400, 
+                    suggested: 'باتری ۷۴ آمپر', 
+                    status: 'answered', 
+                    time: '۳۰ دقیقه پیش', 
+                    message: 'باتری ۷۴ آمپر بوش موجود دارید؟ قیمت چقدر است؟' 
+                }
             ],
             stats: {
                 totalRevenue: 0,
@@ -75,7 +220,10 @@ class MockDatabase {
         };
     }
     
+    // ============================================
     // ===== متدهای سفارش =====
+    // ============================================
+    
     async saveOrder(order) {
         this.data.orders.push(order);
         this.data.stats.totalOrders = this.data.orders.length;
@@ -87,7 +235,6 @@ class MockDatabase {
             this.data.stats.todayRevenue += order.total;
         }
         
-        // ذخیره در localStorage
         this.saveData();
         
         console.log('💾 سفارش در دیتابیس ذخیره شد:', order);
@@ -137,7 +284,10 @@ class MockDatabase {
         return null;
     }
     
+    // ============================================
     // ===== متدهای محصولات =====
+    // ============================================
+    
     async getProducts() {
         return this.data.products;
     }
@@ -149,9 +299,18 @@ class MockDatabase {
     async addProduct(product) {
         const newProduct = {
             id: Date.now(),
-            ...product,
+            name: product.name || 'محصول جدید',
+            brand: product.brand || 'سایر',
+            amp: product.amp || 60,
+            price: product.price || 0,
+            stock: product.stock || 0,
+            minStock: product.minStock || 5,
             sales: 0,
             revenue: 0,
+            image: product.image || 'assets/images/battery.jpg',
+            compatible: product.compatible || 'خودروهای مختلف',
+            rating: product.rating || 4.5,
+            reviews: 0,
             createdAt: new Date().toISOString()
         };
         this.data.products.push(newProduct);
@@ -200,7 +359,10 @@ class MockDatabase {
         return null;
     }
     
+    // ============================================
     // ===== متدهای مشتریان =====
+    // ============================================
+    
     async getCustomers() {
         return this.data.customers;
     }
@@ -216,9 +378,13 @@ class MockDatabase {
     async addCustomer(customerData) {
         const customer = {
             id: Date.now(),
-            ...customerData,
+            name: customerData.name || 'مهمان',
+            phone: customerData.phone || '',
+            orders: customerData.orders || 0,
+            totalSpent: customerData.totalSpent || 0,
+            lastOrder: customerData.lastOrder || new Date().toLocaleDateString('fa-IR'),
             joined: new Date().toLocaleDateString('fa-IR'),
-            status: 'new'
+            status: customerData.status || 'new'
         };
         this.data.customers.push(customer);
         this.data.stats.totalCustomers = this.data.customers.length;
@@ -240,9 +406,31 @@ class MockDatabase {
         return this.data.orders.filter(o => o.customer.phone === phone);
     }
     
+    // ============================================
     // ===== متدهای مشاوره =====
+    // ============================================
+    
     async getConsultings() {
         return this.data.consultings;
+    }
+    
+    async addConsulting(consultingData) {
+        const consulting = {
+            id: Date.now(),
+            customer: consultingData.customer || '',
+            phone: consultingData.phone || '',
+            car: consultingData.car || '',
+            model: consultingData.model || '',
+            year: consultingData.year || '',
+            suggested: consultingData.suggested || '',
+            status: 'new',
+            time: 'همین الان',
+            message: consultingData.message || '',
+            createdAt: new Date().toISOString()
+        };
+        this.data.consultings.push(consulting);
+        this.saveData();
+        return consulting;
     }
     
     async updateConsultingStatus(id, status) {
@@ -255,7 +443,10 @@ class MockDatabase {
         return null;
     }
     
+    // ============================================
     // ===== متدهای آمار =====
+    // ============================================
+    
     async getStats() {
         return this.data.stats;
     }
@@ -273,7 +464,10 @@ class MockDatabase {
         return this.data.stats;
     }
     
+    // ============================================
     // ===== متدهای کمکی =====
+    // ============================================
+    
     async clearAllData() {
         this.data.orders = [];
         this.data.stats = {
@@ -299,6 +493,53 @@ class MockDatabase {
             revenue: todayOrders.reduce((sum, o) => sum + o.total, 0),
             customers: [...new Set(todayOrders.map(o => o.customer.phone))].length
         };
+    }
+    
+    /**
+     * دریافت محصولات با فیلتر
+     */
+    async getProductsByFilter(filters = {}) {
+        let products = this.data.products;
+        
+        if (filters.brand && filters.brand !== 'all') {
+            products = products.filter(p => p.brand === filters.brand);
+        }
+        if (filters.amp && filters.amp !== 'all') {
+            products = products.filter(p => p.amp === parseInt(filters.amp));
+        }
+        if (filters.inStock) {
+            products = products.filter(p => p.stock > 0);
+        }
+        if (filters.minPrice) {
+            products = products.filter(p => p.price >= filters.minPrice);
+        }
+        if (filters.maxPrice) {
+            products = products.filter(p => p.price <= filters.maxPrice);
+        }
+        
+        return products;
+    }
+    
+    /**
+     * دریافت برندهای موجود
+     */
+    async getBrands() {
+        const brands = new Set();
+        this.data.products.forEach(p => {
+            if (p.brand) brands.add(p.brand);
+        });
+        return Array.from(brands);
+    }
+    
+    /**
+     * دریافت آمپراژهای موجود
+     */
+    async getAmps() {
+        const amps = new Set();
+        this.data.products.forEach(p => {
+            if (p.amp) amps.add(p.amp);
+        });
+        return Array.from(amps).sort((a, b) => a - b);
     }
 }
 

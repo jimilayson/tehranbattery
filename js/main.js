@@ -1,385 +1,255 @@
 // ============================================
-// ===== لایه امنیتی - Sanitize ورودی‌ها =====
+// ===== بارگذاری محصولات از دیتابیس =====
 // ============================================
 
 /**
- * تابع اصلی پاکسازی ورودی‌ها
- * جلوگیری از حملات XSS و تزریق کد
+ * بارگذاری محصولات از دیتابیس و نمایش در فروشگاه
  */
-function sanitizeInput(input) {
-    if (typeof input !== 'string') return input;
+function loadProductsFromDatabase() {
+    const productGrid = document.getElementById('productGrid');
+    if (!productGrid) return;
     
-    let sanitized = input.trim();
+    // دریافت محصولات از دیتابیس
+    let products = [];
     
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#x27;',
-        '/': '&#x2F;',
-        '`': '&#x60;',
-        '=': '&#x3D;'
-    };
+    // بررسی وجود دیتابیس
+    if (window.App && window.App.database) {
+        products = window.App.database.data.products || [];
+    } else {
+        // اگر سیستم راه‌اندازی نشده، از localStorage مستقیم استفاده کن
+        try {
+            const saved = localStorage.getItem('tehranbattery_database');
+            if (saved) {
+                const data = JSON.parse(saved);
+                products = data.products || [];
+            }
+        } catch (e) {
+            console.warn('⚠️ خطا در بارگذاری محصولات از localStorage:', e);
+        }
+    }
     
-    sanitized = sanitized.replace(/[&<>"'`=/]/g, function(s) {
-        return map[s];
-    });
+    // اگر محصولی وجود نداشت، محصولات پیش‌فرض را اضافه کن
+    if (products.length === 0) {
+        products = getDefaultProducts();
+        // ذخیره در دیتابیس
+        if (window.App && window.App.database) {
+            window.App.database.data.products = products;
+            window.App.database.saveData();
+        } else {
+            try {
+                const saved = localStorage.getItem('tehranbattery_database');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    data.products = products;
+                    localStorage.setItem('tehranbattery_database', JSON.stringify(data));
+                }
+            } catch (e) {
+                console.warn('⚠️ خطا در ذخیره محصولات پیش‌فرض:', e);
+            }
+        }
+    }
     
-    const div = document.createElement('div');
-    div.textContent = sanitized;
-    sanitized = div.innerHTML;
-    
-    return sanitized;
+    // نمایش محصولات
+    renderProducts(products);
 }
 
-function sanitizeNumber(input) {
-    const num = parseInt(input);
-    return isNaN(num) ? 0 : Math.abs(num);
+/**
+ * محصولات پیش‌فرض (در صورت خالی بودن دیتابیس)
+ */
+function getDefaultProducts() {
+    return [
+        { 
+            id: 1, 
+            name: 'باتری ۶۶ آمپر', 
+            brand: 'ایران باتری', 
+            amp: 66, 
+            price: 5800000, 
+            stock: 12, 
+            minStock: 5, 
+            sales: 128, 
+            revenue: 742400000,
+            image: 'assets/images/battery.jpg',
+            compatible: 'سمند، ۲۰۶، ۲۰۷',
+            rating: 5,
+            reviews: 128
+        },
+        { 
+            id: 2, 
+            name: 'باتری ۵۵ آمپر', 
+            brand: 'سپاهان باتری', 
+            amp: 55, 
+            price: 4900000, 
+            stock: 8, 
+            minStock: 5, 
+            sales: 78, 
+            revenue: 382200000,
+            image: 'assets/images/battery.jpg',
+            compatible: 'پژو ۴۰۵، تیبا',
+            rating: 5,
+            reviews: 78
+        },
+        { 
+            id: 3, 
+            name: 'باتری ۷۴ آمپر', 
+            brand: 'بوش', 
+            amp: 74, 
+            price: 6900000, 
+            stock: 2, 
+            minStock: 5, 
+            sales: 53, 
+            revenue: 365700000,
+            image: 'assets/images/battery.jpg',
+            compatible: 'تویوتا، نیسان، مزدا',
+            rating: 5,
+            reviews: 53
+        },
+        { 
+            id: 4, 
+            name: 'باتری ۶۰ آمپر', 
+            brand: 'ایران باتری', 
+            amp: 60, 
+            price: 5200000, 
+            stock: 15, 
+            minStock: 8, 
+            sales: 45, 
+            revenue: 234000000,
+            image: 'assets/images/battery.jpg',
+            compatible: 'پراید، ۲۰۶، پژو',
+            rating: 4.5,
+            reviews: 124
+        },
+        { 
+            id: 5, 
+            name: 'باتری ۴۴ آمپر', 
+            brand: 'دنسو', 
+            amp: 44, 
+            price: 3800000, 
+            stock: 6, 
+            minStock: 4, 
+            sales: 32, 
+            revenue: 121600000,
+            image: 'assets/images/battery.jpg',
+            compatible: 'پراید، ۲۰۶',
+            rating: 4.5,
+            reviews: 32
+        },
+        { 
+            id: 6, 
+            name: 'باتری ۸۰ آمپر', 
+            brand: 'بوش', 
+            amp: 80, 
+            price: 8500000, 
+            stock: 0, 
+            minStock: 3, 
+            sales: 18, 
+            revenue: 153000000,
+            image: 'assets/images/battery.jpg',
+            compatible: 'SUV، خودروهای سنگین',
+            rating: 5,
+            reviews: 18
+        },
+        { 
+            id: 7, 
+            name: 'باتری ۱۰۰ آمپر', 
+            brand: 'ایران باتری', 
+            amp: 100, 
+            price: 12000000, 
+            stock: 1, 
+            minStock: 2, 
+            sales: 7, 
+            revenue: 84000000,
+            image: 'assets/images/battery.jpg',
+            compatible: 'خودروهای سنگین، SUV',
+            rating: 5,
+            reviews: 7
+        },
+        { 
+            id: 8, 
+            name: 'باتری ۵۰ آمپر', 
+            brand: 'سپاهان باتری', 
+            amp: 50, 
+            price: 4200000, 
+            stock: 4, 
+            minStock: 3, 
+            sales: 22, 
+            revenue: 92400000,
+            image: 'assets/images/battery.jpg',
+            compatible: 'سمند، ۴۰۵',
+            rating: 5,
+            reviews: 22
+        }
+    ];
 }
 
-function sanitizeEmail(input) {
-    if (typeof input !== 'string') return '';
-    const email = input.trim().toLowerCase();
-    return email.replace(/[^a-zA-Z0-9@._-]/g, '');
-}
-
-function sanitizePhone(input) {
-    if (typeof input !== 'string') return '';
-    return input.replace(/[^0-9+]/g, '');
+/**
+ * رندر محصولات در صفحه
+ */
+function renderProducts(products) {
+    const productGrid = document.getElementById('productGrid');
+    if (!productGrid) return;
+    
+    if (products.length === 0) {
+        productGrid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
+                <i class="fas fa-box-open" style="font-size: 48px; display: block; margin-bottom: 16px;"></i>
+                <h3 style="color: var(--text-primary);">هنوز محصولی ثبت نشده است</h3>
+                <p>محصولات به زودی توسط ادمین اضافه می‌شوند</p>
+            </div>
+        `;
+        return;
+    }
+    
+    productGrid.innerHTML = products.map(product => {
+        // ایجاد ستاره‌ها
+        let stars = '';
+        const fullStars = Math.floor(product.rating || 4);
+        const hasHalfStar = (product.rating || 4) % 1 >= 0.5;
+        
+        for (let i = 0; i < fullStars; i++) {
+            stars += '<i class="fas fa-star"></i>';
+        }
+        if (hasHalfStar) {
+            stars += '<i class="fas fa-star-half-alt"></i>';
+        }
+        
+        // بررسی موجودی
+        const inStock = product.stock > 0;
+        const stockBadge = inStock ? 'موجود' : 'ناموجود';
+        const stockClass = inStock ? '' : 'out-of-stock';
+        
+        return `
+            <div class="product-card ${stockClass}" data-brand="${product.brand}" data-amp="${product.amp}">
+                <div class="product-image">
+                    <img src="${product.image || 'assets/images/battery.jpg'}" alt="${product.name}" class="product-img" data-fallback="${product.name}">
+                    <span class="product-badge ${inStock ? 'in-stock' : 'out-of-stock-badge'}">${stockBadge}</span>
+                    <span class="product-guarantee"><i class="fas fa-shield-alt"></i> گارانتی</span>
+                </div>
+                <div class="product-info">
+                    <h4>${product.name}</h4>
+                    <div class="product-meta">
+                        <span class="product-brand"><i class="fas fa-tag"></i> ${product.brand}</span>
+                        <span class="product-compatible"><i class="fas fa-car"></i> ${product.compatible || 'خودروهای مختلف'}</span>
+                    </div>
+                    <div class="product-rating">
+                        ${stars}
+                        <span>(${product.reviews || 0} نظر)</span>
+                    </div>
+                    <span class="price">${product.price.toLocaleString('fa-IR')} تومان</span>
+                    <button class="btn-order" onclick="addToCart(${product.id}, '${product.name}', ${product.price})" ${!inStock ? 'disabled' : ''}>
+                        <i class="fas fa-shopping-cart"></i>
+                        ${inStock ? 'افزودن به سبد خرید' : 'ناموجود'}
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
 // ============================================
-// ===== محافظت از همه فرم‌ها به صورت خودکار =====
+// ===== بارگذاری محصولات هنگام DOM آماده =====
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    const allForms = document.querySelectorAll('form');
-    
-    allForms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            const inputs = this.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
-            
-            inputs.forEach(input => {
-                if (input.value) {
-                    if (input.type === 'email') {
-                        input.value = sanitizeEmail(input.value);
-                    } else if (input.type === 'tel') {
-                        input.value = sanitizePhone(input.value);
-                    } else {
-                        input.value = sanitizeInput(input.value);
-                    }
-                }
-            });
-        });
-    });
+    // بارگذاری محصولات از دیتابیس
+    loadProductsFromDatabase();
 });
-
-function getSafeUrlParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const value = urlParams.get(param);
-    return value ? sanitizeInput(value) : null;
-}
-
-function setSecureItem(key, value) {
-    if (typeof value === 'object') {
-        value = JSON.stringify(value);
-    }
-    localStorage.setItem(key, sanitizeInput(value));
-}
-
-function getSecureItem(key) {
-    const value = localStorage.getItem(key);
-    if (value) {
-        try {
-            return JSON.parse(value);
-        } catch {
-            return sanitizeInput(value);
-        }
-    }
-    return null;
-}
-
-// ============================================
-// ===== کدهای قبلی (با تغییرات جزئی) =====
-// ============================================
-
-// (کدهای قبلی main.js با اعمال امنیتی و رعایت اصول)
-
-// ===== MENU TOGGLE =====
-const hamburger = document.getElementById('hamburger');
-const navMenu = document.querySelector('.nav-menu');
-
-if (hamburger && navMenu) {
-    hamburger.addEventListener('click', function(e) {
-        e.stopPropagation();
-        this.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
-    });
-}
-
-document.querySelectorAll('.nav-menu a').forEach(link => {
-    link.addEventListener('click', function() {
-        if (navMenu) {
-            navMenu.classList.remove('active');
-            if (hamburger) hamburger.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    });
-});
-
-document.addEventListener('click', function(e) {
-    if (navMenu && !e.target.closest('nav') && navMenu.classList.contains('active')) {
-        navMenu.classList.remove('active');
-        if (hamburger) hamburger.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-});
-
-// ===== IMAGE ERROR HANDLING =====
-document.querySelectorAll('.product-img, .cert-img').forEach(img => {
-    img.addEventListener('error', function() {
-        const rawFallbackText = this.getAttribute('data-fallback') || 'تصویر';
-        const cleanText = sanitizeInput(rawFallbackText);
-        
-        const svg = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
-                <rect width="200" height="200" fill="#243247"/>
-                <text x="50%" y="50%" text-anchor="middle" dy=".3em" 
-                      fill="#7A8A9E" font-size="24" font-family="Vazirmatn, Tahoma, sans-serif">
-                    ${cleanText}
-                </text>
-            </svg>
-        `;
-        this.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    });
-});
-
-document.querySelectorAll('.blog-image img').forEach(img => {
-    img.addEventListener('error', function() {
-        const rawFallbackText = this.getAttribute('data-fallback') || 'مطلب';
-        const cleanText = sanitizeInput(rawFallbackText);
-        
-        const svg = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="300" height="200">
-                <rect width="300" height="200" fill="#243247"/>
-                <text x="50%" y="50%" text-anchor="middle" dy=".3em" 
-                      fill="#7A8A9E" font-size="28" font-family="Vazirmatn, Tahoma, sans-serif">
-                    ${cleanText}
-                </text>
-            </svg>
-        `;
-        this.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    });
-});
-
-// ===== BACK TO TOP =====
-const backToTop = document.getElementById('backToTop');
-if (backToTop) {
-    window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
-            backToTop.classList.add('show');
-        } else {
-            backToTop.classList.remove('show');
-        }
-    });
-    
-    backToTop.addEventListener('click', function() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-}
-
-// ===== SMOOTH SCROLL =====
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const target = document.querySelector(targetId);
-        if (target) {
-            e.preventDefault();
-            
-            if (navMenu) {
-                navMenu.classList.remove('active');
-                if (hamburger) hamburger.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-            
-            const header = document.querySelector('header');
-            const headerHeight = header ? header.offsetHeight : 0;
-            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
-            
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// ===== TRACK FORM =====
-const trackForm = document.getElementById('trackForm');
-const trackResult = document.getElementById('trackResult');
-
-if (trackForm && trackResult) {
-    trackForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const codeInput = document.getElementById('trackCode');
-        const code = codeInput ? sanitizeInput(codeInput.value.trim()) : '';
-        
-        trackResult.textContent = '';
-        
-        if (!code) {
-            const errSpan = document.createElement('span');
-            errSpan.style.color = '#FF4D4D';
-            errSpan.style.display = 'block';
-            errSpan.style.padding = 'var(--spacing-md)';
-            errSpan.style.background = 'rgba(255, 77, 77, 0.1)';
-            errSpan.style.borderRadius = 'var(--radius-md)';
-            errSpan.textContent = 'لطفاً کد پیگیری را وارد کنید.';
-            trackResult.appendChild(errSpan);
-            return;
-        }
-        
-        const successSpan = document.createElement('span');
-        successSpan.style.color = '#7A8A9E';
-        successSpan.style.display = 'block';
-        successSpan.style.padding = 'var(--spacing-md)';
-        successSpan.style.background = 'rgba(122, 138, 158, 0.1)';
-        successSpan.style.borderRadius = 'var(--radius-md)';
-        successSpan.textContent = `✅ وضعیت تعمیر کد ${code}: در حال انجام (تخمین ۲ روز دیگر)`;
-        trackResult.appendChild(successSpan);
-    });
-}
-
-// ===== CONTACT FORM =====
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const inputs = this.querySelectorAll('input[required], textarea[required], select[required]');
-        let isValid = true;
-        
-        inputs.forEach(input => {
-            if (!input.value.trim()) {
-                isValid = false;
-                input.style.borderColor = '#FF4D4D';
-                input.style.boxShadow = '0 0 0 3px rgba(255, 77, 77, 0.2)';
-            } else {
-                input.style.borderColor = '';
-                input.style.boxShadow = '';
-            }
-        });
-        
-        if (!isValid) {
-            alert('لطفاً تمام فیلدهای الزامی را پر کنید.');
-            return;
-        }
-        
-        const btn = this.querySelector('button[type="submit"]');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ارسال...';
-        btn.disabled = true;
-        
-        setTimeout(() => {
-            alert('✅ پیام شما با موفقیت ارسال شد.\nکارشناسان ما به زودی با شما تماس می‌گیرند.');
-            this.reset();
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-            
-            inputs.forEach(input => {
-                input.style.borderColor = '';
-                input.style.boxShadow = '';
-            });
-        }, 1000);
-    });
-}
-
-// ===== NEWSLETTER FORM =====
-const newsletterForm = document.getElementById('newsletterForm');
-if (newsletterForm) {
-    newsletterForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const input = this.querySelector('input');
-        const email = input ? sanitizeEmail(input.value.trim()) : '';
-        
-        if (!email || !email.includes('@')) {
-            alert('لطفاً یک ایمیل معتبر وارد کنید.');
-            return;
-        }
-        
-        alert('✅ با موفقیت در خبرنامه عضو شدید.');
-        this.reset();
-    });
-}
-
-// ===== ORDER BUTTONS =====
-document.querySelectorAll('.btn-order').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const productName = this.closest('.product-info')?.querySelector('h4')?.textContent || 'قطعه';
-        alert(`✅ سفارش "${productName}" با موفقیت ثبت شد.\nکارشناسان ما برای تکمیل سفارش با شما تماس می‌گیرند.`);
-    });
-});
-
-// ===== BLOG CATEGORY FILTER =====
-const categoryTags = document.querySelectorAll('.category-tag');
-categoryTags.forEach(tag => {
-    tag.addEventListener('click', function() {
-        categoryTags.forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        
-        const category = this.textContent.trim();
-        if (category === 'همه') {
-            document.querySelectorAll('.blog-card').forEach(card => {
-                card.style.display = 'block';
-            });
-        } else {
-            document.querySelectorAll('.blog-card').forEach(card => {
-                const cardCategory = card.querySelector('.blog-category')?.textContent.trim() || '';
-                card.style.display = cardCategory === category ? 'block' : 'none';
-            });
-        }
-    });
-});
-
-// ===== SHOP FILTERS =====
-const filterSelects = document.querySelectorAll('.filter-select');
-filterSelects.forEach(select => {
-    select.addEventListener('change', function() {
-        console.log('فیلتر انتخاب شد:', this.value);
-    });
-});
-
-// ===== SCROLL ANIMATIONS =====
-if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-
-    document.querySelectorAll('.card, .product-card, .blog-card, .testimonial-card').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-
-    document.querySelectorAll('.stat-item, .about-feature, .trust-badge').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-}
-
-console.log('🚗 طهران باتری - نسخه ۴.۱ با لایه امنیتی کامل');
