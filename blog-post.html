@@ -20,24 +20,47 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <style>
+        /* ===== استایل صفحه مقاله ===== */
         .article-page {
             min-height: 100vh;
             background: var(--bg-primary);
-            padding: 40px 0;
+            padding-top: 80px;
+            padding-bottom: 40px;
         }
+        
         .article-container {
             max-width: 800px;
             margin: 0 auto;
             padding: 0 var(--spacing-md);
         }
+        
+        /* ===== هدر چسبنده (Sticky Header) ===== */
         .article-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 12px 20px;
             margin-bottom: 24px;
-            padding-bottom: 16px;
             border-bottom: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(38, 54, 74, 0.5);
+            transition: all 0.3s ease;
+            margin-left: -20px;
+            margin-right: -20px;
+            padding-left: 20px;
+            padding-right: 20px;
         }
+        
+        .article-header.scrolled {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+            border-bottom-color: var(--border-color);
+        }
+        
         .article-back {
             display: inline-flex;
             align-items: center;
@@ -48,11 +71,14 @@
             border-radius: var(--radius-sm);
             transition: var(--transition-normal);
             font-size: 14px;
+            font-weight: 500;
         }
+        
         .article-back:hover {
             color: var(--text-primary);
             background: var(--bg-card);
         }
+        
         .article-close {
             display: inline-flex;
             align-items: center;
@@ -68,22 +94,29 @@
             font-size: 20px;
             text-decoration: none;
         }
+        
         .article-close:hover {
             color: var(--text-primary);
             border-color: var(--primary);
+            background: rgba(122, 138, 158, 0.1);
         }
+        
+        /* ===== محتوای مقاله ===== */
         .article-image {
             width: 100%;
             border-radius: var(--radius-lg);
             overflow: hidden;
             margin-bottom: 24px;
+            margin-top: 8px;
         }
+        
         .article-image img {
             width: 100%;
             height: auto;
             aspect-ratio: 16/9;
             object-fit: cover;
         }
+        
         .article-meta {
             display: flex;
             gap: 16px;
@@ -92,6 +125,7 @@
             color: var(--text-muted);
             font-size: 14px;
         }
+        
         .article-meta .category-badge {
             background: var(--primary);
             color: var(--text-primary);
@@ -99,6 +133,7 @@
             border-radius: var(--radius-full);
             font-size: 12px;
         }
+        
         .article-title {
             font-size: var(--font-size-3xl);
             font-weight: 700;
@@ -106,39 +141,119 @@
             margin-bottom: 16px;
             line-height: 1.3;
         }
+        
         .article-content {
             color: var(--text-secondary);
             font-size: var(--font-size-lg);
             line-height: 2;
         }
+        
         .article-content p {
             margin-bottom: var(--spacing-lg);
         }
-        @media (max-width: 768px) {
-            .article-page { padding: 20px 0; }
-            .article-title { font-size: var(--font-size-2xl); }
-            .article-content { font-size: var(--font-size-base); }
-            .article-header { flex-direction: row; gap: 8px; }
-            .article-back span { display: none; }
+        
+        /* ===== اسکرول‌بار ===== */
+        .article-content::-webkit-scrollbar {
+            width: 6px;
         }
+        
+        .article-content::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        
+        .article-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: var(--radius-full);
+        }
+        
+        /* ===== ریسپانسیو ===== */
+        @media (max-width: 768px) {
+            .article-page {
+                padding-top: 60px;
+                padding-bottom: 20px;
+            }
+            
+            .article-header {
+                padding: 8px 16px;
+                margin-left: -16px;
+                margin-right: -16px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+            
+            .article-title {
+                font-size: var(--font-size-2xl);
+            }
+            
+            .article-content {
+                font-size: var(--font-size-base);
+            }
+            
+            .article-back span {
+                display: none;
+            }
+            
+            .article-back {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            
+            .article-close {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+        }
+        
         @media (max-width: 480px) {
-            .article-container { padding: 0 var(--spacing-sm); }
-            .article-title { font-size: var(--font-size-xl); }
+            .article-page {
+                padding-top: 50px;
+            }
+            
+            .article-container {
+                padding: 0 var(--spacing-sm);
+            }
+            
+            .article-header {
+                padding: 6px 12px;
+                margin-left: -12px;
+                margin-right: -12px;
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+            
+            .article-title {
+                font-size: var(--font-size-xl);
+            }
+            
+            .article-meta {
+                font-size: 12px;
+                gap: 10px;
+            }
+            
+            .article-close {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="article-page">
         <div class="article-container">
-            <div class="article-header">
-                <a href="index.html#blog" class="article-back">
+            <!-- ===== هدر چسبنده ===== -->
+            <div class="article-header" id="articleHeader">
+                <a href="index.html#blog" class="article-back" id="backToBlog">
                     <i class="fas fa-arrow-right"></i>
                     <span>بازگشت به مجله</span>
                 </a>
-                <a href="index.html#blog" class="article-close" title="بستن">
+                <a href="index.html#blog" class="article-close" title="بستن" id="closeArticle">
                     <i class="fas fa-times"></i>
                 </a>
             </div>
+            
+            <!-- ===== محتوای مقاله ===== -->
             <div id="articleContent">
                 <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
                     <i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i>
