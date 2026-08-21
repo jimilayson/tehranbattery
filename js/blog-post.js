@@ -75,4 +75,20 @@
             <div class="article-meta">
                 <span class="category-badge">${post.category}</span>
                 <span><i class="far fa-calendar-alt"></i> ${post.date}</span>
-                <span><i class
+                <span><i class="far fa-eye"></i> ${post.views || 0} بازدید</span>
+                <span><i class="far fa-comment"></i> ${post.comments || 0} نظر</span>
+            </div>
+            <h1 class="article-title">${post.title}</h1>
+            <div class="article-content">
+                ${paragraphs.map(p => `<p>${p}</p>`).join('')}
+            </div>
+        `;
+        
+        document.title = `${post.title} | طهران باتری`;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        loadPost();
+    });
+})();
