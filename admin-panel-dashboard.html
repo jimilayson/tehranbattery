@@ -1,44 +1,36 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>داشبورد مدیریت | طهران باتری</title>
-    
-    <!-- ===== هدرهای امنیتی ===== -->
-<meta name="robots" content="noindex, nofollow">
-<meta http-equiv="Content-Security-Policy" 
-      content="default-src 'self'; 
-               script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; 
-               style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; 
-               font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; 
-               img-src 'self' data:; 
-               frame-src 'none'; 
-               connect-src 'self' https://cdn.jsdelivr.net; 
-               form-action 'self';">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta name="referrer" content="no-referrer">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    
-    <!-- ===== فونت وزیرمتن ===== -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- ===== Font Awesome 6 ===== -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" 
-          integrity="sha512-avXb6zE2yjG1O0vVv1D1UqB5pCb1LbIVQrMlE+O0I0Lw6LzIe0dJUb5q5L5r5gRx4zZM5Y0w==" 
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self';
+                   script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+                   style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com;
+                   font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com;
+                   img-src 'self' data:;
+                   frame-src 'none';
+                   connect-src 'self' https://cdn.jsdelivr.net;
+                   form-action 'self';" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          integrity="sha512-avXb6zE2yjG1O0vVv1D1UqB5pCb1LbIVQrMlE+O0I0Lw6LzIe0dJUb5q5L5r5gRx4zZM5Y0w=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <!-- ===== Chart.js ===== -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    
-    <!-- ===== استایل اختصاصی ===== -->
-    <link rel="stylesheet" href="css/admin-style.css">
+    <link rel="stylesheet" href="css/admin-style.css" />
 </head>
 <body>
     <div class="admin-container">
+
         <!-- ===== سایدبار ===== -->
         <aside class="admin-sidebar" id="adminSidebar">
             <div class="admin-logo">
@@ -78,6 +70,7 @@
 
         <!-- ===== محتوای اصلی ===== -->
         <main class="admin-main" id="adminMain">
+
             <!-- هدر -->
             <header class="admin-header">
                 <div class="header-left">
@@ -92,12 +85,11 @@
                 </div>
             </header>
 
-            <!-- ============================================ -->
-            <!-- ===== بخش داشبورد ===== -->
-            <!-- ============================================ -->
+            <!-- ========================================== -->
+            <!-- بخش داشبورد -->
+            <!-- ========================================== -->
             <section id="section-dashboard" class="admin-section active">
-                
-                <!-- ===== 1. KPI Cards ===== -->
+                <!-- KPI Cards -->
                 <div class="kpi-grid">
                     <div class="kpi-card" onclick="navigateTo('orders')">
                         <div class="kpi-icon"><i class="fas fa-wallet"></i></div>
@@ -107,7 +99,6 @@
                             <span class="kpi-change" id="todayRevenueChange">+۰%</span>
                         </div>
                     </div>
-                    
                     <div class="kpi-card" onclick="navigateTo('orders')">
                         <div class="kpi-icon"><i class="fas fa-shopping-cart"></i></div>
                         <div class="kpi-content">
@@ -115,7 +106,6 @@
                             <span class="kpi-label">🛒 سفارش‌های امروز</span>
                         </div>
                     </div>
-                    
                     <div class="kpi-card" onclick="navigateTo('orders')">
                         <div class="kpi-icon"><i class="fas fa-clock"></i></div>
                         <div class="kpi-content">
@@ -123,7 +113,6 @@
                             <span class="kpi-label">⏳ سفارش‌های در انتظار</span>
                         </div>
                     </div>
-                    
                     <div class="kpi-card" onclick="navigateTo('orders')">
                         <div class="kpi-icon"><i class="fas fa-truck"></i></div>
                         <div class="kpi-content">
@@ -131,7 +120,6 @@
                             <span class="kpi-label">🚚 در حال ارسال</span>
                         </div>
                     </div>
-                    
                     <div class="kpi-card" onclick="navigateTo('customers')">
                         <div class="kpi-icon"><i class="fas fa-user-plus"></i></div>
                         <div class="kpi-content">
@@ -139,7 +127,6 @@
                             <span class="kpi-label">👥 مشتریان جدید امروز</span>
                         </div>
                     </div>
-                    
                     <div class="kpi-card" onclick="navigateTo('products')">
                         <div class="kpi-icon"><i class="fas fa-car-battery"></i></div>
                         <div class="kpi-content">
@@ -147,7 +134,6 @@
                             <span class="kpi-label">🔋 باتری‌های فروخته‌شده</span>
                         </div>
                     </div>
-                    
                     <div class="kpi-card critical" onclick="navigateTo('products')">
                         <div class="kpi-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <div class="kpi-content">
@@ -155,7 +141,6 @@
                             <span class="kpi-label">⚠️ موجودی بحرانی</span>
                         </div>
                     </div>
-                    
                     <div class="kpi-card" onclick="navigateTo('orders')">
                         <div class="kpi-icon"><i class="fas fa-times-circle"></i></div>
                         <div class="kpi-content">
@@ -165,7 +150,7 @@
                     </div>
                 </div>
 
-                <!-- ===== 2. نمودار فروش ===== -->
+                <!-- نمودار فروش -->
                 <div class="chart-section">
                     <div class="chart-header">
                         <h3><i class="fas fa-chart-line"></i> فروش در بازه‌های زمانی</h3>
@@ -189,9 +174,8 @@
                     </div>
                 </div>
 
-                <!-- ===== دو ستونه پایین ===== -->
+                <!-- دو ستونه پایین -->
                 <div class="dashboard-two-col">
-                    <!-- ===== 3. وضعیت سفارش‌ها ===== -->
                     <div class="card">
                         <h3><i class="fas fa-clipboard-list"></i> وضعیت سفارش‌ها</h3>
                         <div class="order-status-grid">
@@ -229,52 +213,42 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- ===== 4. فروش بر اساس برند ===== -->
                     <div class="card">
                         <h3><i class="fas fa-tags"></i> فروش بر اساس برند</h3>
                         <div class="brand-sales" id="brandSales"></div>
                     </div>
                 </div>
 
-                <!-- ===== 5. فروش بر اساس آمپراژ ===== -->
                 <div class="card">
                     <h3><i class="fas fa-bolt"></i> فروش بر اساس آمپراژ</h3>
                     <div class="amp-sales" id="ampSales"></div>
                 </div>
 
-                <!-- ===== دو ستونه ===== -->
                 <div class="dashboard-two-col">
-                    <!-- ===== 6. پرفروش‌ترین باتری‌ها ===== -->
                     <div class="card">
                         <h3><i class="fas fa-trophy"></i> پرفروش‌ترین باتری‌ها</h3>
                         <div id="topProducts"></div>
                     </div>
-
-                    <!-- ===== 7. هشدار موجودی ===== -->
                     <div class="card">
                         <h3><i class="fas fa-exclamation-circle"></i> هشدار موجودی بحرانی</h3>
                         <div id="criticalStockList"></div>
                     </div>
                 </div>
 
-                <!-- ===== 8. هشدارهای سیستم ===== -->
                 <div class="card alert-card">
                     <h3><i class="fas fa-bell"></i> نیازمند توجه</h3>
                     <div id="systemAlerts"></div>
                 </div>
 
-                <!-- ===== 9. محصولات کم‌فروش ===== -->
                 <div class="card">
                     <h3><i class="fas fa-arrow-down"></i> محصولات کم‌فروش در ۳۰ روز گذشته</h3>
                     <div id="lowSalesProducts"></div>
                 </div>
-
             </section>
 
-            <!-- ============================================ -->
-            <!-- ===== بخش محصولات ===== -->
-            <!-- ============================================ -->
+            <!-- ========================================== -->
+            <!-- بخش محصولات -->
+            <!-- ========================================== -->
             <section id="section-products" class="admin-section">
                 <div class="section-header">
                     <h2><i class="fas fa-box"></i> مدیریت محصولات</h2>
@@ -282,7 +256,6 @@
                         <i class="fas fa-plus"></i> افزودن محصول جدید
                     </button>
                 </div>
-                
                 <div class="table-container">
                     <table class="admin-table">
                         <thead>
@@ -300,13 +273,12 @@
                         <tbody id="productList"></tbody>
                     </table>
                 </div>
-                
                 <div class="pagination-container" id="productsPagination"></div>
             </section>
 
-            <!-- ============================================ -->
-            <!-- ===== بخش سفارشات ===== -->
-            <!-- ============================================ -->
+            <!-- ========================================== -->
+            <!-- بخش سفارشات -->
+            <!-- ========================================== -->
             <section id="section-orders" class="admin-section">
                 <div class="section-header">
                     <h2><i class="fas fa-shopping-bag"></i> مدیریت سفارشات</h2>
@@ -324,7 +296,6 @@
                         </select>
                     </div>
                 </div>
-                
                 <div class="table-container">
                     <table class="admin-table">
                         <thead>
@@ -341,13 +312,12 @@
                         <tbody id="allOrdersList"></tbody>
                     </table>
                 </div>
-                
                 <div class="pagination-container" id="ordersPagination"></div>
             </section>
 
-            <!-- ============================================ -->
-            <!-- ===== بخش مشتریان ===== -->
-            <!-- ============================================ -->
+            <!-- ========================================== -->
+            <!-- بخش مشتریان -->
+            <!-- ========================================== -->
             <section id="section-customers" class="admin-section">
                 <div class="section-header">
                     <h2><i class="fas fa-users"></i> مدیریت مشتریان</h2>
@@ -360,7 +330,6 @@
                         </select>
                     </div>
                 </div>
-                
                 <div class="customer-stats">
                     <div class="customer-stat">
                         <span>کل مشتریان</span>
@@ -379,7 +348,6 @@
                         <strong id="returnCustomers">۰</strong>
                     </div>
                 </div>
-                
                 <div class="table-container">
                     <table class="admin-table">
                         <thead>
@@ -395,13 +363,12 @@
                         <tbody id="customerList"></tbody>
                     </table>
                 </div>
-                
                 <div class="pagination-container" id="customersPagination"></div>
             </section>
 
-            <!-- ============================================ -->
-            <!-- ===== بخش مشاوره ===== -->
-            <!-- ============================================ -->
+            <!-- ========================================== -->
+            <!-- بخش مشاوره -->
+            <!-- ========================================== -->
             <section id="section-consulting" class="admin-section">
                 <div class="section-header">
                     <h2><i class="fas fa-headset"></i> مدیریت درخواست‌های مشاوره</h2>
@@ -414,7 +381,6 @@
                         </select>
                     </div>
                 </div>
-                
                 <div class="consulting-summary">
                     <div class="consulting-stat-box">
                         <span>🆕 جدید</span>
@@ -429,7 +395,6 @@
                         <strong id="consultingAnsweredCount">۰</strong>
                     </div>
                 </div>
-                
                 <div class="table-container">
                     <table class="admin-table">
                         <thead>
@@ -448,13 +413,12 @@
                         <tbody id="consultingList"></tbody>
                     </table>
                 </div>
-                
                 <div class="pagination-container" id="consultingPagination"></div>
             </section>
 
-            <!-- ============================================ -->
-            <!-- ===== بخش گزارش‌ها ===== -->
-            <!-- ============================================ -->
+            <!-- ========================================== -->
+            <!-- بخش گزارش‌ها -->
+            <!-- ========================================== -->
             <section id="section-reports" class="admin-section">
                 <h2><i class="fas fa-chart-bar"></i> گزارش‌ها</h2>
                 <div class="reports-grid">
@@ -481,9 +445,9 @@
                 </div>
             </section>
 
-            <!-- ============================================ -->
-            <!-- ===== بخش تنظیمات ===== -->
-            <!-- ============================================ -->
+            <!-- ========================================== -->
+            <!-- بخش تنظیمات -->
+            <!-- ========================================== -->
             <section id="section-settings" class="admin-section">
                 <h2><i class="fas fa-cog"></i> تنظیمات</h2>
                 <div class="settings-card">
@@ -491,11 +455,11 @@
                     <form id="settingsForm">
                         <div class="form-group">
                             <label>نام فروشگاه</label>
-                            <input type="text" value="طهران باتری" disabled>
+                            <input type="text" value="طهران باتری" disabled />
                         </div>
                         <div class="form-group">
                             <label>شماره تماس</label>
-                            <input type="text" value="۰۲۱-۱۲۳۴۵۶۷۸" disabled>
+                            <input type="text" value="۰۲۱-۱۲۳۴۵۶۷۸" disabled />
                         </div>
                         <div class="form-group">
                             <label>آدرس</label>
@@ -517,7 +481,7 @@
             <form id="addProductForm">
                 <div class="form-group">
                     <label>نام محصول</label>
-                    <input type="text" id="prodName" placeholder="مثلاً باتری ۶۶ آمپر" required>
+                    <input type="text" id="prodName" placeholder="مثلاً باتری ۶۶ آمپر" required />
                 </div>
                 <div class="form-group">
                     <label>برند</label>
@@ -542,15 +506,16 @@
                 </div>
                 <div class="form-group">
                     <label>قیمت (تومان)</label>
-                    <input type="number" id="prodPrice" placeholder="مثلاً ۵۸۰۰۰۰۰" required>
+                    <!-- تغییر type به text و افزودن inputmode -->
+                    <input type="text" id="prodPrice" inputmode="numeric" placeholder="مثلاً ۵۸۰۰۰۰۰" required />
                 </div>
                 <div class="form-group">
                     <label>موجودی</label>
-                    <input type="number" id="prodStock" placeholder="مثلاً ۱۰" required>
+                    <input type="text" id="prodStock" inputmode="numeric" placeholder="مثلاً ۱۰" required />
                 </div>
                 <div class="form-group">
                     <label>حداقل موجودی</label>
-                    <input type="number" id="prodMinStock" placeholder="مثلاً ۵" value="۵">
+                    <input type="text" id="prodMinStock" inputmode="numeric" placeholder="مثلاً ۵" value="۵" />
                 </div>
                 <button type="submit" class="btn-primary">✅ افزودن محصول</button>
             </form>
@@ -563,10 +528,10 @@
             <span class="modal-close" onclick="closeModal('editProductModal')">&times;</span>
             <h3>✏️ ویرایش محصول</h3>
             <form id="editProductForm">
-                <input type="hidden" id="editProductId">
+                <input type="hidden" id="editProductId" />
                 <div class="form-group">
                     <label>نام محصول</label>
-                    <input type="text" id="editProdName" required>
+                    <input type="text" id="editProdName" required />
                 </div>
                 <div class="form-group">
                     <label>برند</label>
@@ -580,6 +545,7 @@
                 </div>
                 <div class="form-group">
                     <label>آمپراژ</label>
+                    <!-- برای آمپراژ هم select است، تغییر نمی‌دهیم -->
                     <select id="editProdAmp">
                         <option value="۴۴">۴۴ آمپر</option>
                         <option value="۵۵">۵۵ آمپر</option>
@@ -591,19 +557,19 @@
                 </div>
                 <div class="form-group">
                     <label>قیمت (تومان)</label>
-                    <input type="number" id="editProdPrice" required>
+                    <input type="text" id="editProdPrice" inputmode="numeric" required />
                 </div>
                 <div class="form-group">
                     <label>موجودی</label>
-                    <input type="number" id="editProdStock" required>
+                    <input type="text" id="editProdStock" inputmode="numeric" required />
                 </div>
                 <div class="form-group">
                     <label>حداقل موجودی</label>
-                    <input type="number" id="editProdMinStock" required>
+                    <input type="text" id="editProdMinStock" inputmode="numeric" required />
                 </div>
                 <div class="form-group">
                     <label>تعداد فروش</label>
-                    <input type="number" id="editProdSales" readonly>
+                    <input type="text" id="editProdSales" inputmode="numeric" readonly />
                 </div>
                 <button type="submit" class="btn-primary">✅ ذخیره تغییرات</button>
             </form>
@@ -633,9 +599,7 @@
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal('consultingStatusModal')">&times;</span>
             <h3>🔄 تغییر وضعیت مشاوره</h3>
-            <div class="consulting-detail" id="consultingDetail">
-                <!-- اطلاعات کامل مشاوره توسط JS پر می‌شود -->
-            </div>
+            <div class="consulting-detail" id="consultingDetail"></div>
             <div class="form-group">
                 <label>وضعیت جدید</label>
                 <select id="consultingNewStatus" class="status-select">
@@ -648,17 +612,17 @@
         </div>
     </div>
 
-    <!-- ===== سیستم اصلی ===== -->
-<script src="js/core/config.js"></script>
-<script src="js/core/event-bus.js"></script>
-<script src="js/providers/mock-database.js"></script>
-<script src="js/core/payment-interface.js"></script>
-<script src="js/providers/mock-payment.js"></script>
-<script src="js/business/order-manager.js"></script>
-<script src="js/bootstrap.js"></script>
+    <!-- ===== اسکریپت‌های اصلی ===== -->
+    <script src="js/core/config.js"></script>
+    <script src="js/core/event-bus.js"></script>
+    <script src="js/providers/mock-database.js"></script>
+    <script src="js/core/payment-interface.js"></script>
+    <script src="js/providers/mock-payment.js"></script>
+    <script src="js/business/order-manager.js"></script>
+    <script src="js/bootstrap.js"></script>
 
-<!-- ===== پنل ادمین ===== -->
-<script src="js/admin-dashboard.js"></script>
-<script src="js/ui/admin-sync.js"></script>
+    <!-- ===== پنل ادمین ===== -->
+    <script src="js/admin-dashboard.js"></script>
+    <script src="js/ui/admin-sync.js"></script>
 </body>
 </html>
