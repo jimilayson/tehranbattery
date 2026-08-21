@@ -46,10 +46,13 @@ function renderBlogPosts(posts) {
             ? post.summary.substring(0, 150) + '...' 
             : post.summary || '';
         
+        // ===== تصویر مقاله از مسیر ذخیره‌شده خوانده می‌شود =====
+        const imageUrl = post.image || 'assets/images/blog-default.jpg';
+        
         return `
             <article class="blog-card" data-category="${post.category}">
                 <div class="blog-image">
-                    <img src="${post.image || 'assets/images/blog-default.jpg'}" alt="${post.title}" class="blog-img" data-fallback="${post.title}">
+                    <img src="${imageUrl}" alt="${post.title}" class="blog-img" data-fallback="${post.title}">
                     <span class="blog-category">${post.category}</span>
                     <span class="blog-date"><i class="far fa-calendar-alt"></i> ${post.date}</span>
                 </div>
