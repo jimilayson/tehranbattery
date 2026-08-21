@@ -592,7 +592,7 @@
                         <div>
                             <h4>آدرس</h4>
                             <p>تهران، شهرک راه آهن، خیابان هوانیروز، بعد از گل آذین</p>
-                            <a href="https://maps.google.com/?q=تهران+شهرک+راه+آهن+خیابان+هوانیروز+بعد+از+گل+آذین" target="_blank" class="contact-link">مشاهده در نقشه <i class="fas fa-external-link-alt"></i></a>
+                            <a href="https://www.google.com/maps/place/طهران+باتری/@35.744618,51.233289,17z" target="_blank" class="contact-link">مشاهده در نقشه <i class="fas fa-external-link-alt"></i></a>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -639,23 +639,40 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- ===== فرم تماس ===== -->
                 <form id="contactForm" class="contact-form">
-                    <!-- ... فرم بدون تغییر ... -->
+                    <input type="text" placeholder="نام و نام خانوادگی" required>
+                    <input type="tel" placeholder="شماره تماس" required>
+                    <input type="email" placeholder="ایمیل (اختیاری)">
+                    <select required>
+                        <option value="">نوع خدمات مورد نظر</option>
+                        <option value="خرید باتری">خرید باتری</option>
+                        <option value="مشاوره">مشاوره رایگان</option>
+                        <option value="تعویض">تعویض باتری در محل</option>
+                        <option value="عیب‌یابی">عیب‌یابی باتری</option>
+                    </select>
+                    <textarea rows="4" placeholder="پیام شما..." required></textarea>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        ارسال پیام
+                    </button>
                 </form>
             </div>
             
+            <!-- ===== نقشه ===== -->
             <div class="map-container">
                 <div class="map-placeholder">
                     <i class="fas fa-map"></i>
-                    <p>نقشه تعاملی</p>
+                    <p>موقعیت ما روی نقشه</p>
                     <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3239.123456!2d51.123456!3d35.123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDA3JzI0LjQiTiA1McKwMDcnMjQuNCJF!5e0!3m2!1sen!2sir!4v1234567890" 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d962.7379822310608!2d51.23328861589863!3d35.74461846443552!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8de5006b1e9141%3A0x7423ab6044c76b9b!2z2KfYqtmIINmF2qnYp9mG24zaqSDZiCDYqNix2YIg2LfZh9ix2KfZhiDYqNin2KrYsduM!5e0!3m2!1sen!2s!4v1787347441555!5m2!1sen!2s" 
                         width="100%" 
                         height="300" 
                         style="border:0;" 
                         allowfullscreen="" 
                         loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade"
+                        referrerpolicy="strict-origin-when-cross-origin"
                         title="موقعیت طهران باتری روی نقشه">
                     </iframe>
                 </div>
