@@ -592,3 +592,96 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('🚗 طهران باتری - نسخه ۴.۲ با بارگذاری پویای محصولات');
 });
+
+/* ===== منوی موبایل ===== */
+.nav-menu {
+    display: flex;
+    gap: var(--spacing-md);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* استایل هامبورگر */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    z-index: 1001;
+}
+
+.hamburger span {
+    width: 28px;
+    height: 3px;
+    background: var(--text-primary);
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ===== ریسپانسیو ===== */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        background: var(--bg-secondary);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        padding: 80px var(--spacing-lg) var(--spacing-lg);
+        gap: var(--spacing-sm);
+        border-bottom: 2px solid var(--primary);
+        box-shadow: var(--shadow-lg);
+        z-index: 1000;
+        overflow-y: auto;
+        transform: translateY(-20px);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    .nav-menu.active {
+        display: flex;
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .nav-menu a {
+        padding: var(--spacing-md) var(--spacing-md);
+        font-size: var(--font-size-base);
+        text-align: center;
+        border-bottom: 1px solid rgba(38, 54, 74, 0.3);
+        width: 100%;
+    }
+
+    .nav-menu a:last-child {
+        border-bottom: none;
+    }
+
+    .nav-menu a::after {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+    
+    .header-emergency {
+        display: none;
+    }
+}
