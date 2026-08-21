@@ -1137,62 +1137,61 @@ window.logout = function() {
 document.addEventListener('DOMContentLoaded', function() {
     
     // ============================================
-    // ===== ۱. Inputهای عددی - تبدیل همه اعداد انگلیسی به فارسی =====
-    // ============================================
-    
-    const numberInputs = document.querySelectorAll(
-        '#prodPrice, #prodStock, #prodMinStock, ' +
-        '#editProdPrice, #editProdStock, #editProdMinStock, ' +
-        '#editProdAmp, #prodAmp'
-    );
-    
-    numberInputs.forEach(input => {
-        if (input) {
-            // 🔥 تبدیل همه اعداد انگلیسی (Num Pad و Number Row) به فارسی
-            input.addEventListener('keydown', function(e) {
-                // بررسی: آیا کلید عددی (0-9) فشار داده شده است؟
-                // این شامل هر دو Num Pad (location: 3) و Number Row (location: 0) می‌شود
-                if (e.key >= '0' && e.key <= '9') {
-                    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-                    const englishDigit = parseInt(e.key);
-                    const persianChar = persianDigits[englishDigit];
-                    
-                    // جلوگیری از ورود عدد انگلیسی
-                    e.preventDefault();
-                    
-                    // وارد کردن عدد فارسی
-                    const start = this.selectionStart;
-                    const end = this.selectionEnd;
-                    const value = this.value;
-                    this.value = value.substring(0, start) + persianChar + value.substring(end);
-                    
-                    // قرار دادن cursor در جای درست
-                    this.selectionStart = this.selectionEnd = start + 1;
-                }
-            });
-            
-            // ✅ فقط هنگام blur، مقدار را فرمت می‌کنیم (نه تبدیل)
-            input.addEventListener('blur', function() {
-                const raw = this.value.trim();
-                if (raw === '') return;
+// ===== Inputهای عددی - تبدیل همه اعداد انگلیسی به فارسی =====
+// ============================================
+
+const numberInputs = document.querySelectorAll(
+    '#prodPrice, #prodStock, #prodMinStock, ' +
+    '#editProdPrice, #editProdStock, #editProdMinStock, ' +
+    '#editProdAmp, #prodAmp'
+);
+
+numberInputs.forEach(input => {
+    if (input) {
+        // 🔥 تبدیل همه اعداد انگلیسی (Num Pad و Number Row) به فارسی
+        input.addEventListener('keydown', function(e) {
+            // بررسی: آیا کلید عددی (0-9) فشار داده شده است؟
+            if (e.key >= '0' && e.key <= '9') {
+                const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+                const englishDigit = parseInt(e.key);
+                const persianChar = persianDigits[englishDigit];
                 
-                const num = normalizeNumber(raw);
-                if (num !== 0 || raw !== '') {
-                    this.value = toPersianNumber(num);
-                }
-            });
+                // جلوگیری از ورود عدد انگلیسی
+                e.preventDefault();
+                
+                // وارد کردن عدد فارسی
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                const value = this.value;
+                this.value = value.substring(0, start) + persianChar + value.substring(end);
+                
+                // قرار دادن cursor در جای درست
+                this.selectionStart = this.selectionEnd = start + 1;
+            }
+        });
+        
+        // ✅ فقط هنگام blur، مقدار را فرمت می‌کنیم (نه تبدیل)
+        input.addEventListener('blur', function() {
+            const raw = this.value.trim();
+            if (raw === '') return;
             
-            // ✅ هنگام focus، اگر مقدار فارسی است، عدد خام را نمایش بده
-            input.addEventListener('focus', function() {
-                const raw = this.value.trim();
-                if (raw === '') return;
-                const num = normalizeNumber(raw);
-                if (num !== 0 || raw !== '') {
-                    this.value = String(num);
-                }
-            });
-        }
-    });
+            const num = normalizeNumber(raw);
+            if (num !== 0 || raw !== '') {
+                this.value = toPersianNumber(num);
+            }
+        });
+        
+        // ✅ هنگام focus، اگر مقدار فارسی است، عدد خام را نمایش بده
+        input.addEventListener('focus', function() {
+            const raw = this.value.trim();
+            if (raw === '') return;
+            const num = normalizeNumber(raw);
+            if (num !== 0 || raw !== '') {
+                this.value = String(num);
+            }
+        });
+    }
+});
     
     // ============================================
     // ===== ۲. فرم افزودن محصول =====
