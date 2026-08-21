@@ -1188,7 +1188,14 @@ document.addEventListener('DOMContentLoaded', function() {
     numberInputs.forEach(input => {
         if (input) {
             input.addEventListener('input', function() {
+                // تبدیل اعداد فارسی به انگلیسی هنگام تایپ
                 this.value = toEnglishNumber(this.value);
+            });
+            // همچنین هنگام paste کردن
+            input.addEventListener('paste', function() {
+                setTimeout(() => {
+                    this.value = toEnglishNumber(this.value);
+                }, 10);
             });
         }
     });
