@@ -2,11 +2,9 @@
 // ===== دیتابیس مشترک - اتصال به سیستم اصلی =====
 // ============================================
 
-// ===== استفاده از دیتابیس مشترک سیستم اصلی =====
 let DataService;
 
 if (window.App && window.App.database) {
-    // ✅ استفاده از دیتابیس مشترک
     const mainDb = window.App.database;
     
     DataService = {
@@ -116,7 +114,6 @@ if (window.App && window.App.database) {
     console.log(`📊 ${DataService.getOrders().length} سفارش، ${DataService.getProducts().length} محصول`);
     
 } else {
-    // Fallback
     console.warn('⚠️ سیستم اصلی یافت نشد، از دیتابیس مستقل استفاده می‌شود');
     
     let mockProducts = [
@@ -268,17 +265,14 @@ function toEnglishNumber(str) {
     const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     let result = str;
     
-    // تبدیل اعداد فارسی
     persianDigits.forEach((p, i) => {
         result = result.replace(new RegExp(p, 'g'), englishDigits[i]);
     });
     
-    // تبدیل اعداد عربی
     arabicDigits.forEach((a, i) => {
         result = result.replace(new RegExp(a, 'g'), englishDigits[i]);
     });
     
-    // حذف جداکننده‌های هزارگان
     result = result.replace(/,|٬/g, '');
     
     return result;
@@ -1138,13 +1132,13 @@ window.logout = function() {
 };
 
 // ============================================
-// ===== راه‌اندازی اصلی (همه چیز در یکجا) =====
+// ===== راه‌اندازی اصلی =====
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
     
     // ============================================
-    // ===== ۱. تبدیل خودکار اعداد فارسی در فیلدهای عددی =====
+    // ===== ۱. Inputهای عددی - بدون تبدیل هنگام تایپ =====
     // ============================================
     
     const numberInputs = document.querySelectorAll(
@@ -1155,13 +1149,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     numberInputs.forEach(input => {
         if (input) {
-            // ❌ حذف تبدیل هنگام تایپ - کاربر باید فارسی ببیند
-            // فقط هنگام blur یا submit تبدیل می‌شود
+            // ❌ حذف شد: input event listener که اعداد را تبدیل می‌کرد
+            // کاربر می‌تواند هر چیزی تایپ کند، بدون تغییر
+            
+            // ✅ فقط هنگام blur، مقدار را فرمت می‌کنیم (نه تبدیل)
             input.addEventListener('blur', function() {
-                // فقط نمایش فارسی (عدد را به فارسی تبدیل کن)
-                const num = normalizeNumber(this.value);
-                if (num !== 0 || this.value.trim() !== '') {
-                    this.value = formatPersianNumber(num);
+                const raw = this.value.trim();
+                if (raw === '') return;
+                
+                // فقط اعداد را استخراج کن و به فارسی نمایش بده
+                const num = normalizeNumber(raw);
+                if (num !== 0 || raw !== '') {
+                    this.value = toPersianNumber(num);
+                }
+            });
+            
+            // ✅ هنگام focus، اگر مقدار فارسی است، عدد خام را نمایش بده
+            input.addEventListener('focus', function() {
+                const raw = this.value.trim();
+                if (raw === '') return;
+                const num = normalizeNumber(raw);
+                if (num !== 0 || raw !== '') {
+                    this.value = String(num);
                 }
             });
         }
@@ -1179,7 +1188,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const name = document.getElementById('prodName')?.value.trim() || '';
             const brand = document.getElementById('prodBrand')?.value || 'ایران باتری';
             
-            // ✅ نرمال‌سازی اعداد
+            // ✅ نرمال‌سازی اعداد (تبدیل فارسی/عربی به انگلیسی)
             const amp = normalizeNumber(document.getElementById('prodAmp')?.value);
             const price = normalizeNumber(document.getElementById('prodPrice')?.value);
             const stock = normalizeNumber(document.getElementById('prodStock')?.value);
@@ -1215,7 +1224,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const name = document.getElementById('editProdName')?.value.trim() || '';
             const brand = document.getElementById('editProdBrand')?.value || 'ایران باتری';
             
-            // ✅ نرمال‌سازی اعداد
+            // ✅ نرمال‌سازی اعداد (تبدیل فارسی/عربی به انگلیسی)
             const amp = normalizeNumber(document.getElementById('editProdAmp')?.value);
             const price = normalizeNumber(document.getElementById('editProdPrice')?.value);
             const stock = normalizeNumber(document.getElementById('editProdStock')?.value);
@@ -1346,6 +1355,5 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('🚗 داشبورد حرفه‌ای طهران باتری نسخه ۳.۰ راه‌اندازی شد');
     console.log(`📊 ${DataService.getProducts().length} محصول، ${DataService.getOrders().length} سفارش، ${DataService.getCustomers().length} مشتری`);
     
-    // ===== تابع رفرش دستی برای همگام‌سازی =====
     window.refreshDashboard = refreshDashboard;
 });
