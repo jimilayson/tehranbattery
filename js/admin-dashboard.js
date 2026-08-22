@@ -7,6 +7,28 @@ let DataService;
 if (window.App && window.App.database) {
     const mainDb = window.App.database;
     
+    // ===== تولید ID 3 رقمی =====
+    function generateProductId() {
+        const products = mainDb.data.products || [];
+        // پیدا کردن بزرگترین ID موجود
+        let maxId = 99;
+        products.forEach(p => {
+            if (p.id > maxId) maxId = p.id;
+        });
+        // اگر به 999 رسیدیم، از 100 شروع کن
+        if (maxId >= 999) {
+            // پیدا کردن اولین عدد خالی بین 100 تا 999
+            const usedIds = new Set(products.map(p => p.id));
+            for (let i = 100; i <= 999; i++) {
+                if (!usedIds.has(i)) {
+                    return i;
+                }
+            }
+            return 999; // اگر همه پر بودند
+        }
+        return maxId + 1;
+    }
+    
     DataService = {
         getProducts: function() { 
             return mainDb.data.products || []; 
@@ -24,7 +46,7 @@ if (window.App && window.App.database) {
         addProduct: function(product) {
             const products = mainDb.data.products;
             const newProduct = {
-                id: Date.now(),
+                id: generateProductId(),
                 name: product.name || 'محصول جدید',
                 brand: product.brand || 'سایر',
                 amp: product.amp || 60,
@@ -117,20 +139,20 @@ if (window.App && window.App.database) {
     console.warn('⚠️ سیستم اصلی یافت نشد، از دیتابیس مستقل استفاده می‌شود');
     
     let mockProducts = [
-        { id: 1, name: 'باتری ۶۶ آمپر', brand: 'ایران باتری', amp: 66, price: 5800000, stock: 12, minStock: 5, sales: 128, revenue: 742400000, image: 'assets/images/battery.jpg', compatible: 'سمند، ۲۰۶، ۲۰۷', rating: 5, reviews: 128 },
-        { id: 2, name: 'باتری ۵۵ آمپر', brand: 'سپاهان باتری', amp: 55, price: 4900000, stock: 8, minStock: 5, sales: 78, revenue: 382200000, image: 'assets/images/battery.jpg', compatible: 'پژو ۴۰۵، تیبا', rating: 5, reviews: 78 },
-        { id: 3, name: 'باتری ۷۴ آمپر', brand: 'بوش', amp: 74, price: 6900000, stock: 2, minStock: 5, sales: 53, revenue: 365700000, image: 'assets/images/battery.jpg', compatible: 'تویوتا، نیسان، مزدا', rating: 5, reviews: 53 },
-        { id: 4, name: 'باتری ۶۰ آمپر', brand: 'ایران باتری', amp: 60, price: 5200000, stock: 15, minStock: 8, sales: 45, revenue: 234000000, image: 'assets/images/battery.jpg', compatible: 'پراید، ۲۰۶، پژو', rating: 4.5, reviews: 124 },
-        { id: 5, name: 'باتری ۴۴ آمپر', brand: 'دنسو', amp: 44, price: 3800000, stock: 6, minStock: 4, sales: 32, revenue: 121600000, image: 'assets/images/battery.jpg', compatible: 'پراید، ۲۰۶', rating: 4.5, reviews: 32 },
-        { id: 6, name: 'باتری ۸۰ آمپر', brand: 'بوش', amp: 80, price: 8500000, stock: 0, minStock: 3, sales: 18, revenue: 153000000, image: 'assets/images/battery.jpg', compatible: 'SUV، خودروهای سنگین', rating: 5, reviews: 18 },
-        { id: 7, name: 'باتری ۱۰۰ آمپر', brand: 'ایران باتری', amp: 100, price: 12000000, stock: 1, minStock: 2, sales: 7, revenue: 84000000, image: 'assets/images/battery.jpg', compatible: 'خودروهای سنگین، SUV', rating: 5, reviews: 7 },
-        { id: 8, name: 'باتری ۵۰ آمپر', brand: 'سپاهان باتری', amp: 50, price: 4200000, stock: 4, minStock: 3, sales: 22, revenue: 92400000, image: 'assets/images/battery.jpg', compatible: 'سمند، ۴۰۵', rating: 5, reviews: 22 },
+        { id: 100, name: 'باتری ۶۶ آمپر', brand: 'ایران باتری', amp: 66, price: 5800000, stock: 12, minStock: 5, sales: 128, revenue: 742400000, image: 'assets/images/battery.jpg', compatible: 'سمند، ۲۰۶، ۲۰۷', rating: 5, reviews: 128 },
+        { id: 101, name: 'باتری ۵۵ آمپر', brand: 'سپاهان باتری', amp: 55, price: 4900000, stock: 8, minStock: 5, sales: 78, revenue: 382200000, image: 'assets/images/battery.jpg', compatible: 'پژو ۴۰۵، تیبا', rating: 5, reviews: 78 },
+        { id: 102, name: 'باتری ۷۴ آمپر', brand: 'بوش', amp: 74, price: 6900000, stock: 2, minStock: 5, sales: 53, revenue: 365700000, image: 'assets/images/battery.jpg', compatible: 'تویوتا، نیسان، مزدا', rating: 5, reviews: 53 },
+        { id: 103, name: 'باتری ۶۰ آمپر', brand: 'ایران باتری', amp: 60, price: 5200000, stock: 15, minStock: 8, sales: 45, revenue: 234000000, image: 'assets/images/battery.jpg', compatible: 'پراید، ۲۰۶، پژو', rating: 4.5, reviews: 124 },
+        { id: 104, name: 'باتری ۴۴ آمپر', brand: 'دنسو', amp: 44, price: 3800000, stock: 6, minStock: 4, sales: 32, revenue: 121600000, image: 'assets/images/battery.jpg', compatible: 'پراید، ۲۰۶', rating: 4.5, reviews: 32 },
+        { id: 105, name: 'باتری ۸۰ آمپر', brand: 'بوش', amp: 80, price: 8500000, stock: 0, minStock: 3, sales: 18, revenue: 153000000, image: 'assets/images/battery.jpg', compatible: 'SUV، خودروهای سنگین', rating: 5, reviews: 18 },
+        { id: 106, name: 'باتری ۱۰۰ آمپر', brand: 'ایران باتری', amp: 100, price: 12000000, stock: 1, minStock: 2, sales: 7, revenue: 84000000, image: 'assets/images/battery.jpg', compatible: 'خودروهای سنگین، SUV', rating: 5, reviews: 7 },
+        { id: 107, name: 'باتری ۵۰ آمپر', brand: 'سپاهان باتری', amp: 50, price: 4200000, stock: 4, minStock: 3, sales: 22, revenue: 92400000, image: 'assets/images/battery.jpg', compatible: 'سمند، ۴۰۵', rating: 5, reviews: 22 },
     ];
 
     let mockOrders = [
-        { id: 1258, customer: 'علی رضایی', phone: '09123456789', products: ['باتری ۶۶ آمپر'], total: 5800000, status: 'pending', time: '۱۰ دقیقه پیش', items: 1 },
-        { id: 1257, customer: 'محمد احمدی', phone: '09129876543', products: ['باتری ۵۵ آمپر'], total: 4900000, status: 'shipping', time: '۲۵ دقیقه پیش', items: 1 },
-        { id: 1256, customer: 'رضا کریمی', phone: '09127654321', products: ['باتری ۷۴ آمپر'], total: 6900000, status: 'delivered', time: '۴۵ دقیقه پیش', items: 1 },
+        { id: 1001, customer: 'علی رضایی', phone: '09123456789', products: ['باتری ۶۶ آمپر'], total: 5800000, status: 'pending', time: '۱۰ دقیقه پیش', items: 1 },
+        { id: 1002, customer: 'محمد احمدی', phone: '09129876543', products: ['باتری ۵۵ آمپر'], total: 4900000, status: 'shipping', time: '۲۵ دقیقه پیش', items: 1 },
+        { id: 1003, customer: 'رضا کریمی', phone: '09127654321', products: ['باتری ۷۴ آمپر'], total: 6900000, status: 'delivered', time: '۴۵ دقیقه پیش', items: 1 },
     ];
 
     let mockCustomers = [
@@ -147,6 +169,24 @@ if (window.App && window.App.database) {
         { id: 3, customer: 'رضا کریمی', phone: '09127654321', car: 'تویوتا کرولا', model: '۲۰۲۰', year: 1400, suggested: 'باتری ۷۴ آمپر', status: 'answered', time: '۳۰ دقیقه پیش', message: 'باتری ۷۴ آمپر بوش موجود دارید؟ قیمت چقدر است؟' },
     ];
 
+    // ===== تولید ID 3 رقمی برای حالت fallback =====
+    function generateProductIdFallback() {
+        let maxId = 99;
+        mockProducts.forEach(p => {
+            if (p.id > maxId) maxId = p.id;
+        });
+        if (maxId >= 999) {
+            const usedIds = new Set(mockProducts.map(p => p.id));
+            for (let i = 100; i <= 999; i++) {
+                if (!usedIds.has(i)) {
+                    return i;
+                }
+            }
+            return 999;
+        }
+        return maxId + 1;
+    }
+
     DataService = {
         getProducts: function() { return mockProducts; },
         getOrders: function() { return mockOrders; },
@@ -155,7 +195,7 @@ if (window.App && window.App.database) {
         
         addProduct: function(product) {
             const newProduct = {
-                id: Date.now(),
+                id: generateProductIdFallback(),
                 name: product.name || 'محصول جدید',
                 brand: product.brand || 'سایر',
                 amp: product.amp || 60,
@@ -713,8 +753,9 @@ function renderConsultings(page = 1) {
             <td>${c.time}</td>
             <td>
                 <div class="action-buttons">
-                    <button onclick="openConsultingStatusModal(${c.id})" class="btn-action btn-view">
-                        👁️ مشاهده و تغییر
+                    <button onclick="openConsultingStatusModal(${c.id})" class="btn-action btn-view" title="مشاهده و تغییر">
+                        <i class="fas fa-eye"></i>
+                        <span>مشاهده و تغییر</span>
                     </button>
                 </div>
             </td>
@@ -1179,7 +1220,7 @@ window.showAddBlogModal = function() {
     document.getElementById('addBlogModal').style.display = 'flex';
 };
 
-// افزودن مقاله جدید (با نام فایل تصویر)
+// افزودن مقاله جدید
 document.addEventListener('DOMContentLoaded', function() {
     const addBlogForm = document.getElementById('addBlogForm');
     if (addBlogForm) {
@@ -1192,7 +1233,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const content = document.getElementById('blogContent')?.value.trim() || '';
             const imageName = document.getElementById('blogImageName')?.value.trim() || '';
             
-            // ===== ساخت مسیر تصویر بر اساس نام فایل =====
             const image = imageName ? `assets/images/${imageName}` : 'assets/images/blog-default.jpg';
             
             if (!title || !category || !content) {
@@ -1265,7 +1305,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const content = document.getElementById('editBlogContent')?.value.trim() || '';
             const imageName = document.getElementById('editBlogImageName')?.value.trim() || '';
             
-            // ===== ساخت مسیر تصویر بر اساس نام فایل =====
             const image = imageName ? `assets/images/${imageName}` : 'assets/images/blog-default.jpg';
             
             if (!title || !category || !content) {
@@ -1355,9 +1394,15 @@ function showNotification(message) {
 window.toggleSidebar = function() {
     const sidebar = document.getElementById('adminSidebar');
     const overlay = document.querySelector('.sidebar-overlay');
+    const hamburger = document.querySelector('.hamburger-btn');
+    
     if (sidebar) {
         sidebar.classList.toggle('open');
         if (overlay) overlay.classList.toggle('active');
+        if (hamburger) hamburger.classList.toggle('active');
+        
+        // جلوگیری از اسکرول پس‌زمینه
+        document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
     }
 };
 
@@ -1638,11 +1683,15 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             if (pageTitle) pageTitle.textContent = titleMap[sectionId] || 'داشبورد مدیریت';
             
+            // بستن سایدبار در موبایل
             if (window.innerWidth <= 768) {
                 const sidebar = document.getElementById('adminSidebar');
                 const overlay = document.querySelector('.sidebar-overlay');
+                const hamburger = document.querySelector('.hamburger-btn');
                 if (sidebar) sidebar.classList.remove('open');
                 if (overlay) overlay.classList.remove('active');
+                if (hamburger) hamburger.classList.remove('active');
+                document.body.style.overflow = '';
             }
         });
     });
@@ -1708,8 +1757,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (window.innerWidth > 768) {
             const sidebar = document.getElementById('adminSidebar');
             const overlay = document.querySelector('.sidebar-overlay');
+            const hamburger = document.querySelector('.hamburger-btn');
             if (sidebar) sidebar.classList.remove('open');
             if (overlay) overlay.classList.remove('active');
+            if (hamburger) hamburger.classList.remove('active');
+            document.body.style.overflow = '';
         }
     });
     
