@@ -32,62 +32,41 @@
     <div class="admin-container">
 
         <!-- ===== سایدبار ===== -->
-        <aside class="admin-sidebar" id="adminSidebar">
-            <div class="admin-logo">
-                <h2>🔧 طهران باتری</h2>
-                <span>پنل مدیریت</span>
-                <button class="sidebar-toggle" onclick="toggleSidebar()">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-            <nav class="admin-nav">
-                <a href="#dashboard" class="active" data-section="dashboard">
-                    <i class="fas fa-chart-pie"></i> <span>داشبورد</span>
-                </a>
-                <a href="#products" data-section="products">
-                    <i class="fas fa-box"></i> <span>محصولات</span>
-                </a>
-                <a href="#orders" data-section="orders">
-                    <i class="fas fa-shopping-bag"></i> <span>سفارشات</span>
-                </a>
-                <a href="#customers" data-section="customers">
-                    <i class="fas fa-users"></i> <span>مشتریان</span>
-                </a>
-                <a href="#consulting" data-section="consulting">
-                    <i class="fas fa-headset"></i> <span>مشاوره</span>
-                </a>
-                <a href="#blog-manager" data-section="blog-manager">
-                    <i class="fas fa-newspaper"></i> <span>مدیریت مجله</span>
-                </a>
-                <a href="#reports" data-section="reports">
-                    <i class="fas fa-chart-bar"></i> <span>گزارش‌ها</span>
-                </a>
-                <a href="#settings" data-section="settings">
-                    <i class="fas fa-cog"></i> <span>تنظیمات</span>
-                </a>
-            </nav>
-            <button onclick="logout()" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> <span>خروج</span>
+<aside class="admin-sidebar" id="adminSidebar">
+    <div class="admin-logo">
+        <h2>🔧 طهران باتری</h2>
+        <span>پنل مدیریت</span>
+        <!-- ===== دکمه بستن سایدبار (موبایل) ===== -->
+        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="بستن منو">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <nav class="admin-nav">
+        <!-- ... لینک‌های منو ... -->
+    </nav>
+    <button onclick="logout()" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> <span>خروج</span>
+    </button>
+</aside>
+
+<!-- ===== محتوای اصلی ===== -->
+<main class="admin-main" id="adminMain">
+    <!-- هدر -->
+    <header class="admin-header">
+        <div class="header-left">
+            <!-- ===== دکمه همبرگری ===== -->
+            <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="باز کردن منو">
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
-        </aside>
-
-        <!-- ===== محتوای اصلی ===== -->
-        <main class="admin-main" id="adminMain">
-
-            <!-- هدر -->
-            <header class="admin-header">
-                <div class="header-left">
-                    <button class="mobile-menu-btn" onclick="toggleSidebar()">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <h1 id="pageTitle">داشبورد مدیریت</h1>
-                </div>
-                <div class="admin-info">
-                    <span>👤 خوش آمدید، ادمین</span>
-                    <span class="admin-time" id="adminTime"></span>
-                </div>
-            </header>
-
+            <h1 id="pageTitle">داشبورد مدیریت</h1>
+        </div>
+        <div class="admin-info">
+            <span>👤 خوش آمدید، ادمین</span>
+            <span class="admin-time" id="adminTime"></span>
+        </div>
+    </header>
             <!-- ========================================== -->
             <!-- بخش داشبورد -->
             <!-- ========================================== -->
