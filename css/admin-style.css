@@ -65,7 +65,7 @@ body {
     bottom: 0;
     z-index: 100;
     overflow-y: auto;
-    transition: var(--transition);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .admin-sidebar::-webkit-scrollbar {
@@ -1261,7 +1261,7 @@ body {
 /* ===== تبلت ===== */
 @media (max-width: 1024px) {
     .kpi-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .dashboard-two-col {
@@ -1275,32 +1275,54 @@ body {
 
 /* ===== موبایل ===== */
 @media (max-width: 768px) {
+    /* ===== سایدبار ===== */
     .admin-sidebar {
         width: 280px;
         transform: translateX(100%);
         right: 0;
+        box-shadow: none;
     }
     
     .admin-sidebar.open {
         transform: translateX(0);
+        box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
     }
     
     .sidebar-toggle {
         display: block;
+        position: absolute;
+        left: 16px;
+        top: 24px;
     }
     
+    .admin-logo {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+    
+    .admin-logo h2 {
+        font-size: 18px;
+    }
+    
+    .admin-logo span {
+        display: none;
+    }
+    
+    /* ===== محتوای اصلی ===== */
     .admin-main {
         margin-right: 0;
         padding: 16px;
+        width: 100%;
     }
     
-    .mobile-menu-btn {
-        display: block;
-    }
-    
+    /* ===== هدر ===== */
     .admin-header {
         flex-direction: row;
         align-items: center;
+        padding-bottom: 12px;
+        margin-bottom: 16px;
     }
     
     .admin-header h1 {
@@ -1317,14 +1339,21 @@ body {
         padding: 2px 10px;
     }
     
+    /* ===== منوی موبایل ===== */
+    .mobile-menu-btn {
+        display: block;
+        font-size: 20px;
+    }
+    
+    /* ===== KPI Cards ===== */
     .kpi-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        gap: 10px;
     }
     
     .kpi-card {
-        padding: 16px;
-        gap: 12px;
+        padding: 14px;
+        gap: 10px;
     }
     
     .kpi-card .kpi-value {
@@ -1332,20 +1361,27 @@ body {
     }
     
     .kpi-card .kpi-icon {
-        font-size: 22px;
-        width: 40px;
+        font-size: 20px;
+        width: 36px;
     }
     
+    .kpi-card .kpi-label {
+        font-size: 11px;
+    }
+    
+    /* ===== نمودار ===== */
     .chart-header {
         flex-direction: column;
         align-items: flex-start;
+        gap: 8px;
     }
     
     .chart-controls {
         width: 100%;
-        justify-content: flex-start;
         overflow-x: auto;
         padding-bottom: 4px;
+        flex-wrap: nowrap;
+        gap: 2px;
     }
     
     .chart-btn {
@@ -1355,123 +1391,35 @@ body {
     }
     
     .chart-container {
-        height: 200px;
+        height: 180px;
     }
     
-    .order-status-grid {
-        grid-template-columns: 1fr 1fr;
+    .chart-stats strong {
+        font-size: 16px;
     }
     
-    .brand-item,
-    .amp-item {
-        grid-template-columns: 70px 1fr 40px 100px;
-        font-size: 12px;
-        gap: 8px;
-    }
-    
-    .brand-detail,
-    .amp-detail {
-        font-size: 11px;
-    }
-    
+    /* ===== بخش‌ها ===== */
     .section-header {
         flex-direction: column;
         align-items: flex-start;
-    }
-    
-    .order-filters,
-    .consulting-filters {
-        width: 100%;
-    }
-    
-    .order-filters select,
-    .consulting-filters select {
-        width: 100%;
-    }
-    
-    .consulting-summary {
-        grid-template-columns: 1fr 1fr 1fr;
         gap: 8px;
     }
     
-    .consulting-stat-box strong {
-        font-size: 20px;
+    .section-header h2 {
+        font-size: 17px;
     }
     
-    .reports-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-    
-    .status-buttons {
-        grid-template-columns: 1fr 1fr;
-    }
-    
-    .modal-content {
-        padding: 24px;
-        margin: 10px;
-    }
-    
-    .admin-table {
-        font-size: 12px;
-        min-width: 500px;
-    }
-    
-    .admin-table th,
-    .admin-table td {
-        padding: 8px 12px;
-    }
-    
-    .pagination-btn {
-        padding: 4px 10px;
-        font-size: 12px;
-    }
-}
-
-/* ===== موبایل کوچک ===== */
-@media (max-width: 480px) {
-    .admin-main {
-        padding: 12px;
-    }
-    
-    .kpi-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-    }
-    
-    .kpi-card {
-        padding: 12px;
-        gap: 8px;
-    }
-    
-    .kpi-card .kpi-value {
-        font-size: 16px;
-    }
-    
-    .kpi-card .kpi-icon {
-        font-size: 18px;
-        width: 32px;
-    }
-    
-    .kpi-card .kpi-label {
-        font-size: 11px;
-    }
-    
-    .kpi-card .kpi-change {
-        font-size: 10px;
-    }
-    
-    .admin-header h1 {
-        font-size: 16px;
-    }
-    
-    .admin-info {
-        font-size: 11px;
-    }
-    
+    /* ===== کارت‌ها ===== */
     .card {
         padding: 16px;
+        margin-bottom: 16px;
     }
     
+    .card h3 {
+        font-size: 14px;
+    }
+    
+    /* ===== وضعیت سفارش‌ها ===== */
     .order-status-grid {
         grid-template-columns: 1fr 1fr;
         gap: 4px;
@@ -1486,11 +1434,18 @@ body {
         font-size: 14px;
     }
     
+    /* ===== برند و آمپراژ ===== */
     .brand-item,
     .amp-item {
-        grid-template-columns: 1fr 1fr;
-        gap: 4px;
+        grid-template-columns: 60px 1fr 35px 80px;
         font-size: 12px;
+        gap: 6px;
+        padding: 4px 0;
+    }
+    
+    .brand-detail,
+    .amp-detail {
+        font-size: 10px;
     }
     
     .brand-bar,
@@ -1498,9 +1453,25 @@ body {
         height: 6px;
     }
     
+    /* ===== فیلترها ===== */
+    .order-filters,
+    .consulting-filters,
+    .customer-filters {
+        width: 100%;
+    }
+    
+    .order-filters select,
+    .consulting-filters select,
+    .customer-filters select {
+        width: 100%;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    /* ===== مشاوره ===== */
     .consulting-summary {
         grid-template-columns: 1fr 1fr 1fr;
-        gap: 4px;
+        gap: 6px;
     }
     
     .consulting-stat-box {
@@ -1511,12 +1482,209 @@ body {
         font-size: 18px;
     }
     
+    /* ===== جدول‌ها ===== */
+    .admin-table {
+        font-size: 12px;
+        min-width: 480px;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+    
+    .table-container {
+        border-radius: var(--radius-sm);
+        margin-bottom: 12px;
+    }
+    
+    /* ===== دکمه‌ها ===== */
+    .action-buttons {
+        flex-direction: column;
+        gap: 3px;
+    }
+    
+    .btn-action {
+        font-size: 10px;
+        padding: 2px 8px;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    /* ===== صفحه‌بندی ===== */
+    .pagination-btn {
+        padding: 4px 10px;
+        font-size: 11px;
+    }
+    
+    .pagination-info {
+        font-size: 11px;
+    }
+    
+    /* ===== مودال ===== */
+    .modal-content {
+        padding: 20px;
+        margin: 10px;
+        max-width: 100%;
+        border-radius: var(--radius-sm);
+    }
+    
+    .modal-content h3 {
+        font-size: 18px;
+    }
+    
+    .modal-content .form-group input,
+    .modal-content .form-group select {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    /* ===== وضعیت سفارش در مودال ===== */
+    .status-buttons {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .status-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    /* ===== گزارش‌ها ===== */
     .reports-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
     }
     
     .report-card {
         padding: 16px;
+    }
+    
+    .report-card i {
+        font-size: 28px;
+    }
+    
+    .report-card h3 {
+        font-size: 14px;
+    }
+    
+    .report-card p {
+        font-size: 12px;
+    }
+    
+    /* ===== تنظیمات ===== */
+    .settings-card {
+        padding: 16px;
+    }
+    
+    .settings-card .form-group input,
+    .settings-card .form-group textarea {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+}
+
+/* ===== موبایل کوچک ===== */
+@media (max-width: 480px) {
+    .admin-main {
+        padding: 10px;
+    }
+    
+    .admin-header h1 {
+        font-size: 16px;
+    }
+    
+    .admin-info {
+        font-size: 10px;
+        gap: 4px;
+    }
+    
+    .admin-time {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+    
+    .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+    
+    .kpi-card {
+        padding: 10px;
+        gap: 6px;
+    }
+    
+    .kpi-card .kpi-value {
+        font-size: 15px;
+    }
+    
+    .kpi-card .kpi-icon {
+        font-size: 16px;
+        width: 28px;
+    }
+    
+    .kpi-card .kpi-label {
+        font-size: 10px;
+    }
+    
+    .kpi-card .kpi-change {
+        font-size: 9px;
+    }
+    
+    .chart-container {
+        height: 150px;
+    }
+    
+    .card {
+        padding: 12px;
+    }
+    
+    .order-status-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 3px;
+    }
+    
+    .status-item {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    
+    .status-item .status-count {
+        font-size: 12px;
+    }
+    
+    .brand-item,
+    .amp-item {
+        grid-template-columns: 1fr 1fr;
+        gap: 3px;
+        font-size: 11px;
+    }
+    
+    .brand-bar,
+    .amp-bar {
+        height: 4px;
+    }
+    
+    .consulting-summary {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 4px;
+    }
+    
+    .consulting-stat-box {
+        padding: 8px;
+    }
+    
+    .consulting-stat-box strong {
+        font-size: 16px;
+    }
+    
+    .consulting-stat-box span {
+        font-size: 11px;
+    }
+    
+    .reports-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
     }
     
     .admin-sidebar {
@@ -1528,37 +1696,70 @@ body {
         padding: 16px;
     }
     
+    .modal-content h3 {
+        font-size: 16px;
+    }
+    
     .status-buttons {
         grid-template-columns: 1fr;
     }
     
     .top-product-detail {
-        gap: 8px;
-        font-size: 11px;
+        gap: 6px;
+        font-size: 10px;
     }
     
     .critical-info {
-        gap: 8px;
-        font-size: 12px;
+        gap: 4px;
+        font-size: 11px;
+    }
+    
+    .pagination-container {
+        gap: 4px;
+        padding: 8px 0;
+    }
+    
+    .pagination-btn {
+        padding: 3px 8px;
+        font-size: 10px;
     }
     
     .pagination-info {
-        font-size: 11px;
-        padding: 0 8px;
+        font-size: 10px;
+        padding: 0 4px;
     }
     
     .admin-table {
-        font-size: 11px;
-        min-width: 400px;
+        font-size: 10px;
+        min-width: 350px;
     }
     
     .admin-table th,
     .admin-table td {
-        padding: 6px 8px;
+        padding: 4px 6px;
+        font-size: 10px;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .detail-label {
+        font-size: 11px;
+        min-width: unset;
+    }
+    
+    .detail-value {
+        font-size: 12px;
+    }
+    
+    .consulting-full-detail {
+        padding: 10px;
     }
 }
 
-/* ===== دکمه همبرگری برای موبایل ===== */
+/* ===== سایدبار اوورلی ===== */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -1651,27 +1852,6 @@ body {
 .btn-status:hover {
     background: var(--warning);
     color: var(--text-primary);
-}
-
-/* ===== ریسپانسیو دکمه‌ها ===== */
-@media (max-width: 768px) {
-    .action-buttons {
-        flex-direction: column;
-        gap: 4px;
-    }
-    
-    .btn-action {
-        font-size: 11px;
-        padding: 3px 8px;
-        justify-content: center;
-    }
-}
-
-@media (max-width: 480px) {
-    .btn-action {
-        font-size: 10px;
-        padding: 2px 6px;
-    }
 }
 
 /* ============================================
@@ -1790,33 +1970,4 @@ body {
 .consulting-status-badge.status-answered {
     background: rgba(46, 213, 115, 0.15);
     color: var(--success);
-}
-
-/* ===== ریسپانسیو ===== */
-@media (max-width: 768px) {
-    .customer-filters {
-        width: 100%;
-    }
-    
-    .customer-filters select {
-        width: 100%;
-    }
-    
-    .detail-row {
-        flex-direction: column;
-        gap: 4px;
-    }
-    
-    .detail-label {
-        min-width: unset;
-        font-size: 12px;
-    }
-    
-    .detail-value {
-        font-size: 13px;
-    }
-    
-    .consulting-full-detail {
-        padding: 12px;
-    }
 }
