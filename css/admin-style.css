@@ -1330,6 +1330,49 @@ body {
    ===== ریسپانسیو کامل =====
    ============================================ */
 
+/* ===== دکمه مشاهده و تغییر در موبایل ===== */
+@media (max-width: 768px) {
+    /* مخفی کردن متن دکمه در موبایل */
+    .btn-view span {
+        display: none;
+    }
+    
+    /* فقط آیکون نمایش داده شود */
+    .btn-view {
+        padding: 6px 10px;
+        font-size: 14px;
+        min-width: 32px;
+        justify-content: center;
+    }
+    
+    /* دکمه‌های عملیات در موبایل */
+    .action-buttons {
+        flex-direction: row;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+    
+    .btn-action {
+        font-size: 12px;
+        padding: 4px 8px;
+        min-width: 32px;
+        justify-content: center;
+    }
+    
+    /* متن دکمه‌ها در موبایل کوچک */
+    .btn-action span {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-action {
+        font-size: 11px;
+        padding: 3px 6px;
+        min-width: 28px;
+    }
+}
+
 /* ===== تبلت ===== */
 @media (max-width: 1024px) {
     .kpi-grid {
@@ -1595,15 +1638,20 @@ body {
     
     /* ===== دکمه‌ها ===== */
     .action-buttons {
-        flex-direction: column;
-        gap: 3px;
+        flex-direction: row;
+        gap: 4px;
+        flex-wrap: wrap;
     }
     
     .btn-action {
-        font-size: 10px;
-        padding: 2px 8px;
+        font-size: 11px;
+        padding: 4px 8px;
+        min-width: 32px;
         justify-content: center;
-        width: 100%;
+    }
+    
+    .btn-action span {
+        display: none;
     }
     
     /* ===== صفحه‌بندی ===== */
